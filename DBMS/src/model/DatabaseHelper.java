@@ -1,8 +1,6 @@
-package util;
+package model;
 
 import java.util.HashSet;
-
-import model.Database;
 
 public class DatabaseHelper {
     private HashSet<Database> databases;
@@ -19,5 +17,5 @@ public class DatabaseHelper {
     public void setCurrentDatabase(Database currentDatabase) {
         this.currentDatabase = currentDatabase;
     }
-    
+
 }

@@ -1,7 +1,7 @@
 package controller;
 
+import model.DatabaseHelper;
 import model.statements.Query;
-import util.DatabaseHelper;
 
 public class DatabaseController implements DBMS {
     private DBMSController dbmsController;
