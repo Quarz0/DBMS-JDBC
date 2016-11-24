@@ -6,10 +6,16 @@ import java.util.List;
 public class Column<T> {
     private List<T> column;
     private String colName;
+    private Class<?> type;
 
-    public Column(String colName) {
+    public Column(String colName, Class<?> cls) {
         this.colName = colName;
+        this.type = cls;
         column = new ArrayList<>();
+    }
+
+    public Class<?> getColumnType() {
+        return type;
     }
 
     public void addData(T data) {
