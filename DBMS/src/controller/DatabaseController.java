@@ -9,7 +9,7 @@ public class DatabaseController implements DBMS {
 
     public DatabaseController(DBMSController dbmsController) {
         this.dbmsController = dbmsController;
-        dbHelper = new DatabaseHelper();
+        dbHelper = new DatabaseHelper(this);
     }
 
     public DatabaseHelper getHelper() {
