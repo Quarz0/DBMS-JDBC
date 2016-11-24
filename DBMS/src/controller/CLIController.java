@@ -1,18 +1,28 @@
 package controller;
 
-public class CLIController {
+import view.CLI;
+
+public class CLIController implements controller.CLI {
 
 	private DBMSController dbmsController;
+	private CLI cli;
 
 	public CLIController(DBMSController dbmsController) {
 		this.dbmsController = dbmsController;
+		this.cli = new CLI(dbmsController);
 	}
 
 	public void begin() {
-
+		this.cli.run();
 	}
 
 	public void end() {
 
 	}
+
+	@Override
+	public void newInput(String s) {
+		
+	}
+
 }
