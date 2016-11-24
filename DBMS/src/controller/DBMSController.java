@@ -23,7 +23,7 @@ public class DBMSController {
 		Main.exit();
 	}
 
-	public CLIController getCliController() {
+	public CLIController getCLIController() {
 		return this.cliController;
 	}
 
@@ -31,11 +31,11 @@ public class DBMSController {
 		return this.databaseController;
 	}
 
-	public SQLParserController getSqlParserController() {
+	public SQLParserController getSQLParserController() {
 		return this.sqlParserController;
 	}
 
-	public XMLController getXmlController() {
+	public XMLController getXMLController() {
 		return this.xmlController;
 	}
 }
