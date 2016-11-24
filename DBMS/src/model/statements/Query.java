@@ -2,5 +2,5 @@ package model.statements;
 
 public interface Query {
 
-	//marker
+	public void parse(String s);
 }
