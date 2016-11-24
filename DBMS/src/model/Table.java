@@ -16,7 +16,11 @@ public class Table {
         }
     }
 
-    public List<Column<?>> tester() {
-        return columnsList;
+    public Column<?> getColumn(int index) {
+        return columnsList.get(index);
+    }
+
+    public Class<?> getColumnType(int index) {
+        return columnsList.get(index).getType();
     }
 }

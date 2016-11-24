@@ -14,7 +14,7 @@ public class Column<T> {
         column = new ArrayList<>();
     }
 
-    public Class<?> getColumnType() {
+    public Class<?> getType() {
         return type;
     }
 
