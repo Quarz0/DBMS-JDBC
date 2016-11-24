@@ -48,5 +48,5 @@ public class CLI {
 			System.out.println(ErrorCode.CLI_READLINE + " " + e.getMessage());
 		}
 	}
-	
+
 }

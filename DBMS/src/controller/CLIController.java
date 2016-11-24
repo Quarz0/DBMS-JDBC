@@ -2,7 +2,7 @@ package controller;
 
 import view.CLI;
 
-public class CLIController implements controller.CLI {
+public class CLIController {
 
 	private DBMSController dbmsController;
 	private CLI cli;
@@ -20,9 +20,7 @@ public class CLIController implements controller.CLI {
 
 	}
 
-	@Override
 	public void newInput(String s) {
-		
 	}
 
 }
