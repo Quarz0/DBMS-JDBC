@@ -1,9 +1,10 @@
 package controller;
 
 import model.DatabaseHelper;
+import model.Observer;
 import model.statements.Query;
 
-public class DatabaseController implements DBMS {
+public class DatabaseController implements DBMS, Observer {
     private DBMSController dbmsController;
     private DatabaseHelper dbHelper;
 
@@ -44,6 +45,12 @@ public class DatabaseController implements DBMS {
 
     @Override
     public void deleteFromTable(Query query) {
+
+    }
+
+    @Override
+    public void update() {
+        // TODO Auto-generated method stub
 
     }
 

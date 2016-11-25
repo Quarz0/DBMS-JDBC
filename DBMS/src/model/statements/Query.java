@@ -1,6 +1,6 @@
 package model.statements;
 
-public interface Query {
+public interface Query extends Parser {
 
-    public void parse(String s);
+    // marker
 }
