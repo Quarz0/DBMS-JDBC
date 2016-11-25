@@ -1,18 +1,24 @@
 package controller;
 
-import model.statements.Query;
+import java.util.List;
 
 public interface DBMS {
 
-    public void create(Query query);
+    public boolean create(String databaseName);
 
-    public void drop(Query query);
+    public boolean create(String tableName, List<String> colNames, List<Class<?>> types);
 
-    public void insertIntoTable(Query query);
+    public boolean dropTable(String tableName);
 
-    public void updateTable(Query query);
+    public boolean dropDatabase(String databaseName);
 
-    public void selectFromTable(Query query);
+    public boolean insertIntoTable(String tableName, List<String> colNames, List<Object> values);
 
-    public void deleteFromTable(Query query);
+    public boolean insertIntoTable(String tableName, List<Object> values);
+
+    public boolean updateTable(String tableName, List<String> colNames, List<Object> values);
+
+    public boolean selectFromTable(String tableName, List<String> colNames);
+
+    public boolean deleteFromTable(String tableName, List<String> colNames, List<Object> values);
 }
