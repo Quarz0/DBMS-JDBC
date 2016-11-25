@@ -32,17 +32,12 @@ public class DatabaseHelper {
         return currentDatabase;
     }
 
-    public String getWorkSpaceDir() {
-        return workSpaceDir;
+    public List<Database> getDatabases() {
+        return databases;
     }
 
-    public void addDatabase(Database database) {
-        for (Database i : databases) {
-            if (i.getDatabaseName().equals(database.getDatabaseName())) {
-                throw new RuntimeException("Database already exists");
-            }
-        }
-        databases.add(database);
+    public String getWorkSpaceDir() {
+        return workSpaceDir;
     }
 
     public void useDatabase(String databaseName) {

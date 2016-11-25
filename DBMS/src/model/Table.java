@@ -11,14 +11,14 @@ public class Table {
     private String tableDir;
     private File tableFile;
 
-    public Table(String tableName, String tableDirc, List<String> colName, List<Class<?>> types) {
-        header = colName;
+    public Table(String tableName, String tableDirc, List<String> colNames, List<Class<?>> types) {
+        header = colNames;
         this.tableDir = tableDirc;
-        this.tableName = tableName;
+        this.tableName = tableName + tableName;
         createTableDir();
         columnsList = new ArrayList<>();
         for (int i = 0; i < types.size(); i++) {
-            Column<?> temp = ColumnBuilder.buildColumn(types.get(i), colName.get(i));
+            Column<?> temp = ColumnBuilder.buildColumn(types.get(i), colNames.get(i));
             columnsList.add(temp);
         }
     }
@@ -45,5 +45,21 @@ public class Table {
 
     public Class<?> getColumnType(int index) {
         return columnsList.get(index).getType();
+    }
+
+    public File getTableFile() {
+        return tableFile;
+    }
+
+    public List<Column<?>> getColumnsList() {
+        return columnsList;
+    }
+
+    public boolean containsColumn(String colName) {
+        for (Column<?> col : columnsList) {
+            if (col.getColName().equals(colName))
+                return true;
+        }
+        return false;
     }
 }

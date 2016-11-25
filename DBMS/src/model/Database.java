@@ -34,4 +34,8 @@ public class Database {
     public List<Table> getTables() {
         return tables;
     }
+
+    public File getDatabaseFile() {
+        return databaseFile;
+    }
 }
