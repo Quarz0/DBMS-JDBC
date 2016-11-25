@@ -1,5 +1,5 @@
 package model.statements;
 
-public class Where implements Query {
+public class Where implements Clause {
 
 }
