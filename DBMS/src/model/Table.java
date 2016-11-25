@@ -55,11 +55,11 @@ public class Table {
         return columnsList;
     }
 
-    public boolean containsColumn(String colName) {
-        for (Column<?> col : columnsList) {
-            if (col.getColName().equals(colName))
-                return true;
+    public int containsColumn(String colName) {
+        for (int index = 0; index < columnsList.size(); index++) {
+            if (columnsList.get(index).getColName().equals(colName))
+                return index;
         }
-        return false;
+        return -1;
     }
 }

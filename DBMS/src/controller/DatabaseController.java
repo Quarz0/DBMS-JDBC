@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +34,11 @@ public class DatabaseController implements DBMS, Observer {
         }
         dbHelper.getDatabases().add(new Database(dbHelper.getWorkSpaceDir(), databaseName));
         return true;
+    }
+
+    @Override
+    public void update() {
+        // TODO Auto-generated method stub
     }
 
     @Override
@@ -85,19 +91,20 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public boolean insertIntoTable(String tableName, List<String> colNames, List<Object> values) {
-        if (colNames.size() != values.size()) {
+        if (colNames.size() != values.size() || containsDublicates(colNames))
             return false;
-        }
-        if (containsDublicates(colNames)) {
-            return false;
-        }
-        for (Table x : dbHelper.getCurrentDatabase().getTables()) {
-            if (x.getTableName().equals(tableName)) {
-                for (String str : colNames) {
-                    if (!x.containsColumn(str)) {
+        List<Integer> colIndex = new ArrayList<>();
+        for (Table table : dbHelper.getCurrentDatabase().getTables()) {
+            if (table.getTableName().equals(tableName)) {
+                for (int i = 0; i < colNames.size(); i++) {
+                    int temp = table.containsColumn(colNames.get(i));
+                    if (temp == -1 || !table.getColumnType(temp).isInstance(values.get(i))) {
                         return false;
                     }
+                    colIndex.add(temp);
                 }
+                for (int i = 0; i < colNames.size(); i++)
+                    table.getColumn(colIndex.get(i)).addData(values.get(i));
             }
         }
         return false;
@@ -113,13 +120,24 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public boolean insertIntoTable(String tableName, List<Object> values) {
+        for (Table table : dbHelper.getCurrentDatabase().getTables()) {
+            if (table.getTableName().equals(tableName)) {
+                if (table.getColumnsList().size() == values.size()) {
+                    for (int i = 0; i < values.size(); i++) {
+                        if (!table.getColumn(i).getType().isInstance(values.get(i))) {
+                            return false;
+                        }
+                    }
+                    for (int i = 0; i < values.size(); i++) {
+                        table.getColumn(i).addData(values.get(i));
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
         return false;
-    }
-
-    @Override
-    public void update() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
