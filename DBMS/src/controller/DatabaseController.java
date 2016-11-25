@@ -4,6 +4,7 @@ import java.util.List;
 
 import model.DatabaseHelper;
 import model.Observer;
+import model.statements.Clause;
 import model.statements.Query;
 
 public class DatabaseController implements DBMS, Observer {
@@ -50,24 +51,29 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     @Override
-    public boolean selectFromTable(String tableName, List<String> colNames) {
-        return false;
-    }
-
-    @Override
-    public boolean updateTable(String tableName, List<String> colNames, List<Object> values) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteFromTable(String tableName, List<String> colNames, List<Object> values) {
-        return false;
-    }
-
-    @Override
     public void update() {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public boolean selectFromTable(String tableName, List<String> colNames, List<Clause> clauses) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean updateTable(String tableName, List<String> colNames, List<Object> values,
+            List<Clause> clauses) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean deleteFromTable(String tableName, List<String> colNames, List<Object> values,
+            List<Clause> clauses) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }
