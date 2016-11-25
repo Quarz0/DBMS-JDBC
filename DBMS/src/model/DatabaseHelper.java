@@ -15,13 +15,17 @@ public class DatabaseHelper {
 
     public DatabaseHelper(DatabaseController databaseController) {
         databases = new ArrayList<>();
+        createAppPath();
+        this.dbController = databaseController;
+    }
+
+    private void createAppPath() {
         workSpaceDir = System.getProperty("user.home") + File.separator + "Workspace";
         workspace = new File(workSpaceDir);
         if (!workspace.mkdir()) {
             throw new RuntimeException("Cannot create workspace directory");
         }
         workSpaceDir += File.separator;
-        this.dbController = databaseController;
     }
 
     public Database getCurrentDatabase() {
