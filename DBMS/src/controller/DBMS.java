@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface DBMS {
 
-    public boolean create(String databaseName);
+    public boolean createDatabase(String databaseName);
 
-    public boolean create(String tableName, List<String> colNames, List<Class<?>> types);
+    public boolean createTable(String tableName, List<String> colNames, List<Class<?>> types);
 
     public boolean dropTable(String tableName);
 
