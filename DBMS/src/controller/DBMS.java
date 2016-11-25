@@ -16,9 +16,9 @@ public interface DBMS {
 
     public boolean insertIntoTable(String tableName, List<Object> values);
 
-    public boolean updateTable(String tableName, List<String> colNames, List<Object> values);
-
     public boolean selectFromTable(String tableName, List<String> colNames);
+
+    public boolean updateTable(String tableName, List<String> colNames, List<Object> values);
 
     public boolean deleteFromTable(String tableName, List<String> colNames, List<Object> values);
 }

@@ -49,12 +49,12 @@ public class DatabaseController implements DBMS {
     }
 
     @Override
-    public boolean updateTable(String tableName, List<String> colNames, List<Object> values) {
+    public boolean selectFromTable(String tableName, List<String> colNames) {
         return false;
     }
 
     @Override
-    public boolean selectFromTable(String tableName, List<String> colNames) {
+    public boolean updateTable(String tableName, List<String> colNames, List<Object> values) {
         return false;
     }
 
