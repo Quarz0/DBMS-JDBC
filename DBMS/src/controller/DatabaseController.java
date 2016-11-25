@@ -3,9 +3,10 @@ package controller;
 import java.util.List;
 
 import model.DatabaseHelper;
+import model.Observer;
 import model.statements.Query;
 
-public class DatabaseController implements DBMS {
+public class DatabaseController implements DBMS, Observer {
     private DBMSController dbmsController;
     private DatabaseHelper dbHelper;
 
@@ -61,6 +62,12 @@ public class DatabaseController implements DBMS {
     @Override
     public boolean deleteFromTable(String tableName, List<String> colNames, List<Object> values) {
         return false;
+    }
+
+    @Override
+    public void update() {
+        // TODO Auto-generated method stub
+
     }
 
 }

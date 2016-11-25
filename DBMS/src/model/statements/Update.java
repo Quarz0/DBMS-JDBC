@@ -1,9 +1,11 @@
 package model.statements;
 
 public class Update implements Query {
-    private String identidier;
 
-    public Update(String identifier) {
-        this.identidier = identifier;
+    @Override
+    public void parse(String s) {
+        // TODO Auto-generated method stub
+
     }
+
 }

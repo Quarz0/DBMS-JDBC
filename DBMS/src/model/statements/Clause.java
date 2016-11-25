@@ -1,6 +1,7 @@
 package model.statements;
 
-public interface Query extends Parser {
+public interface Clause extends Parser {
 
     // marker
+
 }
