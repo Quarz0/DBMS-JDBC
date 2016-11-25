@@ -22,8 +22,10 @@ public class DatabaseHelper {
     private void createAppPath() {
         workSpaceDir = System.getProperty("user.home") + File.separator + "Workspace";
         workspace = new File(workSpaceDir);
-        if (!workspace.mkdir()) {
-            throw new RuntimeException("Cannot create workspace directory");
+        if (!workspace.exists()) {
+            if (!workspace.mkdir()) {
+                throw new RuntimeException("Cannot create workspace directory");
+            }
         }
         workSpaceDir += File.separator;
     }
