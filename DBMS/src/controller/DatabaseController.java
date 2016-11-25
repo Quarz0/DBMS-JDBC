@@ -5,12 +5,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import model.Database;
 import model.DatabaseHelper;
 import model.Observer;
 import model.Table;
-import model.statements.Clause;
 
 public class DatabaseController implements DBMS, Observer {
     private DBMSController dbmsController;
@@ -27,13 +25,20 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public boolean createDatabase(String databaseName) {
+        if (checkDatabaseDuplicates(databaseName)) {
+            return false;
+        }
+        dbHelper.registerDatabase(new Database(dbHelper.getWorkSpaceDir(), databaseName));
+        return true;
+    }
+
+    private boolean checkDatabaseDuplicates(String databaseName) {
         for (Database x : dbHelper.getDatabases()) {
             if (x.getDatabaseName().equals(databaseName)) {
-                return false;
+                return true;
             }
         }
-        dbHelper.getDatabases().add(new Database(dbHelper.getWorkSpaceDir(), databaseName));
-        return true;
+        return false;
     }
 
     @Override
@@ -43,17 +48,21 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public boolean createTable(String tableName, List<String> colNames, List<Class<?>> types) {
-        if (colNames.size() != types.size()) {
+        if (colNames.size() != types.size() || checkTablesDuplicates(tableName)) {
             return false;
         }
-        for (Table x : dbHelper.getCurrentDatabase().getTables()) {
-            if (x.getTableName().equals(tableName)) {
-                return false;
-            }
-        }
-        dbHelper.getCurrentDatabase().getTables().add(new Table(tableName,
+        dbHelper.getCurrentDatabase().registerTable(new Table(tableName,
                 dbHelper.getCurrentDatabase().getDirectory(), colNames, types));
         return true;
+    }
+
+    private boolean checkTablesDuplicates(String tableName) {
+        for (Table x : dbHelper.getCurrentDatabase().getTables()) {
+            if (x.getTableName().equals(tableName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -61,7 +70,7 @@ public class DatabaseController implements DBMS, Observer {
         for (Table x : dbHelper.getCurrentDatabase().getTables()) {
             if (x.getTableName().equals(tableName)) {
                 deleteFile(x.getTableFile());
-                dbHelper.getCurrentDatabase().getTables().remove(x);
+                dbHelper.getCurrentDatabase().dropTable(x);
                 return true;
             }
         }
@@ -73,7 +82,7 @@ public class DatabaseController implements DBMS, Observer {
         for (Database x : dbHelper.getDatabases()) {
             if (x.getDatabaseName().equals(databaseName)) {
                 deleteFile(x.getDatabaseFile());
-                dbHelper.getDatabases().remove(x);
+                dbHelper.dropDatabase(x);
                 return true;
             }
         }
@@ -103,8 +112,10 @@ public class DatabaseController implements DBMS, Observer {
                     }
                     colIndex.add(temp);
                 }
-                for (int i = 0; i < colNames.size(); i++)
+                for (int i = 0; i < colNames.size(); i++) {
                     table.getColumn(colIndex.get(i)).addData(values.get(i));
+                }
+                return true;
             }
         }
         return false;
@@ -141,21 +152,21 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     @Override
-    public boolean selectFromTable(String tableName, List<String> colNames, List<Clause> clauses) {
+    public boolean selectFromTable(String tableName, List<String> colNames, List<String> clauses) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean updateTable(String tableName, List<String> colNames, List<Object> values,
-            List<Clause> clauses) {
+            List<String> clauses) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean deleteFromTable(String tableName, List<String> colNames, List<Object> values,
-            List<Clause> clauses) {
+            List<String> clauses) {
         // TODO Auto-generated method stub
         return false;
     }

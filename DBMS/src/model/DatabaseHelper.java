@@ -51,4 +51,12 @@ public class DatabaseHelper {
         }
         throw new RuntimeException("Database doesnot exists");
     }
+
+    public void registerDatabase(Database newDatabase) {
+        databases.add(newDatabase);
+    }
+
+    public void dropDatabase(Database database) {
+        databases.remove(database);
+    }
 }

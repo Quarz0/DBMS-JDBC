@@ -18,11 +18,11 @@ public interface DBMS {
 
     public boolean insertIntoTable(String tableName, List<Object> values);
 
-    public boolean selectFromTable(String tableName, List<String> colNames, List<Clause> clauses);
+    public boolean selectFromTable(String tableName, List<String> colNames, List<String> clauses);
 
     public boolean updateTable(String tableName, List<String> colNames, List<Object> values,
-            List<Clause> clauses);
+            List<String> clauses);
 
     public boolean deleteFromTable(String tableName, List<String> colNames, List<Object> values,
-            List<Clause> clauses);
+            List<String> clauses);
 }

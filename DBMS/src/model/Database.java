@@ -38,4 +38,12 @@ public class Database {
     public File getDatabaseFile() {
         return databaseFile;
     }
+
+    public void registerTable(Table table) {
+        tables.add(table);
+    }
+
+    public void dropTable(Table table) {
+        tables.remove(table);
+    }
 }
