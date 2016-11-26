@@ -11,6 +11,9 @@ public final class Regex {
 
     public static final String PARSE_WITH_DELETE_ALL = "\\A\\s*\\*?\\s+FROM\\s+([a-zA-Z_]\\w*)\\s*\\Z";
 
+    public static final String PARSE_WITH_DROP_DATABASE = "\\A\\s*DATABASE\\s+([a-zA-Z_]\\w*)\\s*\\Z";
+    public static final String PARSE_WITH_DROP_TABLE = "\\A\\s*TABLE\\s+([a-zA-Z_]\\w*)\\s*\\Z";
+
     private Regex() {
     }
 }
