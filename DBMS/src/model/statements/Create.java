@@ -72,19 +72,19 @@ public class Create implements Query {
     }
 
     public String getDatabaseIdentifier() {
-        return databaseIdentifier;
+        return this.databaseIdentifier;
     }
 
     public String getTableIdentifier() {
-        return tableIdentifier;
+        return this.tableIdentifier;
     }
 
     public List<Pair<String, Class<?>>> getColumns() {
-        return columns;
+        return this.columns;
     }
 
     public boolean isDatabase() {
-        return isDatabase;
+        return this.isDatabase;
     }
 
 }
