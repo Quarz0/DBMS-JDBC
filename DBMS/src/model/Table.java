@@ -1,6 +1,7 @@
 package model;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,8 @@ public class Table {
     private String tableName;
     private String tableDir;
     private File tableFile;
+    private File tableXMLFile;
+    private File tableDTDFile;
 
     public Table(String tableName, String tableDirc, List<String> colNames, List<Class<?>> types) {
         header = colNames;
@@ -31,6 +34,18 @@ public class Table {
             throw new RuntimeException("Cannot create table directory");
         }
         tableDir += File.separator;
+        tableXMLFile = new File(tableDir + tableName + ".xml");
+        tableDTDFile = new File(tableDir + tableName + ".dtd");
+        try {
+            tableXMLFile.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot create " + tableName + ".xml File");
+        }
+        try {
+            tableDTDFile.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot create " + tableName + ".dtd File");
+        }
     }
 
     public String getTableName() {
@@ -55,5 +70,13 @@ public class Table {
 
     public void addRecord(Record record) {
         recordList.add(record);
+    }
+
+    public File getXMLFile() {
+        return tableXMLFile;
+    }
+
+    public File getDTDFile() {
+        return tableDTDFile;
     }
 }
