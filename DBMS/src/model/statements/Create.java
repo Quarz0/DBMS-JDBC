@@ -36,7 +36,7 @@ public class Create implements Query {
         groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_CREATE_TABLE);
         if (App.checkForExistence(groups)) {
             this.extractTable(groups[1].trim());
-            this.extractColIdentifiers((String[]) App.subArray(groups, 2, groups.length));
+            this.extractColIdentifiers(groups[2].trim());
             return true;
         }
         return false;
@@ -52,11 +52,12 @@ public class Create implements Query {
         this.isDatabase = false;
     }
 
-    private void extractColIdentifiers(String[] s) {
+    private void extractColIdentifiers(String s) {
+        String[] colmuns = s.split(",");
         String[] colmun;
         ClassFactroy classFactroy = new ClassFactroy();
-        for (int i = 0; i < s.length; i++) {
-            colmun = s[i].trim().split(" ");
+        for (int i = 0; i < colmuns.length; i++) {
+            colmun = colmuns[i].trim().split(" ");
             if (App.checkForExistence(classFactroy.getClass(colmun[1].trim()))) {
                 Pair<String, Class<?>> pair = new Pair<String, Class<?>>(colmun[0].trim(),
                         classFactroy.getClass(colmun[1].trim()));
