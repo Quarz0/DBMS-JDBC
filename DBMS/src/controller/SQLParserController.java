@@ -3,6 +3,7 @@ package controller;
 import model.SQLParserHelper;
 import model.statements.Query;
 import model.statements.Where;
+import util.App;
 import util.ErrorCode;
 import util.Regex;
 import util.RegexEvaluator;
@@ -40,14 +41,14 @@ public class SQLParserController {
         Where where = null;
         String[] groups;
         boolean whereExists = false;
-        if (s.equals(null) || s.trim().isEmpty())
+        if (App.checkForExistence(s))
             this.callForFailure();
         groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_WHERE);
-        if (groups.equals(null))
+        if (App.checkForExistence(groups))
             this.callForFailure();
-        whereExists = !groups[Regex.PARSE_WITH_WHERE_GROUP_ID].equals(null);
+        whereExists = !App.checkForExistence(groups[Regex.PARSE_WITH_WHERE_GROUP_ID]);
         query = this.loacteQuery(groups[1].trim());
-        if (query.equals(null))
+        if (App.checkForExistence(query))
             this.callForFailure();
         if (whereExists) {
             where = new Where();

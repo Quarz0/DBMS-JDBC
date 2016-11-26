@@ -1,10 +1,12 @@
 package model.statements;
 
 public enum Operator {
-    NONE(0), EQUAL(1), NOT_EQUAL(2), GREATER_THAN(3), LESS_THAN(4), GREATER_OR_EQUAL(5), LESS_OR_EQUAL(6);
+    NONE(0), EQUAL(1), NOT_EQUAL(2), GREATER_THAN(3), LESS_THAN(4), GREATER_OR_EQUAL(
+            5), LESS_OR_EQUAL(6);
 
-    Operator(int strokeWidth) {}
-    
+    Operator(int strokeWidth) {
+    }
+
     public static Operator fromInteger(int op) {
         switch (op) {
         case 1:
@@ -23,7 +25,7 @@ public enum Operator {
             return NONE;
         }
     }
-    
+
     public static Operator fromString(String op) {
         switch (op) {
         case "=":
@@ -41,5 +43,25 @@ public enum Operator {
         default:
             return NONE;
         }
+    }
+
+    public static String toString(Operator operator) {
+        switch (operator) {
+        case EQUAL:
+            return "=";
+        case NOT_EQUAL:
+            return "!=";
+        case GREATER_THAN:
+            return ">";
+        case LESS_THAN:
+            return "<";
+        case GREATER_OR_EQUAL:
+            return ">=";
+        case LESS_OR_EQUAL:
+            return "<=";
+        default:
+            break;
+        }
+        return null;
     }
 }
