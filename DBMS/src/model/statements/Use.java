@@ -1,10 +1,40 @@
 package model.statements;
 
+import util.App;
+import util.Regex;
+import util.RegexEvaluator;
+
 public class Use implements Query {
 
-    public void parse(String s) {
-        // TODO Auto-generated method stub
+    private String databaseIdentifier;
 
+    public Use() {}
+
+    @Override
+    public void parse(String s) {
+        if (!App.checkForExistence(s) || !this.checkRegex(s))
+            this.callForFailure();
+    }
+
+    private boolean checkRegex(String s) {
+        String[] groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_CREATE_DATABASE);
+        if (App.checkForExistence(groups)) {
+            this.extractDatabase(groups[1].trim());
+            return true;
+        }
+        return false;
+    }
+
+    private void extractDatabase(String s) {
+        this.databaseIdentifier = s.trim();
+    }
+
+    private void callForFailure(/* Exception e */) {
+
+    }
+
+    public String getDatabaseIdentifier() {
+        return this.databaseIdentifier;
     }
 
 }
