@@ -2,8 +2,6 @@ package controller;
 
 import java.util.List;
 
-import model.statements.Clause;
-
 public interface DBMS {
 
     public boolean createDatabase(String databaseName);
@@ -23,6 +21,5 @@ public interface DBMS {
     public boolean updateTable(String tableName, List<String> colNames, List<Object> values,
             List<String> clauses);
 
-    public boolean deleteFromTable(String tableName, List<String> colNames, List<Object> values,
-            List<String> clauses);
+    public boolean deleteFromTable(String tableName, List<String> colNames, List<String> clauses);
 }

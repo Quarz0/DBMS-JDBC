@@ -10,6 +10,7 @@ public class DatabaseHelper {
     private List<Database> databases;
     private Database currentDatabase;
     private DatabaseController dbController;
+    private Table selectedTable;
     private String workSpaceDir;
     private File workspace;
 
@@ -58,5 +59,13 @@ public class DatabaseHelper {
 
     public void dropDatabase(Database database) {
         databases.remove(database);
+    }
+
+    public Table getSelectedTable() {
+        return selectedTable;
+    }
+
+    public void setSelectedTable(Table selectedTable) {
+        this.selectedTable = selectedTable;
     }
 }
