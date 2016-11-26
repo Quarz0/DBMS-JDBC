@@ -107,17 +107,47 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public boolean selectFromTable(String tableName, List<String> colNames, List<String> clauses) {
+        for (Table table : dbHelper.getCurrentDatabase().getTables()) {
+            if (table.getTableName().equals(tableName)) {
+                if (!columnsExists(table, colNames)) {
+                    return false;
+                }
+                // TODO implement Selection.
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public boolean updateTable(String tableName, List<String> colNames, List<Object> values,
             List<String> clauses) {
+        if (colNames.size() != values.size()) {
+            return false;
+        }
+        for (Table table : dbHelper.getCurrentDatabase().getTables()) {
+            if (table.getTableName().equals(tableName)) {
+                if (!columnsExists(table, colNames)) {
+                    return false;
+                }
+                // TODO implement Update.
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public boolean deleteFromTable(String tableName, List<String> colNames, List<String> clauses) {
+        for (Table table : dbHelper.getCurrentDatabase().getTables()) {
+            if (table.getTableName().equals(tableName)) {
+                if (!columnsExists(table, colNames)) {
+                    return false;
+                }
+                // TODO implement Delete.
+                return true;
+            }
+        }
         return false;
     }
 
