@@ -34,7 +34,7 @@ public class Update implements Query {
         String[] groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_UPDATE);
         if (App.checkForExistence(groups)) {
             this.extractTable(groups[1].trim());
-            this.fillColumns(groups[1].trim());
+            this.fillColumns(groups[2].trim());
             return true;
         }
         return false;

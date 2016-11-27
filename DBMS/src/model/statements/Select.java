@@ -3,6 +3,9 @@ package model.statements;
 import java.util.ArrayList;
 import java.util.List;
 
+import controller.DBMSController;
+import controller.SQLParserController;
+import model.Record;
 import util.App;
 import util.Regex;
 import util.RegexEvaluator;
@@ -11,9 +14,12 @@ public class Select implements Query {
 
     private List<String> columns;
     private String tableIdentifier;
-
+    private boolean isAll;
+    private Where where;
+    
     public Select() {
-        columns = new ArrayList<>();
+        this.columns = new ArrayList<>();
+        this.isAll = false;
     }
     
     @Override
@@ -23,11 +29,19 @@ public class Select implements Query {
     }
     
     public boolean checkRegex(String s) {
-        String[] groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_SELECT_FROM);
+        String[] groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_SELECT_ALL_FROM);
         if (App.checkForExistence(groups)) {
-            this.extractTable(groups[3].trim());
-            this.extractColIdentifiers(groups[1].trim());
+            this.extractTable(groups[1].trim());
+            this.isAll = true;
             return true;
+        }
+        else {
+            groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_SELECT_FROM);
+            if (App.checkForExistence(groups)) {
+                this.extractTable(groups[2].trim());
+                this.extractColIdentifiers(groups[1].trim());
+                return true;
+            }
         }
         return false;
     }
@@ -37,7 +51,7 @@ public class Select implements Query {
         String tableName;
         for (int i = 0; i < colmuns.length; i++) {
             tableName = colmuns[i].trim();
-            if (RegexEvaluator.isMatch(tableName, Regex.VALID_IDENTIFIER)) {
+            if (RegexEvaluator.isMatch(tableName, Regex.LEGAL_IDENTIFIER)) {
                 this.columns.add(tableName);
             } else {
                 this.callForFailure();
@@ -64,5 +78,13 @@ public class Select implements Query {
     public List<String> getColumns() {
         return this.columns;
     }
+    
+    public boolean isAll() {
+        return isAll;
+    }
 
+    public Where getWhere() {
+        return where;
+    }
+    
 }
