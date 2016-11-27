@@ -1,12 +1,14 @@
 package util;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class App {
 
-    public static final String DEFAULT_DIR_NAME = System.getProperty("user.name") + "_DBMS/";
-    public static final String PS1 = System.getProperty("user.home") + "/" + DEFAULT_DIR_NAME
+    public static final String DEFAULT_DIR_PATH = System.getProperty("user.home") + File.separatorChar
+            + "DBMS" + File.separatorChar;
+    public static final String PS1 = System.getProperty("user.home") + "/" + DEFAULT_DIR_PATH
             + ">> ";
 
     public static boolean checkForExistence(Object object) {

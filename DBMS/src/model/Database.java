@@ -9,8 +9,8 @@ public class Database {
     private String databaseDir;
     private File databaseFile;
 
-    public Database(String databaseDirc, String databaseName) {
-        this.databaseDir = databaseDirc + databaseName;
+    public Database(String databaseName) {
+//        this.databaseDir = databaseDirc + databaseName;
         createDatabaseDir();
         this.databaseName = databaseName;
     }
