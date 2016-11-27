@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Table {
+public class SelectionTable {
     private List<Record> recordList;
     private List<String> header;
     private List<Class<?>> types;
@@ -15,7 +15,8 @@ public class Table {
     private File tableXMLFile;
     private File tableDTDFile;
 
-    public Table(String tableName, String tableDirc, List<String> colNames, List<Class<?>> types) {
+    public SelectionTable(String tableName, String tableDirc, List<String> colNames,
+            List<Class<?>> types) {
         header = colNames;
         this.tableDir = tableDirc;
         this.tableName = tableName + tableName;
@@ -23,7 +24,7 @@ public class Table {
         recordList = new ArrayList<>();
     }
 
-    public Table(List<String> colNames, List<Class<?>> types) {
+    public SelectionTable(List<String> colNames, List<Class<?>> types) {
         header = colNames;
         recordList = new ArrayList<>();
     }

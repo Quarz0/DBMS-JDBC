@@ -1,42 +1,38 @@
 package model;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Database {
     private String databaseName;
     private List<Table> tables;
-    private String databaseDir;
-    private File databaseFile;
+    private File databaseDir;
 
-    public Database(String databaseDirc, String databaseName) {
-        this.databaseDir = databaseDirc + databaseName;
-        createDatabaseDir();
+    public Database(String workspaceDirc, String databaseName) {
+        createDatabaseDir(workspaceDirc + File.separator + databaseName);
+        tables = new ArrayList<>();
         this.databaseName = databaseName;
     }
 
-    private void createDatabaseDir() {
-        databaseFile = new File(databaseDir);
-        if (!databaseFile.mkdir()) {
-            throw new RuntimeException("Cannot create database directory");
-        }
-        databaseDir += File.separator;
+    public Database() {
+        tables = new ArrayList<>();
+    }
+
+    public void clearTableList() {
+        tables = new ArrayList<>();
     }
 
     public String getDatabaseName() {
         return databaseName;
     }
 
-    public String getDirectory() {
+    public File getDatabaseDir() {
         return databaseDir;
     }
 
-    public List<Table> getTables() {
-        return tables;
-    }
-
-    public File getDatabaseFile() {
-        return databaseFile;
+    public String getPath() {
+        return databaseDir.getAbsolutePath();
     }
 
     public void registerTable(Table table) {
@@ -45,5 +41,21 @@ public class Database {
 
     public void dropTable(Table table) {
         tables.remove(table);
+    }
+
+    public void useDatabase(File databaseDir) {
+        this.databaseDir = databaseDir;
+        databaseName = databaseDir.getName();
+    }
+
+    public List<Table> getTables() {
+        return tables;
+    }
+
+    private void createDatabaseDir(String databasePath) {
+        databaseDir = new File(databasePath);
+        if (!databaseDir.mkdir()) {
+            throw new RuntimeException("Cannot create database directory");
+        }
     }
 }

@@ -1,22 +1,23 @@
 package controller;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import model.Database;
+import model.DatabaseFilterGenerator;
 import model.DatabaseHelper;
 import model.Observer;
-import model.Record;
 import model.Table;
 
 public class DatabaseController implements DBMS, Observer {
     private DBMSController dbmsController;
     private DatabaseHelper dbHelper;
+    private DatabaseFilterGenerator databaseFilter;
 
     public DatabaseController(DBMSController dbmsController) {
+        databaseFilter = new DatabaseFilterGenerator();
         this.dbmsController = dbmsController;
         dbHelper = new DatabaseHelper(this);
     }
@@ -31,11 +32,23 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     @Override
+    public boolean useDatabase(String databaseName) {
+        File usedDatabase = getDatabase(databaseName);
+        if (usedDatabase == null) {
+            // throw new RuntimeException("Database doesnot exist");
+            return false;
+        }
+        dbHelper.getCurrentDatabase().useDatabase(usedDatabase);
+        reLoadTables(dbHelper.getCurrentDatabase());
+        return true;
+    }
+
+    @Override
     public boolean createDatabase(String databaseName) {
         if (databaseExists(databaseName)) {
             return false;
         }
-        dbHelper.registerDatabase(new Database(dbHelper.getWorkSpaceDir(), databaseName));
+        new Database(dbHelper.getWorkSpacePath(), databaseName);
         return true;
     }
 
@@ -45,17 +58,29 @@ public class DatabaseController implements DBMS, Observer {
                 || tablesExists(tableName)) {
             return false;
         }
-        dbHelper.getCurrentDatabase().registerTable(new Table(tableName,
-                dbHelper.getCurrentDatabase().getDirectory(), colNames, types));
+        if (tablesExists(tableName)) {
+            // throw new RuntimeException("Table already exists");
+            return false;
+        }
+        File tableFile = new File(
+                dbHelper.getCurrentDatabase().getPath() + File.separator + tableName);
+        Table table = new Table(tableFile);
+        dbHelper.getCurrentDatabase().registerTable(table);
+        File xmlFile = dbmsController.getXMLController()
+                .initializeXML(dbHelper.getCurrentDatabase().getPath(), tableName, colNames, types);
+        File dtdFile = dbmsController.getXMLController()
+                .initializeDTD(dbHelper.getCurrentDatabase().getPath(), tableName, colNames, types);
+        table.registerFiles(xmlFile, dtdFile);
         return true;
     }
 
     @Override
     public boolean dropTable(String tableName) {
-        for (Table x : dbHelper.getCurrentDatabase().getTables()) {
-            if (x.getTableName().equals(tableName)) {
-                deleteFile(x.getTableFile());
-                dbHelper.getCurrentDatabase().dropTable(x);
+        int index = 0;
+        for (Table table : dbHelper.getCurrentDatabase().getTables()) {
+            if (table.getTableName().equals(tableName)) {
+                deleteDir(table.getTableDir());
+                dbHelper.getCurrentDatabase().getTables().remove(index);
                 return true;
             }
         }
@@ -64,125 +89,38 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public boolean dropDatabase(String databaseName) {
-        for (Database x : dbHelper.getDatabases()) {
-            if (x.getDatabaseName().equals(databaseName)) {
-                deleteFile(x.getDatabaseFile());
-                dbHelper.dropDatabase(x);
-                return true;
-            }
+        File database = getDatabase(databaseName);
+        if (database == null) {
+            return false;
         }
-        return false;
+        deleteDir(database);
+        return true;
     }
 
     @Override
     public boolean insertIntoTable(String tableName, List<String> colNames, List<Object> values) {
-        if (colNames.size() != values.size() || containsDublicates(colNames)) {
-            return false;
-        }
-        for (Table table : dbHelper.getCurrentDatabase().getTables()) {
-            if (table.getTableName().equals(tableName)) {
-                if (!columnsExists(table, colNames)) {
-                    return false;
-                }
-                table.addRecord(createNewRecord(table, colNames, values));
-                return true;
-            }
-        }
         return false;
     }
 
     @Override
     public boolean insertIntoTable(String tableName, List<Object> values) {
-        for (Table table : dbHelper.getCurrentDatabase().getTables()) {
-            if (table.getTableName().equals(tableName)) {
-                if (!oneToOneColumnTypes(table, values)) {
-                    return false;
-                }
-                table.addRecord(new Record(values));
-                return true;
-            }
-        }
         return false;
     }
 
     @Override
-    public boolean selectFromTable(String tableName, List<String> colNames, List<String> clauses) {
-        for (Table table : dbHelper.getCurrentDatabase().getTables()) {
-            if (table.getTableName().equals(tableName)) {
-                if (!columnsExists(table, colNames)) {
-                    return false;
-                }
-                // TODO implement Selection.
-                return true;
-            }
-        }
+    public boolean selectFromTable(String tableName, List<String> colNames, String condition) {
         return false;
     }
 
     @Override
     public boolean updateTable(String tableName, List<String> colNames, List<Object> values,
-            List<String> clauses) {
-        if (colNames.size() != values.size()) {
-            return false;
-        }
-        for (Table table : dbHelper.getCurrentDatabase().getTables()) {
-            if (table.getTableName().equals(tableName)) {
-                if (!columnsExists(table, colNames)) {
-                    return false;
-                }
-                // TODO implement Update.
-                return true;
-            }
-        }
+            String condition) {
         return false;
     }
 
     @Override
-    public boolean deleteFromTable(String tableName, List<String> colNames, List<String> clauses) {
-        for (Table table : dbHelper.getCurrentDatabase().getTables()) {
-            if (table.getTableName().equals(tableName)) {
-                if (!columnsExists(table, colNames)) {
-                    return false;
-                }
-                // TODO implement Delete.
-                return true;
-            }
-        }
+    public boolean deleteFromTable(String tableName, List<String> colNames, String condition) {
         return false;
-    }
-
-    private boolean oneToOneColumnTypes(Table table, List<Object> values) {
-        if (table.getHeader().size() != values.size()) {
-            return false;
-        }
-        for (int i = 0; i < values.size(); i++) {
-            if (!table.getTypes().get(i).isInstance(values.get(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private Record createNewRecord(Table table, List<String> colNames, List<Object> values) {
-        List<Object> record = new ArrayList<>();
-        int it = 0;
-        for (String name : table.getHeader()) {
-            if (name.equals(colNames.get(it))) {
-                record.add(values.get(it++));
-            } else {
-                record.add(null);
-            }
-        }
-        return new Record(record);
-    }
-
-    private boolean columnsExists(Table table, List<String> colNames) {
-        for (String name : colNames) {
-            if (!table.getHeader().contains(name)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private <T> boolean containsDublicates(List<T> list) {
@@ -194,29 +132,56 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     private boolean databaseExists(String databaseName) {
-        for (Database x : dbHelper.getDatabases()) {
-            if (x.getDatabaseName().equals(databaseName)) {
-                return true;
-            }
+        File database = getDatabase(databaseName);
+        if (database == null) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     private boolean tablesExists(String tableName) {
-        for (Table x : dbHelper.getCurrentDatabase().getTables()) {
-            if (x.getTableName().equals(tableName)) {
+        for (Table table : dbHelper.getCurrentDatabase().getTables()) {
+            if (table.getTableName().equals(tableName)) {
                 return true;
             }
         }
         return false;
     }
 
-    private void deleteFile(File file) {
-        if (file.isDirectory()) {
-            for (File sub : file.listFiles()) {
-                deleteFile(sub);
+    private void deleteDir(File file) {
+        File[] contents = file.listFiles();
+        if (contents != null) {
+            for (File f : contents) {
+                deleteDir(f);
             }
         }
         file.delete();
+    }
+
+    private File getDatabase(String databaseName) {
+        File[] databases = dbHelper.getDatabaseDir().listFiles(databaseFilter);
+        for (File databaseFile : databases) {
+            if (databaseFile.getName().equals(databaseName)) {
+                return databaseFile;
+            }
+        }
+        return null;
+    }
+
+    private void reLoadTables(Database database) {
+        database.clearTableList();
+        File[] tables = database.getDatabaseDir().listFiles(databaseFilter);
+        for (File tableDir : tables) {
+            Table table = new Table(tableDir);
+            File xmlFile = new File(
+                    table.getTablePath() + File.separator + table.getTableName() + ".xml");
+            File dtdFile = new File(
+                    table.getTablePath() + File.separator + table.getTableName() + ".dtd");
+            if (!(xmlFile.exists() && dtdFile.exists())) {
+                throw new RuntimeException("Missing table files");
+            }
+            table.registerFiles(xmlFile, dtdFile);
+            database.getTables().add(new Table(tableDir));
+        }
     }
 }
