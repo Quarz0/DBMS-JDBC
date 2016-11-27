@@ -2,6 +2,8 @@ package util;
 
 public final class Regex {
 
+    public static final String LEGAL_IDENTIFIER = "[a-zA-Z_]\\w*";
+
     public static final String PARSE_WITH_WHERE = "(\\w+)\\s+((.*)\\s+(WHERE\\s))?(.*)";
     public static final int PARSE_WITH_WHERE_GROUP_ID = 4;
 
@@ -18,6 +20,17 @@ public final class Regex {
     public static final String PARSE_WITH_INSERT_TRIM_MATCH = ".+(?<!,)";
     public static final String PARSE_WITH_INSERT_SPLIT_PATTERN1 = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
     public static final String PARSE_WITH_INSERT_SPLIT_PATTERN2 = ",(?=(?:[^\']*\'[^\']*\')*[^\']*$)";
+
+    public static final String PARSE_WITH_UPDATE = "\\A\\s*([a-zA-Z_]\\w*)\\s+SET\\s+(.+)\\Z";
+    public static final String PARSE_WITH_UPDATE_TRIM_MATCH = ".+(?<!,)";
+    public static final String PARSE_WITH_UPDATE_SPLIT_PATTERN1 = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
+    public static final String PARSE_WITH_UPDATE_SPLIT_PATTERN2 = ",(?=(?:[^\']*\'[^\']*\')*[^\']*$)";
+    public static final String PARSE_WITH_UPDATE_SPLIT_PATTERN_LEFT = "\\A\\s*([a-zA-Z_]\\w*)\\s*=\\s*(.*)\\Z";
+    public static final String PARSE_WITH_UPDATE_SPLIT_PATTERN_RIGHT = "\\A\\s*(.*)=\\s*([a-zA-Z_]\\w*)\\Z";
+    public static final String PARSE_WITH_UPDATE_TRIM_MATCH_LEFT = "\\A\\s*"
+            + Regex.LEGAL_IDENTIFIER + "\\s*=\\s*.*\\Z";
+    public static final String PARSE_WITH_UPDATE_TRIM_MATCH_RIGHT = "\\A\\s*.*=\\s*"
+            + Regex.LEGAL_IDENTIFIER + "\\Z";
 
     private Regex() {
     }

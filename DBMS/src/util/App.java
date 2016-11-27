@@ -15,11 +15,15 @@ public final class App {
         return !object.equals(null);
     }
 
-    public static Object[] subArray(Object[] objects, int startIndex, int endIndex) {
+    public static Object[] swapArrayOfTwo(Object[] objects) {
         List<Object> result = new ArrayList<>();
-        for (int i = startIndex; i < endIndex; i++)
-            result.add(objects[i]);
+        result.add(objects[1]);
+        result.add(objects[0]);
         return result.toArray();
+    }
+
+    public static boolean isColumnIdentifier(String s) {
+        return s.matches(Regex.LEGAL_IDENTIFIER);
     }
 
     private App() {
