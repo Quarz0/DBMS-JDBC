@@ -12,7 +12,10 @@ public class Delete implements Query {
 
     public Delete(Where where) {
         this.where = where;
-        this.isAll = false;
+        if (!App.checkForExistence(this.where))
+            this.isAll = true;
+        else
+            this.isAll = false;
     }
 
     @Override
@@ -32,8 +35,6 @@ public class Delete implements Query {
 
     private void extractTable(String s) {
         this.tableIdentifier = s.trim();
-        if (!App.checkForExistence(this.where))
-            this.isAll = true;
     }
 
     private void callForFailure(/* Exception e */) {
