@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="src/libs/asciitable-0.2.2.jar"/>
 	<classpathentry kind="lib" path="src/libs/stax-1.2.0.jar"/>
 	<classpathentry kind="lib" path="src/libs/jdom-2.0.0.jar"/>
+	<classpathentry kind="lib" path="src/libs/jline-2.13.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

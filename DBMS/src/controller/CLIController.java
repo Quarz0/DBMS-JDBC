@@ -33,7 +33,7 @@ public class CLIController {
     }
 
     public void status(Boolean status) {
-       
+
     }
 
 }

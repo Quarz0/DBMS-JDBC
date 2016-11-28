@@ -20,7 +20,6 @@ public class DatabaseHelper {
         return currentDatabase;
     }
 
-
     public File getDatabaseDir() {
         return workspaceDir;
     }
