@@ -20,7 +20,7 @@ public class Database {
     }
 
     public void clearTableList() {
-        tables = new ArrayList<>();
+        tables.clear();
     }
 
     public String getDatabaseName() {

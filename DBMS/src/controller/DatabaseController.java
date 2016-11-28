@@ -1,24 +1,33 @@
 package controller;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.script.ScriptException;
+
+import model.ClassFactory;
 import model.Database;
 import model.DatabaseFilterGenerator;
 import model.DatabaseHelper;
 import model.Observer;
 import model.Record;
+import model.SelectionTable;
 import model.Table;
+import util.App;
+import util.BooleanEvaluator;
 
 public class DatabaseController implements DBMS, Observer {
     private DBMSController dbmsController;
     private DatabaseHelper dbHelper;
     private DatabaseFilterGenerator databaseFilter;
+    private ClassFactory classFactory;
 
     public DatabaseController(DBMSController dbmsController) {
         databaseFilter = new DatabaseFilterGenerator();
+        classFactory = new ClassFactory();
         this.dbmsController = dbmsController;
         dbHelper = new DatabaseHelper(this);
     }
@@ -36,8 +45,8 @@ public class DatabaseController implements DBMS, Observer {
     public boolean useDatabase(String databaseName) {
         File usedDatabase = getDatabase(databaseName);
         if (usedDatabase == null) {
-            // throw new RuntimeException("Database doesnot exist");
-            return false;
+            throw new RuntimeException("Database doesnot exist");
+            // return false;
         }
         dbHelper.getCurrentDatabase().useDatabase(usedDatabase);
         reLoadTables(dbHelper.getCurrentDatabase());
@@ -47,7 +56,8 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public boolean createDatabase(String databaseName) {
         if (databaseExists(databaseName)) {
-            return false;
+            throw new RuntimeException("Database already exists");
+            // return false;
         }
         new Database(dbHelper.getWorkSpacePath(), databaseName);
         return true;
@@ -98,27 +108,104 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public boolean insertIntoTable(String tableName, List<String> colNames, List<Object> values) {
-
-        return false;
+        if (containsDublicates(colNames) || colNames.size() != values.size()) {
+            return false;
+        }
+        Table table = getTable(tableName);
+        if (table == null) {
+            throw new RuntimeException("Cannot find table");
+        }
+        List<String> typesAsStrings = dbmsController.getXMLController().getTypes(table);
+        List<String> tableColNames = dbmsController.getXMLController().getColumnsNames(table);
+        List<Class<?>> types = getTypesFromStrings(typesAsStrings);
+        for (String colName : colNames) {
+            if (!tableColNames.contains(colName)) {
+                throw new RuntimeException("Data doesnot match table.");
+            }
+        }
+        if (!isMatched(tableColNames, colNames, types, values)) {
+            throw new RuntimeException("Data doesnot match table.");
+        }
+        List<Object> generateValues = new ArrayList<>();
+        for (int i = 0; i < tableColNames.size(); i++) {
+            boolean found = false;
+            for (int j = 0; j < colNames.size(); j++) {
+                if (tableColNames.get(i).equals(colNames.get(j))) {
+                    generateValues.add(values.get(j));
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                generateValues.add(null);
+            }
+        }
+        Record record = new Record(generateValues);
+        return dbmsController.getXMLController().insertIntoTable(table, record);
     }
 
     @Override
     public boolean insertIntoTable(String tableName, List<Object> values) {
-        // read classes names to validate.
-        Record record = new Record(values);
         Table table = getTable(tableName);
+        if (table == null) {
+            throw new RuntimeException("Cannot find table");
+        }
+        List<String> typesAsStrings = dbmsController.getXMLController().getTypes(table);
+        List<Class<?>> types = getTypesFromStrings(typesAsStrings);
+        if (values.size() != types.size()) {
+            throw new RuntimeException("Wrong data");
+        }
+        for (int i = 0; i < types.size(); i++) {
+            if (!types.get(i).isInstance(values.get(i))) {
+                throw new RuntimeException("Wrong data");
+            }
+        }
+        Record record = new Record(values);
         return dbmsController.getXMLController().insertIntoTable(table, record);
     }
 
     @Override
     public boolean selectFromTable(String tableName, List<String> colNames, String condition) {
-        return false;
+        Table table = getTable(tableName);
+        if (table == null) {
+            throw new RuntimeException("Cannot find table");
+        }
+        if (containsDublicates(colNames)) {
+            throw new RuntimeException("Data contains dublicates");
+        }
+        List<String> tableColNames = dbmsController.getXMLController().getColumnsNames(table);
+        if (!tableColNames.containsAll(colNames)) {
+            throw new RuntimeException("Wrong column names");
+            // return false;
+        }
+        try {
+            SelectionTable selectedTable = dbmsController.getXMLController().selectFromTable(table,
+                    colNames, condition);
+            dbHelper.setSelectedTable(selectedTable);
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot read Table");
+            // return false;
+        }
+        return true;
     }
 
     @Override
     public boolean updateTable(String tableName, List<String> colNames, List<Object> values,
             String condition) {
-        return false;
+        Table table = getTable(tableName);
+        if (table == null) {
+            throw new RuntimeException("Cannot find table");
+        }
+        List<String> tableColNames = dbmsController.getXMLController().getColumnsNames(table);
+        List<String> typesAsStrings = dbmsController.getXMLController().getTypes(table);
+        List<Class<?>> types = getTypesFromStrings(typesAsStrings);
+        if (colNames.size() != values.size() || containsDublicates(colNames)
+                || !isMatched(tableColNames, colNames, types, values)) {
+            throw new RuntimeException("Wrong data inserted");
+            // return false;
+        }
+        // update table.
+        return true;
     }
 
     @Override
@@ -133,6 +220,14 @@ public class DatabaseController implements DBMS, Observer {
             }
         }
         return null;
+    }
+
+    private List<Class<?>> getTypesFromStrings(List<String> typesAsStrings) {
+        List<Class<?>> types = new ArrayList<>();
+        for (int i = 0; i < typesAsStrings.size(); i++) {
+            types.add(classFactory.getClass(typesAsStrings.get(i)));
+        }
+        return types;
     }
 
     private <T> boolean containsDublicates(List<T> list) {
@@ -193,7 +288,44 @@ public class DatabaseController implements DBMS, Observer {
                 throw new RuntimeException("Missing table files");
             }
             table.registerFiles(xmlFile, dtdFile);
-            database.getTables().add(new Table(tableDir));
+            database.getTables().add(table);
         }
+    }
+
+    public boolean evaluate(String expression, Record record) throws ScriptException {
+        String exp = getFilledExpression(expression, record);
+        exp = exp.toLowerCase();
+        exp = App.replace(exp, "and", " && ");
+        exp = App.replace(exp, "or", " || ");
+        exp = App.replace(exp, "not", " ! ");
+        return BooleanEvaluator.evaluate(exp);
+    }
+
+    private String getFilledExpression(String expression, Record record) {
+        String exp = expression;
+        for (int i = 0; i < record.getColumns().size(); i++) {
+            if (record.getValues().get(i) instanceof String) {
+                exp = App.replace(exp, record.getColumns().get(i).toLowerCase(),
+                        "\"" + record.getValues().get(i).toString() + "\"");
+            } else {
+                exp = App.replace(exp, record.getColumns().get(i).toLowerCase(),
+                        record.getValues().get(i).toString());
+            }
+        }
+        return exp;
+    }
+
+    private boolean isMatched(List<String> tableColNames, List<String> colNames,
+            List<Class<?>> types, List<Object> values) {
+        for (int i = 0; i < colNames.size(); i++) {
+            for (int j = 0; j < tableColNames.size(); j++) {
+                if (colNames.get(i).equals(tableColNames.get(j))) {
+                    if (!types.get(j).isInstance(values.get(i))) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 }

@@ -9,27 +9,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.events.Characters;
+import javax.xml.stream.events.XMLEvent;
 
-import org.jdom2.DocType;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import model.Record;
+import model.SelectionTable;
 import model.Table;
 
 public class XMLController {
 
     private DBMSController dbmsController;
     private XMLOutputFactory fileWriter;
+    private XMLInputFactory inputFactory;
     private XMLStreamWriter xmlStreamWriter;
+    private XMLEventReader eventReader;
     private FileOutputStream writer;
     private SAXBuilder saxBuilder;
     private org.jdom2.Document document;
-    private DocType docType;
     private XMLOutputter xmlOutput;
 
     public XMLController(DBMSController dbmsController) {
@@ -38,6 +44,7 @@ public class XMLController {
         saxBuilder = new SAXBuilder();
         xmlOutput = new XMLOutputter();
         xmlOutput.setFormat(Format.getPrettyFormat());
+        inputFactory = XMLInputFactory.newInstance();
 
     }
 
@@ -98,15 +105,18 @@ public class XMLController {
     public boolean insertIntoTable(Table table, Record record) {
         try {
             File tableXML = table.getXML();
-            System.out.println(tableXML);
-            List<String> names = getColumnNames(table);
-            document = saxBuilder.build(tableXML);
-            docType = document.getDocType();
+            List<String> names = getColumnsNames(table);
             Element newRecord = new Element("Record");
+            eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
             for (int i = 0; i < record.getValues().size(); i++) {
-                newRecord.addContent(
-                        new Element(names.get(i)).setText(record.getValues().get(i).toString()));
+                Element temp;
+                if (record.getValues().get(i) == null)
+                    temp = new Element(names.get(i)).setText("null");
+                else
+                    temp = new Element(names.get(i)).setText(record.getValues().get(i).toString());
+                newRecord.addContent(temp);
             }
+            document = saxBuilder.build(tableXML);
             document.getRootElement().addContent(newRecord);
             xmlOutput.output(document, new FileWriter(tableXML));
         } catch (Exception e) {
@@ -116,7 +126,52 @@ public class XMLController {
         return true;
     }
 
-    public List<String> getColumnNames(Table table) {
+    public SelectionTable selectFromTable(Table table, List<String> colNames, String condition) {
+        SelectionTable selectionTable = new SelectionTable(table.getTableName(), colNames);
+        try {
+            File tableXML = table.getXML();
+            eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
+            document = saxBuilder.build(tableXML);
+            Object[] values = new Object[colNames.size()];
+            while (eventReader.hasNext()) {
+                XMLEvent event = eventReader.nextEvent();
+                switch (event.getEventType()) {
+                case XMLStreamConstants.START_ELEMENT:
+                    String startElementName = event.asStartElement().getName().getLocalPart();
+                    if (!startElementName.equals("Record")) {
+                        if (colNames.contains(startElementName)) {
+                            Characters chars = (Characters) eventReader.nextEvent();
+                            values[colNames.indexOf(startElementName)] = chars.getData();
+                            eventReader.nextEvent();
+                        }
+                    }
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    String endElementName = event.asEndElement().getName().getLocalPart();
+                    if (endElementName.equals("Record")) {
+                        Record tempRecord = new Record(colNames,
+                                Arrays.asList(Arrays.copyOf(values, values.length)));
+                        if (dbmsController.getDatabaseController().evaluate(condition,
+                                tempRecord)) {
+                            selectionTable.addRecord(tempRecord);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(selectionTable.getHeader());
+        for (int i = 0; i < selectionTable.getRecordList().size(); i++) {
+            for (int j = 0; j < selectionTable.getRecordList().get(i).getValues().size(); j++) {
+                System.out.print(selectionTable.getRecordList().get(i).getValues().get(j) + " ");
+            }
+            System.out.println();
+        }
+        return selectionTable;
+    }
+
+    public List<String> getColumnsNames(Table table) {
         File dtdFile = table.getDTD();
         List<String> colNames = new ArrayList<>();
         BufferedReader reader;
@@ -153,5 +208,21 @@ public class XMLController {
                 strBuilder.append(", ");
         }
         return strBuilder.toString();
+    }
+
+    public List<String> getTypes(Table table) {
+        File tableXML = table.getXML();
+        List<String> types = new ArrayList<>();
+        try {
+            eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
+            document = saxBuilder.build(tableXML);
+            Element root = document.getRootElement();
+            String typesStr = root.getAttributeValue("types");
+            String[] arr = typesStr.split(",\\s");
+            types = Arrays.asList(arr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return types;
     }
 }
