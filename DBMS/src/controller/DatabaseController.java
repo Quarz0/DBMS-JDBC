@@ -9,6 +9,7 @@ import model.Database;
 import model.DatabaseFilterGenerator;
 import model.DatabaseHelper;
 import model.Observer;
+import model.Record;
 import model.Table;
 
 public class DatabaseController implements DBMS, Observer {
@@ -54,22 +55,20 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public boolean createTable(String tableName, List<String> colNames, List<Class<?>> types) {
-        if (colNames.size() != types.size() || containsDublicates(colNames)
-                || tablesExists(tableName)) {
-            return false;
+        if (colNames.size() != types.size() || containsDublicates(colNames)) {
+            throw new RuntimeException("Wrong data entered");
         }
-        if (tablesExists(tableName)) {
-            // throw new RuntimeException("Table already exists");
-            return false;
+        if (tableExists(tableName)) {
+            throw new RuntimeException("Table already exists");
         }
         File tableFile = new File(
                 dbHelper.getCurrentDatabase().getPath() + File.separator + tableName);
         Table table = new Table(tableFile);
         dbHelper.getCurrentDatabase().registerTable(table);
-        File xmlFile = dbmsController.getXMLController()
-                .initializeXML(dbHelper.getCurrentDatabase().getPath(), tableName, colNames, types);
-        File dtdFile = dbmsController.getXMLController()
-                .initializeDTD(dbHelper.getCurrentDatabase().getPath(), tableName, colNames, types);
+        File xmlFile = dbmsController.getXMLController().initializeXML(table.getTablePath(),
+                tableName, colNames, types);
+        File dtdFile = dbmsController.getXMLController().initializeDTD(table.getTablePath(),
+                tableName, colNames, types);
         table.registerFiles(xmlFile, dtdFile);
         return true;
     }
@@ -104,7 +103,9 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public boolean insertIntoTable(String tableName, List<Object> values) {
-        return false;
+        Record record = new Record(values);
+        Table table = getTable(tableName);
+        return dbmsController.getXMLController().insertIntoTable(table, record);
     }
 
     @Override
@@ -123,6 +124,15 @@ public class DatabaseController implements DBMS, Observer {
         return false;
     }
 
+    private Table getTable(String tableName) {
+        for (Table table : dbHelper.getCurrentDatabase().getTables()) {
+            if (table.getTableName().equals(tableName)) {
+                return table;
+            }
+        }
+        return null;
+    }
+
     private <T> boolean containsDublicates(List<T> list) {
         Set<T> temp = new HashSet<>(list);
         if (temp.size() != list.size()) {
@@ -139,7 +149,7 @@ public class DatabaseController implements DBMS, Observer {
         return true;
     }
 
-    private boolean tablesExists(String tableName) {
+    private boolean tableExists(String tableName) {
         for (Table table : dbHelper.getCurrentDatabase().getTables()) {
             if (table.getTableName().equals(tableName)) {
                 return true;

@@ -52,6 +52,7 @@ public class Database {
         return tables;
     }
 
+
     private void createDatabaseDir(String databasePath) {
         databaseDir = new File(databasePath);
         if (!databaseDir.mkdir()) {

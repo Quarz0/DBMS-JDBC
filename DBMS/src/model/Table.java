@@ -11,7 +11,6 @@ public class Table {
         this.tableDir = tableDir;
         createDir();
     }
-    // ColNames, Types.
 
     public String getTableName() {
         return tableDir.getName();
@@ -52,4 +51,5 @@ public class Table {
         this.xmlFile = xmlFile;
         this.dtdFile = dtdFile;
     }
+    
 }
