@@ -4,6 +4,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.vandermeer.asciitable.v2.RenderedTable;
+import de.vandermeer.asciitable.v2.V2_AsciiTable;
+import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
+import de.vandermeer.asciitable.v2.render.WidthAbsoluteEven;
+import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
+
 public class Table {
     private List<Column<?>> columnsList;
     private List<String> header;
@@ -15,7 +21,7 @@ public class Table {
         header = colName;
         this.tableDir = tableDirc;
         this.tableName = tableName;
-        createTableDir();
+        // createTableDir();
         columnsList = new ArrayList<>();
         for (int i = 0; i < types.size(); i++) {
             Column<?> temp = ColumnBuilder.buildColumn(types.get(i), colName.get(i));
@@ -46,4 +52,29 @@ public class Table {
     public Class<?> getColumnType(int index) {
         return columnsList.get(index).getType();
     }
+
+    @Override
+    public String toString() {
+        V2_AsciiTable asciiTable = new V2_AsciiTable();
+        asciiTable.addStrongRule();
+        asciiTable.addRow(this.header.toArray());
+        asciiTable.addStrongRule();
+        V2_AsciiTableRenderer asciiTableRenderer = new V2_AsciiTableRenderer();
+        asciiTableRenderer.setTheme(V2_E_TableThemes.UTF_LIGHT.get());
+        asciiTableRenderer.setWidth(new WidthAbsoluteEven(76));
+        RenderedTable renderedTable = asciiTableRenderer.render(asciiTable);
+        return renderedTable.toString();
+    }
+    // Test
+    // public static void main(String[] args) {
+    //
+    // List<String> col = new ArrayList<>();
+    // col.add("Hello");
+    // col.add("world");
+    // List<Class<?>> type = new ArrayList<>();
+    // type.add(String.class);
+    // type.add(String.class);
+    // Table table = new Table("", null, col, type);
+    // System.out.println(table.toString());
+    // }
 }
