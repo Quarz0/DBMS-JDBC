@@ -5,7 +5,14 @@ import javax.script.ScriptException;
 import model.DatabaseHelper;
 import model.Observer;
 import model.Record;
+import model.statements.Create;
+import model.statements.Delete;
+import model.statements.Drop;
+import model.statements.Insert;
 import model.statements.Query;
+import model.statements.Select;
+import model.statements.Update;
+import model.statements.Use;
 import util.App;
 import util.BooleanEvaluator;
 
@@ -15,7 +22,7 @@ public class DatabaseController implements DBMS, Observer {
 
     public DatabaseController(DBMSController dbmsController) {
         this.dbmsController = dbmsController;
-        dbHelper = new DatabaseHelper(this);
+        this.dbHelper = new DatabaseHelper(this);
     }
 
     public DatabaseHelper getHelper() {
@@ -53,12 +60,6 @@ public class DatabaseController implements DBMS, Observer {
 
     }
 
-    @Override
-    public void update() {
-        // TODO Auto-generated method stub
-
-    }
-
     private boolean evaluate(String expression, Record record) throws ScriptException {
         String exp = getFilledExpression(expression, record);
         exp = exp.toLowerCase();
@@ -80,6 +81,57 @@ public class DatabaseController implements DBMS, Observer {
             }
         }
         return exp;
+    }
+
+    @Override
+    public void update() {
+        Query currentQuery = this.dbmsController.getSQLParserController().getSqlParserHelper()
+                .getCurrentQuery();
+        if (currentQuery instanceof Create) {
+            this.handleCreate((Create) currentQuery);
+        } else if (currentQuery instanceof Delete) {
+            this.handleDelete((Delete) currentQuery);
+        } else if (currentQuery instanceof Drop) {
+            this.handleDrop((Drop) currentQuery);
+        } else if (currentQuery instanceof Insert) {
+            this.handleInsert((Insert) currentQuery);
+        } else if (currentQuery instanceof Select) {
+            this.handleSelect((Select) currentQuery);
+        } else if (currentQuery instanceof Update) {
+            this.handleUpdate((Update) currentQuery);
+        } else if (currentQuery instanceof Use) {
+            this.handleUse((Use) currentQuery);
+        } else {
+
+        }
+    }
+
+    private void handleCreate(Create create) {
+
+    }
+
+    private void handleDelete(Delete delete) {
+
+    }
+
+    private void handleDrop(Drop drop) {
+
+    }
+
+    private void handleInsert(Insert insert) {
+
+    }
+
+    private void handleSelect(Select select) {
+
+    }
+
+    private void handleUpdate(Update update) {
+
+    }
+
+    private void handleUse(Use use) {
+
     }
 
 }

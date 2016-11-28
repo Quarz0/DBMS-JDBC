@@ -1,17 +1,7 @@
 package controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Delayed;
-
-import javax.script.ScriptException;
-
-import model.Record;
 import model.SQLParserHelper;
-import model.statements.Delete;
 import model.statements.Query;
-import model.statements.Select;
-import model.statements.Update;
 import model.statements.Where;
 import util.App;
 import util.ErrorCode;
@@ -75,6 +65,10 @@ public class SQLParserController {
 
     private void callForFailure(/* Exception e */) {
 
+    }
+
+    public SQLParserHelper getSqlParserHelper() {
+        return sqlParserHelper;
     }
 
 }
