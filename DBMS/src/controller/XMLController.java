@@ -89,32 +89,10 @@ public class XMLController {
             writer.flush();
             writer.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Cannot generate dtd file.");
         }
         return dtdFile;
 
-    }
-
-    public String classToString(List<Class<?>> list) {
-        StringBuilder strBuilder = new StringBuilder();
-        for (int i = 0; i < list.size(); i++) {
-            strBuilder.append(list.get(i).getSimpleName());
-            if (i != list.size() - 1)
-                strBuilder.append(", ");
-        }
-
-        return strBuilder.toString();
-    }
-
-    public String listToString(List<?> list) {
-        StringBuilder strBuilder = new StringBuilder();
-        for (int i = 0; i < list.size(); i++) {
-            strBuilder.append(list.get(i).toString());
-            if (i != list.size() - 1)
-                strBuilder.append(", ");
-        }
-
-        return strBuilder.toString();
     }
 
     public boolean insertIntoTable(Table table, Record record) {
@@ -141,14 +119,15 @@ public class XMLController {
     public List<String> getColumnNames(Table table) {
         File dtdFile = table.getDTD();
         List<String> colNames = new ArrayList<>();
-
+        BufferedReader reader;
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(dtdFile));
+            reader = new BufferedReader(new FileReader(dtdFile));
             reader.readLine();
             String line = reader.readLine();
             line = line.substring(line.indexOf("(") + 1, line.indexOf(")"));
             String[] arr = line.split(",\\s");
             colNames = Arrays.asList(arr);
+            reader.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -156,4 +135,23 @@ public class XMLController {
         return colNames;
     }
 
+    private String classToString(List<Class<?>> list) {
+        StringBuilder strBuilder = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            strBuilder.append(list.get(i).getSimpleName());
+            if (i != list.size() - 1)
+                strBuilder.append(", ");
+        }
+        return strBuilder.toString();
+    }
+
+    private String listToString(List<?> list) {
+        StringBuilder strBuilder = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            strBuilder.append(list.get(i).toString());
+            if (i != list.size() - 1)
+                strBuilder.append(", ");
+        }
+        return strBuilder.toString();
+    }
 }

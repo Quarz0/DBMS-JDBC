@@ -98,11 +98,13 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public boolean insertIntoTable(String tableName, List<String> colNames, List<Object> values) {
+
         return false;
     }
 
     @Override
     public boolean insertIntoTable(String tableName, List<Object> values) {
+        // read classes names to validate.
         Record record = new Record(values);
         Table table = getTable(tableName);
         return dbmsController.getXMLController().insertIntoTable(table, record);
