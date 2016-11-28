@@ -11,7 +11,6 @@ public class SQLParserHelper {
 
     private DBMSController dbmsController;
     private Query currentQuery;
-    private Clause currentClause;
     private List<Observer> observers;
 
     public SQLParserHelper(DBMSController dbmsController) {
@@ -31,14 +30,9 @@ public class SQLParserHelper {
         return currentQuery;
     }
 
-    public void setCurrentQuery(Query currentQuery, Clause currentClause) {
+    public void setCurrentQuery(Query currentQuery) {
         this.currentQuery = currentQuery;
-        this.currentClause = currentClause;
         this.notifyObservers();
-    }
-
-    public Clause getCurrentClause() {
-        return currentClause;
     }
 
 }

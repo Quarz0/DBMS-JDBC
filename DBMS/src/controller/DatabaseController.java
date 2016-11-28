@@ -1,8 +1,13 @@
 package controller;
 
+import javax.script.ScriptException;
+
 import model.DatabaseHelper;
 import model.Observer;
+import model.Record;
 import model.statements.Query;
+import util.App;
+import util.BooleanEvaluator;
 
 public class DatabaseController implements DBMS, Observer {
     private DBMSController dbmsController;
@@ -52,6 +57,29 @@ public class DatabaseController implements DBMS, Observer {
     public void update() {
         // TODO Auto-generated method stub
 
+    }
+
+    private boolean evaluate(String expression, Record record) throws ScriptException {
+        String exp = getFilledExpression(expression, record);
+        exp = exp.toLowerCase();
+        exp = App.replace(exp, "and", " && ");
+        exp = App.replace(exp, "or", " || ");
+        exp = App.replace(exp, "not", " ! ");
+        return BooleanEvaluator.evaluate(exp);
+    }
+
+    private String getFilledExpression(String expression, Record record) {
+        String exp = expression;
+        for (int i = 0; i < record.getColumns().size(); i++) {
+            if (record.getValues().get(i) instanceof String) {
+                exp = App.replace(exp, record.getColumns().get(i).toLowerCase(),
+                        "\"" + record.getValues().get(i).toString() + "\"");
+            } else {
+                exp = App.replace(exp, record.getColumns().get(i).toLowerCase(),
+                        record.getValues().get(i).toString());
+            }
+        }
+        return exp;
     }
 
 }

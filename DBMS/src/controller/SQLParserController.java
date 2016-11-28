@@ -2,12 +2,16 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Delayed;
 
 import javax.script.ScriptException;
 
 import model.Record;
 import model.SQLParserHelper;
+import model.statements.Delete;
 import model.statements.Query;
+import model.statements.Select;
+import model.statements.Update;
 import model.statements.Where;
 import util.App;
 import util.ErrorCode;
@@ -19,8 +23,9 @@ public class SQLParserController {
     private DBMSController dbmsController;
     private SQLParserHelper sqlParserHelper;
 
-    public SQLParserController() {};
-    
+    public SQLParserController() {
+    };
+
     public SQLParserController(DBMSController dbmsController) {
         this.dbmsController = dbmsController;
         this.sqlParserHelper = new SQLParserHelper(dbmsController);
@@ -60,36 +65,16 @@ public class SQLParserController {
             this.callForFailure();
         if (whereExists) {
             where = new Where(groups[Regex.PARSE_WITH_WHERE_GROUP_ID + 1]);
-            //where.parse(groups[Regex.PARSE_WITH_WHERE_GROUP_ID + 1]);
             query.parse(groups[Regex.PARSE_WITH_WHERE_GROUP_ID - 1]);
+            query.setClause(where);
         } else {
             query.parse(groups[Regex.PARSE_WITH_WHERE_GROUP_ID + 1]);
         }
-        //this.sqlParserHelper.setCurrentQuery(query, where);
-        w = where;
+        this.sqlParserHelper.setCurrentQuery(query);
     }
 
     private void callForFailure(/* Exception e */) {
 
     }
 
-    public static Where w;
-    public static void main(String[] args) {
-        String statement = "select * from table where age >= (-1 * -19 + 11) and ( not (1== 2)) or (name==\"and\")";
-        List<String> cols = new ArrayList<>();
-        cols.add("name"); cols.add("Age"); cols.add("Country");
-        List<Object> vals = new ArrayList<>();
-        vals.add("and"); vals.add(19); vals.add("Egypt");
-        
-        Record r = new Record(cols, vals);
-        SQLParserController s = new SQLParserController();
-        s.parse(statement);
-        System.out.println(w.getExpression());
-        try {
-            System.out.println(w.evaluate(r));
-        } catch (ScriptException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 }

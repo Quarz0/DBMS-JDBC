@@ -88,4 +88,9 @@ public class Create implements Query {
         return this.isDatabase;
     }
 
+    @Override
+    public void setClause(Clause clause) {
+
+    }
+
 }

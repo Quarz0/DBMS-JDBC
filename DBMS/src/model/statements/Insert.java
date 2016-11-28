@@ -90,4 +90,10 @@ public class Insert implements Query {
         return isDefaultSelection;
     }
 
+    @Override
+    public void setClause(Clause clause) {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

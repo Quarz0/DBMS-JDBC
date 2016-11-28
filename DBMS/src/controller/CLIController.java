@@ -4,23 +4,24 @@ import view.CLI;
 
 public class CLIController {
 
-	private DBMSController dbmsController;
-	private CLI cli;
+    private DBMSController dbmsController;
+    private CLI cli;
 
-	public CLIController(DBMSController dbmsController) {
-		this.dbmsController = dbmsController;
-		this.cli = new CLI(dbmsController);
-	}
+    public CLIController(DBMSController dbmsController) {
+        this.dbmsController = dbmsController;
+        this.cli = new CLI(dbmsController);
+    }
 
-	public void begin() {
-		this.cli.run();
-	}
+    public void begin() {
+        this.cli.run();
+    }
 
-	public void end() {
+    public void end() {
 
-	}
+    }
 
-	public void newInput(String s) {
-	}
+    public void newInput(String s) {
+        this.dbmsController.getSQLParserController().parse(s);
+    }
 
 }

@@ -104,16 +104,18 @@ public class Update implements Query {
         return isAll;
     }
 
-    public void setWhere(Where where) {
-        this.where = where;
+    public Where getWhere() {
+        return where;
+    }
+
+    @Override
+    public void setClause(Clause clause) {
+        if (clause instanceof Where)
+            this.where = (Where) clause;
         if (!App.checkForExistence(this.where))
             this.isAll = true;
         else
             this.isAll = false;
-    }
-
-    public Where getWhere() {
-        return where;
     }
 
 }

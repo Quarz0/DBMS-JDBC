@@ -8,7 +8,8 @@ public class Use implements Query {
 
     private String databaseIdentifier;
 
-    public Use() {}
+    public Use() {
+    }
 
     @Override
     public void parse(String s) {
@@ -17,7 +18,7 @@ public class Use implements Query {
     }
 
     private boolean checkRegex(String s) {
-        String[] groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_CREATE_DATABASE);
+        String[] groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_USE);
         if (App.checkForExistence(groups)) {
             this.extractDatabase(groups[1].trim());
             return true;
@@ -35,6 +36,12 @@ public class Use implements Query {
 
     public String getDatabaseIdentifier() {
         return this.databaseIdentifier;
+    }
+
+    @Override
+    public void setClause(Clause clause) {
+        // TODO Auto-generated method stub
+
     }
 
 }

@@ -2,5 +2,5 @@ package model.statements;
 
 public interface Query extends Parser {
 
-    // marker
+    public void setClause(Clause clause);
 }

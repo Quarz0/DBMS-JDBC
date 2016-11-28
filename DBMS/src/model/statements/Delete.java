@@ -55,12 +55,14 @@ public class Delete implements Query {
         return this.isAll;
     }
 
-    public void setWhere(Where where) {
-        this.where = where;
-    }
-
     public Where getWhere() {
         return this.where;
+    }
+
+    @Override
+    public void setClause(Clause clause) {
+        if (clause instanceof Where)
+            this.where = (Where) clause;
     }
 
 }

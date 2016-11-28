@@ -60,4 +60,10 @@ public class Drop implements Query {
         return this.isDatabase;
     }
 
+    @Override
+    public void setClause(Clause clause) {
+        // TODO Auto-generated method stub
+        
+    }
+
 }
