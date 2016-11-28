@@ -14,7 +14,7 @@ public class SelectionTable {
         recordList = new ArrayList<>();
     }
 
-    public SelectionTable(List<String> colNames, List<Class<?>> types) {
+    public SelectionTable(List<String> colNames) {
         header = colNames;
         recordList = new ArrayList<>();
     }

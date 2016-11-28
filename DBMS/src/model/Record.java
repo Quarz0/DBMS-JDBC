@@ -22,4 +22,8 @@ public class Record {
     public List<Object> getValues() {
         return values;
     }
+
+    public void addToRecord(Object obj) {
+        values.add(obj);
+    }
 }

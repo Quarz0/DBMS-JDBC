@@ -14,7 +14,7 @@ public class Test {
         // db.getDatabaseController().createDatabase("Mahmoud");
         List<String> str = new ArrayList<>();
         str.add("col1");
-        str.add("Col2");
+        str.add("col2");
         str.add("col3");
         str.add("col4");
         List<Class<?>> cls = new ArrayList<>();
@@ -28,21 +28,33 @@ public class Test {
         values.add(new Integer(4));
         values.add(new String("There"));
         db.getDatabaseController().useDatabase("Mahmoud");
-        // db.getDatabaseController().createTable("Mod2a", str, cls);
+        // db.getDatabaseController().createTable("Modaa", str, cls);
         List<String> sellectedCols = new ArrayList<>();
+        sellectedCols.add("col4");
+        sellectedCols.add("col2");
+        sellectedCols.add("col1");
         sellectedCols.add("col3");
-        sellectedCols.add("Col2");
         List<Object> sellectedValues = new ArrayList<>();
-        sellectedValues.add(4);
         sellectedValues.add("lol");
+        sellectedValues.add(4);
+        sellectedValues.add("lol2");
+        sellectedValues.add(6);
         // values.add(new String("Here"));
-//        db.getDatabaseController().insertIntoTable("Mod2a", sellectedCols, sellectedValues);
+        // db.getDatabaseController().insertIntoTable("Modaa", sellectedCols, sellectedValues);
         List<String> temp = new ArrayList<>();
         temp.add("col1");
         temp.add("col3");
+        temp.add("coL4");
         // db.getDatabaseController().createTable("Moda", str, cls);
         // db.getDatabaseController().insertIntoTable("Moda", values);
         // db.getDatabaseController().insertIntoTable("Moda", values);
-        boolean t = db.getDatabaseController().selectFromTable("Moda", temp, "1 == 1");
+        boolean t = db.getDatabaseController().selectFromTable("Modaa", temp, "col2 == 4 and col4 == lol");
+        SelectionTable tempp = db.getDatabaseController().getHelper().getSelectedTable();
+        for(int i = 0;i<tempp.getHeader().size();i++) {
+            for(int j = 0;j<tempp.getRecordList().get(i).getValues().size();j++) {
+                System.out.print(tempp.getRecordList().get(i).getValues().get(j) + " ");
+            }
+            System.out.println();
+        }
     }
 }

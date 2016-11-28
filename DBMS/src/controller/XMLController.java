@@ -127,30 +127,31 @@ public class XMLController {
     }
 
     public SelectionTable selectFromTable(Table table, List<String> colNames, String condition) {
-        SelectionTable selectionTable = new SelectionTable(table.getTableName(), colNames);
+        List<Object> values = new ArrayList<>();
+        List<String> names = getColumnsNames(table);
+        SelectionTable selectionTable = new SelectionTable(table.getTableName(), names);
         try {
             File tableXML = table.getXML();
             eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
             document = saxBuilder.build(tableXML);
-            Object[] values = new Object[colNames.size()];
             while (eventReader.hasNext()) {
                 XMLEvent event = eventReader.nextEvent();
                 switch (event.getEventType()) {
                 case XMLStreamConstants.START_ELEMENT:
                     String startElementName = event.asStartElement().getName().getLocalPart();
-                    if (!startElementName.equals("Record")) {
-                        if (colNames.contains(startElementName)) {
-                            Characters chars = (Characters) eventReader.nextEvent();
-                            values[colNames.indexOf(startElementName)] = chars.getData();
-                            eventReader.nextEvent();
-                        }
+                    if (!(startElementName.equals("Record")
+                            || startElementName.equals(table.getTableName()))) {
+                        Characters chars = (Characters) eventReader.nextEvent();
+                        values.add(chars.getData());
+                        eventReader.nextEvent();
+                    } else {
+                        values = new ArrayList<>();
                     }
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     String endElementName = event.asEndElement().getName().getLocalPart();
                     if (endElementName.equals("Record")) {
-                        Record tempRecord = new Record(colNames,
-                                Arrays.asList(Arrays.copyOf(values, values.length)));
+                        Record tempRecord = new Record(names, values);
                         if (dbmsController.getDatabaseController().evaluate(condition,
                                 tempRecord)) {
                             selectionTable.addRecord(tempRecord);
@@ -160,13 +161,6 @@ public class XMLController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        System.out.println(selectionTable.getHeader());
-        for (int i = 0; i < selectionTable.getRecordList().size(); i++) {
-            for (int j = 0; j < selectionTable.getRecordList().get(i).getValues().size(); j++) {
-                System.out.print(selectionTable.getRecordList().get(i).getValues().get(j) + " ");
-            }
-            System.out.println();
         }
         return selectionTable;
     }

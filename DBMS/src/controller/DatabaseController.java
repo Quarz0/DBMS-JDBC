@@ -87,7 +87,7 @@ public class DatabaseController implements DBMS, Observer {
     public boolean dropTable(String tableName) {
         int index = 0;
         for (Table table : dbHelper.getCurrentDatabase().getTables()) {
-            if (table.getTableName().equals(tableName)) {
+            if (equalStrings(table.getTableName(), tableName)) {
                 deleteDir(table.getTableDir());
                 dbHelper.getCurrentDatabase().getTables().remove(index);
                 return true;
@@ -130,7 +130,7 @@ public class DatabaseController implements DBMS, Observer {
         for (int i = 0; i < tableColNames.size(); i++) {
             boolean found = false;
             for (int j = 0; j < colNames.size(); j++) {
-                if (tableColNames.get(i).equals(colNames.get(j))) {
+                if (equalStrings(tableColNames.get(i), colNames.get(j))) {
                     generateValues.add(values.get(j));
                     found = true;
                     break;
@@ -174,13 +174,14 @@ public class DatabaseController implements DBMS, Observer {
             throw new RuntimeException("Data contains dublicates");
         }
         List<String> tableColNames = dbmsController.getXMLController().getColumnsNames(table);
-        if (!tableColNames.containsAll(colNames)) {
+        if (!containsAllStrings(tableColNames, colNames)) {
             throw new RuntimeException("Wrong column names");
             // return false;
         }
         try {
             SelectionTable selectedTable = dbmsController.getXMLController().selectFromTable(table,
                     colNames, condition);
+            selectedTable = reformTable(selectedTable, colNames);
             dbHelper.setSelectedTable(selectedTable);
         } catch (Exception e) {
             throw new RuntimeException("Cannot read Table");
@@ -213,9 +214,18 @@ public class DatabaseController implements DBMS, Observer {
         return false;
     }
 
+    public boolean evaluate(String expression, Record record) throws ScriptException {
+        String exp = getFilledExpression(expression, record);
+        exp = exp.toLowerCase();
+        exp = App.replace(exp, "and", " && ");
+        exp = App.replace(exp, "or", " || ");
+        exp = App.replace(exp, "not", " ! ");
+        return BooleanEvaluator.evaluate(exp);
+    }
+
     private Table getTable(String tableName) {
         for (Table table : dbHelper.getCurrentDatabase().getTables()) {
-            if (table.getTableName().equals(tableName)) {
+            if (equalStrings(table.getTableName(), tableName)) {
                 return table;
             }
         }
@@ -248,7 +258,7 @@ public class DatabaseController implements DBMS, Observer {
 
     private boolean tableExists(String tableName) {
         for (Table table : dbHelper.getCurrentDatabase().getTables()) {
-            if (table.getTableName().equals(tableName)) {
+            if (equalStrings(table.getTableName(), tableName)) {
                 return true;
             }
         }
@@ -268,7 +278,7 @@ public class DatabaseController implements DBMS, Observer {
     private File getDatabase(String databaseName) {
         File[] databases = dbHelper.getDatabaseDir().listFiles(databaseFilter);
         for (File databaseFile : databases) {
-            if (databaseFile.getName().equals(databaseName)) {
+            if (equalStrings(databaseFile.getName(), databaseName)) {
                 return databaseFile;
             }
         }
@@ -292,17 +302,8 @@ public class DatabaseController implements DBMS, Observer {
         }
     }
 
-    public boolean evaluate(String expression, Record record) throws ScriptException {
-        String exp = getFilledExpression(expression, record);
-        exp = exp.toLowerCase();
-        exp = App.replace(exp, "and", " && ");
-        exp = App.replace(exp, "or", " || ");
-        exp = App.replace(exp, "not", " ! ");
-        return BooleanEvaluator.evaluate(exp);
-    }
-
     private String getFilledExpression(String expression, Record record) {
-        String exp = expression;
+        String exp = expression.toLowerCase();
         for (int i = 0; i < record.getColumns().size(); i++) {
             if (record.getValues().get(i) instanceof String) {
                 exp = App.replace(exp, record.getColumns().get(i).toLowerCase(),
@@ -319,11 +320,48 @@ public class DatabaseController implements DBMS, Observer {
             List<Class<?>> types, List<Object> values) {
         for (int i = 0; i < colNames.size(); i++) {
             for (int j = 0; j < tableColNames.size(); j++) {
-                if (colNames.get(i).equals(tableColNames.get(j))) {
+                if (equalStrings(colNames.get(i), tableColNames.get(j))) {
                     if (!types.get(j).isInstance(values.get(i))) {
                         return false;
                     }
                 }
+            }
+        }
+        return true;
+    }
+
+    private boolean equalStrings(String str1, String str2) {
+        return str1.toLowerCase().equals(str2.toLowerCase());
+    }
+
+    private SelectionTable reformTable(SelectionTable selectedTable, List<String> colNames) {
+        SelectionTable ret = new SelectionTable(colNames);
+        List<Object> values;
+        for (int i = 0; i < selectedTable.getRecordList().size(); i++) {
+            values = new ArrayList<>();
+            for (String str : colNames) {
+                for (int j = 0; j < selectedTable.getHeader().size(); j++) {
+                    if (equalStrings(str, selectedTable.getHeader().get(j))) {
+                        values.add(selectedTable.getRecordList().get(i).getValues().get(j));
+                    }
+                }
+            }
+            ret.addRecord(new Record(values));
+        }
+        return ret;
+    }
+
+    private boolean containsAllStrings(List<String> list1, List<String> list2) {
+        for (String str2 : list2) {
+            boolean found = false;
+            for (String str1 : list1) {
+                if (equalStrings(str1, str2)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                return false;
             }
         }
         return true;
