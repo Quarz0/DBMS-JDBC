@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.List;
+
 import javax.script.ScriptException;
 
 import model.DatabaseHelper;
@@ -29,36 +31,7 @@ public class DatabaseController implements DBMS, Observer {
         return dbHelper;
     }
 
-    @Override
-    public void create(Query query) {
 
-    }
-
-    @Override
-    public void drop(Query query) {
-
-    }
-
-    @Override
-    public void insertIntoTable(Query query) {
-
-    }
-
-    @Override
-    public void updateTable(Query query) {
-
-    }
-
-    @Override
-    public void selectFromTable(Query query) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void deleteFromTable(Query query) {
-
-    }
 
     private boolean evaluate(String expression, Record record) throws ScriptException {
         String exp = getFilledExpression(expression, record);
@@ -70,7 +43,7 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     private String getFilledExpression(String expression, Record record) {
-        String exp = expression;
+        String exp = expression.toLowerCase();
         for (int i = 0; i < record.getColumns().size(); i++) {
             if (record.getValues().get(i) instanceof String) {
                 exp = App.replace(exp, record.getColumns().get(i).toLowerCase(),
@@ -132,6 +105,67 @@ public class DatabaseController implements DBMS, Observer {
 
     private void handleUse(Use use) {
 
+    }
+
+    @Override
+    public boolean useDatabase(String databaseName) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean createDatabase(String databaseName) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean createTable(String tableName, List<String> colNames, List<Class<?>> types) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean dropTable(String tableName) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean dropDatabase(String databaseName) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean insertIntoTable(String tableName, List<String> colNames, List<Object> values) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean insertIntoTable(String tableName, List<Object> values) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean selectFromTable(String tableName, List<String> colNames, String condition) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean updateTable(String tableName, List<String> colNames, List<Object> values,
+            String condition) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean deleteFromTable(String tableName, List<String> colNames, String condition) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

@@ -8,6 +8,9 @@ import de.vandermeer.asciitable.v2.RenderedTable;
 import de.vandermeer.asciitable.v2.V2_AsciiTable;
 import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
 import de.vandermeer.asciitable.v2.render.WidthAbsoluteEven;
+import de.vandermeer.asciitable.v2.render.WidthFixedColumns;
+import de.vandermeer.asciitable.v2.render.WidthLongestLine;
+import de.vandermeer.asciitable.v2.render.WidthLongestWordMaxCol;
 import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
 
 public class Table {
@@ -58,23 +61,23 @@ public class Table {
         V2_AsciiTable asciiTable = new V2_AsciiTable();
         asciiTable.addStrongRule();
         asciiTable.addRow(this.header.toArray());
-        asciiTable.addStrongRule();
+        asciiTable.addRule();
         V2_AsciiTableRenderer asciiTableRenderer = new V2_AsciiTableRenderer();
         asciiTableRenderer.setTheme(V2_E_TableThemes.UTF_LIGHT.get());
-        asciiTableRenderer.setWidth(new WidthAbsoluteEven(76));
+        asciiTableRenderer.setWidth(new WidthLongestWordMaxCol(70));
         RenderedTable renderedTable = asciiTableRenderer.render(asciiTable);
         return renderedTable.toString();
     }
     // Test
-    // public static void main(String[] args) {
-    //
-    // List<String> col = new ArrayList<>();
-    // col.add("Hello");
-    // col.add("world");
-    // List<Class<?>> type = new ArrayList<>();
-    // type.add(String.class);
-    // type.add(String.class);
-    // Table table = new Table("", null, col, type);
-    // System.out.println(table.toString());
-    // }
+//     public static void main(String[] args) {
+//    
+//     List<String> col = new ArrayList<>();
+//     col.add("Hellooodddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddooooo");
+//     col.add("world");
+//     List<Class<?>> type = new ArrayList<>();
+//     type.add(String.class);
+//     type.add(String.class);
+//     Table table = new Table("", null, col, type);
+//     System.out.println(table.toString());
+//     }
 }
