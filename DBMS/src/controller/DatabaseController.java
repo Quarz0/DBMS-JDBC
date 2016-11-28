@@ -205,7 +205,12 @@ public class DatabaseController implements DBMS, Observer {
             throw new RuntimeException("Wrong data inserted");
             // return false;
         }
-        // update table.
+        try {
+            dbmsController.getXMLController().updateTable(table, colNames, values, condition);
+        } catch (Exception e) {
+//            throw new RuntimeException("Something went wrong Cannot update table.");
+            e.printStackTrace();
+        }
         return true;
     }
 

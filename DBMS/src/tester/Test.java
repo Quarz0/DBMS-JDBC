@@ -48,13 +48,22 @@ public class Test {
         // db.getDatabaseController().createTable("Moda", str, cls);
         // db.getDatabaseController().insertIntoTable("Moda", values);
         // db.getDatabaseController().insertIntoTable("Moda", values);
-        boolean t = db.getDatabaseController().selectFromTable("Modaa", temp, "col2 == 4 and col4 == lol");
-        SelectionTable tempp = db.getDatabaseController().getHelper().getSelectedTable();
-        for(int i = 0;i<tempp.getHeader().size();i++) {
-            for(int j = 0;j<tempp.getRecordList().get(i).getValues().size();j++) {
-                System.out.print(tempp.getRecordList().get(i).getValues().get(j) + " ");
-            }
-            System.out.println();
-        }
+
+        List<String> lst = new ArrayList<>();
+        lst.add("col1");
+        lst.add("col2");
+        List<Object> obj = new ArrayList<>();
+        obj.add("heree");
+        obj.add(100);
+        db.getDatabaseController().updateTable("Modaa", lst, obj, " col3 == null ");
+        // boolean t = db.getDatabaseController().selectFromTable("Modaa", temp,
+        // "1==1");
+        // SelectionTable tempp = db.getDatabaseController().getHelper().getSelectedTable();
+        // for (int i = 0; i < tempp.getHeader().size(); i++) {
+        // for (int j = 0; j < tempp.getRecordList().get(i).getValues().size(); j++) {
+        // System.out.print(tempp.getRecordList().get(i).getValues().get(j) + " ");
+        // }
+        // System.out.println();
+        // }
     }
 }

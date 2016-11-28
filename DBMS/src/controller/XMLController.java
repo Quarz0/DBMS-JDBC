@@ -2,22 +2,27 @@ package controller;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.script.ScriptException;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.XMLEvent;
 
 import org.jdom2.Element;
+import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
@@ -134,6 +139,7 @@ public class XMLController {
             File tableXML = table.getXML();
             eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
             document = saxBuilder.build(tableXML);
+            System.out.println(document.getRootElement().getName());
             while (eventReader.hasNext()) {
                 XMLEvent event = eventReader.nextEvent();
                 switch (event.getEventType()) {
@@ -163,6 +169,45 @@ public class XMLController {
             e.printStackTrace();
         }
         return selectionTable;
+    }
+
+    public void updateTable(Table table, List<String> colNames, List<Object> values,
+            String condition)
+            throws XMLStreamException, JDOMException, IOException, ScriptException {
+        File tableXML = table.getXML();
+        eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
+        document = saxBuilder.build(tableXML);
+        Element rootElement = document.getRootElement();
+        List<Element> records = rootElement.getChildren("Record");
+        for (int i = 0; i < records.size(); i++) {
+            Element record = records.get(i);
+            List<Element> children = record.getChildren();
+            List<String> names = new ArrayList<>();
+            List<Object> vals = new ArrayList<>();
+            for (int j = 0; j < children.size(); j++) {
+                names.add(children.get(j).getName());
+                vals.add(children.get(j).getText());
+            }
+            Record tempRecord = new Record(names, vals);
+            if (dbmsController.getDatabaseController().evaluate(condition, tempRecord)) {
+                for (int j = 0; j < children.size(); j++) {
+                    int tempIndex = colNames.indexOf(children.get(j).getName());
+                    System.out.println(tempIndex);
+                    
+                    if (tempIndex != -1) {
+                        System.out.println(children.get(j) + " " + values.get(tempIndex));
+                        if (values.get(tempIndex) == null)
+                            children.get(j).setText("null");
+                        else
+                            children.get(j).setText(values.get(tempIndex).toString());
+                    }
+                    names.add(children.get(j).getName());
+                    vals.add(children.get(j).getText());
+                }
+            }
+        }
+        xmlOutput.output(document, new FileWriter(tableXML));
+
     }
 
     public List<String> getColumnsNames(Table table) {
