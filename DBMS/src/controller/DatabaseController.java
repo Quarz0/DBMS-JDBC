@@ -114,7 +114,7 @@ public class DatabaseController implements DBMS, Observer {
             throw new RuntimeException("Database already exists");
             // return false;
         }
-        new Database(dbHelper.getWorkSpacePath(), databaseName);
+        new Database(this.dbHelper.getWorkspaceDir().getAbsolutePath(), databaseName);
         return true;
     }
 

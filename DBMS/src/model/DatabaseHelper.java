@@ -11,30 +11,15 @@ public class DatabaseHelper {
     private File workspaceDir;
 
     public DatabaseHelper(DatabaseController databaseController) {
-        this.createAppPath();
         currentDatabase = new Database();
         this.dbController = databaseController;
         this.currentDatabase = null;
-    }
-
-    private void createAppPath() {
-        String workspace = System.getProperty("user.home") + File.separatorChar + "Workspace";
-        workspaceDir = new File(workspace);
-        if (!workspaceDir.exists()) {
-            if (!workspaceDir.mkdir()) {
-                throw new RuntimeException("Cannot create workspace directory");
-            }
-        }
     }
 
     public Database getCurrentDatabase() {
         return currentDatabase;
     }
 
-
-    public String getWorkSpacePath() {
-        return workspaceDir.getAbsolutePath();
-    }
 
     public File getDatabaseDir() {
         return workspaceDir;
@@ -47,6 +32,14 @@ public class DatabaseHelper {
 
     public SelectionTable getSelectedTable() {
         return selectedTable;
+    }
+
+    public File getWorkspaceDir() {
+        return workspaceDir;
+    }
+
+    public void setWorkspaceDir(File workspaceDir) {
+        this.workspaceDir = workspaceDir;
     }
 
 }

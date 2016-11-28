@@ -34,7 +34,7 @@ public class DBMSController {
                 throw new RuntimeException(ErrorCode.FAILED_TO_CREATE_DEFAULT_DATABASE);
             }
         }
-        this.databaseController.getHelper().setWorkspace(workspace);
+        this.databaseController.getHelper().setWorkspaceDir(workspace);
     }
 
     public CLIController getCLIController() {

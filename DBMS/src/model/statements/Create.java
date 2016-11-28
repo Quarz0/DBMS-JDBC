@@ -3,7 +3,7 @@ package model.statements;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.ClassFactroy;
+import model.ClassFactory;
 import model.Pair;
 import util.App;
 import util.Regex;
@@ -55,7 +55,7 @@ public class Create implements Query {
     private boolean extractColIdentifiers(String s) {
         String[] colmuns = s.split(",");
         String[] colmun;
-        ClassFactroy classFactroy = new ClassFactroy();
+        ClassFactory classFactroy = new ClassFactory();
         for (int i = 0; i < colmuns.length; i++) {
             colmun = colmuns[i].trim().split(" ");
             if (App.checkForExistence(classFactroy.getClass(colmun[1].trim()))) {
