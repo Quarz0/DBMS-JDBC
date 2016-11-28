@@ -20,9 +20,10 @@ public class Insert implements Query {
     }
 
     @Override
-    public void parse(String s) {
+    public boolean parse(String s) {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
-            this.callForFailure();
+            return false;
+        return true;
     }
 
     private boolean checkRegex(String s) {
@@ -30,23 +31,27 @@ public class Insert implements Query {
         if (App.checkForExistence(groups)) {
             this.extractTable(groups[1].trim());
             String[] values = this.extractValues(groups[3].trim());
+            if (!App.checkForExistence(values))
+                return false;
             if (!App.checkForExistence(groups[2])) {
                 this.isDefaultSelection = true;
-                this.fillColumns(values, null);
+                if (!this.fillColumns(values, null))
+                    return false;
             } else {
                 this.isDefaultSelection = false;
                 String[] identifiers = this.extractIdentifiers(groups[2].trim());
-                this.fillColumns(values, identifiers);
+                if (!this.fillColumns(values, identifiers))
+                    return false;
             }
             return true;
         }
         return false;
     }
 
-    private void fillColumns(String[] values, String[] identifiers) {
+    private boolean fillColumns(String[] values, String[] identifiers) {
         Pair<String, String> pair;
         if (App.checkForExistence(identifiers) && values.length != identifiers.length)
-            this.callForFailure();
+            return false;
         for (int i = 0; i < values.length; i++) {
             if (App.checkForExistence(identifiers))
                 pair = new Pair<String, String>(values[i], identifiers[i]);
@@ -54,11 +59,12 @@ public class Insert implements Query {
                 pair = new Pair<String, String>(values[i], null);
             this.columns.add(pair);
         }
+        return true;
     }
 
     private String[] extractValues(String s) {
         if (!s.matches(Regex.PARSE_WITH_INSERT_TRIM_MATCH))
-            this.callForFailure();
+            return null;
         if (s.split(Regex.PARSE_WITH_INSERT_SPLIT_PATTERN1).length <= s
                 .split(Regex.PARSE_WITH_INSERT_SPLIT_PATTERN2).length)
             return s.split(Regex.PARSE_WITH_INSERT_SPLIT_PATTERN1);
@@ -72,10 +78,6 @@ public class Insert implements Query {
 
     private void extractTable(String s) {
         this.tableIdentifier = s.trim();
-    }
-
-    private void callForFailure(/* Exception e */) {
-
     }
 
     public String getTableIdentifier() {
@@ -93,7 +95,7 @@ public class Insert implements Query {
     @Override
     public void setClause(Clause clause) {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

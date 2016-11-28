@@ -22,9 +22,10 @@ public class Create implements Query {
     }
 
     @Override
-    public void parse(String s) {
+    public boolean parse(String s) {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
-            this.callForFailure();
+            return false;
+        return true;
     }
 
     private boolean checkRegex(String s) {
@@ -36,8 +37,7 @@ public class Create implements Query {
         groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_CREATE_TABLE);
         if (App.checkForExistence(groups)) {
             this.extractTable(groups[1].trim());
-            this.extractColIdentifiers(groups[2].trim());
-            return true;
+            return this.extractColIdentifiers(groups[2].trim());
         }
         return false;
     }
@@ -52,7 +52,7 @@ public class Create implements Query {
         this.isDatabase = false;
     }
 
-    private void extractColIdentifiers(String s) {
+    private boolean extractColIdentifiers(String s) {
         String[] colmuns = s.split(",");
         String[] colmun;
         ClassFactroy classFactroy = new ClassFactroy();
@@ -63,13 +63,10 @@ public class Create implements Query {
                         classFactroy.getClass(colmun[1].trim()));
                 this.columns.add(pair);
             } else {
-                this.callForFailure();
+                return false;
             }
         }
-    }
-
-    private void callForFailure(/* Exception e */) {
-
+        return true;
     }
 
     public String getDatabaseIdentifier() {

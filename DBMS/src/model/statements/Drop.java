@@ -15,9 +15,10 @@ public class Drop implements Query {
     }
 
     @Override
-    public void parse(String s) {
+    public boolean parse(String s) {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
-            this.callForFailure();
+            return false;
+        return true;
     }
 
     private boolean checkRegex(String s) {
@@ -44,10 +45,6 @@ public class Drop implements Query {
         this.isDatabase = false;
     }
 
-    private void callForFailure(/* Exception e */) {
-
-    }
-
     public String getDatabaseIdentifier() {
         return this.databaseIdentifier;
     }
@@ -63,7 +60,7 @@ public class Drop implements Query {
     @Override
     public void setClause(Clause clause) {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

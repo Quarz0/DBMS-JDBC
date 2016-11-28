@@ -44,27 +44,31 @@ public class SQLParserController {
         Where where = null;
         String[] groups;
         boolean whereExists = false;
+        boolean errorExists = false;
         if (App.checkForExistence(s))
-            this.callForFailure();
+            this.callForFailure(ErrorCode.SYNTAX_ERROR);
         groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_WHERE);
         if (App.checkForExistence(groups))
-            this.callForFailure();
+            this.callForFailure(ErrorCode.SYNTAX_ERROR);
         whereExists = App.checkForExistence(groups[Regex.PARSE_WITH_WHERE_GROUP_ID]);
         query = this.locateQuery(groups[1].trim());
         if (App.checkForExistence(query))
-            this.callForFailure();
+            this.callForFailure(ErrorCode.SYNTAX_ERROR);
         if (whereExists) {
             where = new Where(groups[Regex.PARSE_WITH_WHERE_GROUP_ID + 1]);
-            query.parse(groups[Regex.PARSE_WITH_WHERE_GROUP_ID - 1]);
+            errorExists = query.parse(groups[Regex.PARSE_WITH_WHERE_GROUP_ID - 1]);
             query.setClause(where);
         } else {
-            query.parse(groups[Regex.PARSE_WITH_WHERE_GROUP_ID + 1]);
+            errorExists = query.parse(groups[Regex.PARSE_WITH_WHERE_GROUP_ID + 1]);
         }
-        this.sqlParserHelper.setCurrentQuery(query);
+        if (errorExists)
+            this.sqlParserHelper.setCurrentQuery(null);
+        else
+            this.sqlParserHelper.setCurrentQuery(query);
     }
 
-    private void callForFailure(/* Exception e */) {
-
+    public void callForFailure(String errorMessage) {
+        this.dbmsController.getCLIController().callForFailure(errorMessage);
     }
 
     public SQLParserHelper getSqlParserHelper() {

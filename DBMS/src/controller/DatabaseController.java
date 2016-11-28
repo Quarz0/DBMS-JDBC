@@ -15,6 +15,7 @@ import model.statements.Update;
 import model.statements.Use;
 import util.App;
 import util.BooleanEvaluator;
+import util.ErrorCode;
 
 public class DatabaseController implements DBMS, Observer {
     private DBMSController dbmsController;
@@ -102,7 +103,7 @@ public class DatabaseController implements DBMS, Observer {
         } else if (currentQuery instanceof Use) {
             this.handleUse((Use) currentQuery);
         } else {
-
+            this.dbmsController.getSQLParserController().callForFailure(ErrorCode.SYNTAX_ERROR);
         }
     }
 

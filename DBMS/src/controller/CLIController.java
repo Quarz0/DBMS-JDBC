@@ -24,4 +24,16 @@ public class CLIController {
         this.dbmsController.getSQLParserController().parse(s);
     }
 
+    public void callForFailure(String errorMessage) {
+        this.cli.newPrompt(errorMessage);
+    }
+
+    public void draw(String shape) {
+        this.cli.newPrompt(shape);
+    }
+
+    public void status(Boolean status) {
+       
+    }
+
 }

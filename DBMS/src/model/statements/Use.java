@@ -12,9 +12,10 @@ public class Use implements Query {
     }
 
     @Override
-    public void parse(String s) {
+    public boolean parse(String s) {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
-            this.callForFailure();
+            return false;
+        return true;
     }
 
     private boolean checkRegex(String s) {
@@ -28,10 +29,6 @@ public class Use implements Query {
 
     private void extractDatabase(String s) {
         this.databaseIdentifier = s.trim();
-    }
-
-    private void callForFailure(/* Exception e */) {
-
     }
 
     public String getDatabaseIdentifier() {

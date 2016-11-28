@@ -15,36 +15,33 @@ public class Delete implements Query {
     }
 
     @Override
-    public void parse(String s) {
+    public boolean parse(String s) {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
-            this.callForFailure();
+            return false;
+        return true;
     }
 
     private boolean checkRegex(String s) {
         String[] groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_DELETE_ALL);
         if (App.checkForExistence(groups)) {
             this.extractTable(groups[2].trim());
-            this.isAllFromRegex(groups[1]);
-            return true;
+            return this.isAllFromRegex(groups[1]);
         }
         return false;
     }
 
-    private void isAllFromRegex(String s) {
+    private boolean isAllFromRegex(String s) {
         if (App.checkForExistence(s) && App.checkForExistence(this.where))
-            this.callForFailure();
+            return false;
         else if (App.checkForExistence(s))
             this.isAll = true;
         else
             this.isAll = false;
+        return true;
     }
 
     private void extractTable(String s) {
         this.tableIdentifier = s.trim();
-    }
-
-    private void callForFailure(/* Exception e */) {
-
     }
 
     public String getTableIdentifier() {

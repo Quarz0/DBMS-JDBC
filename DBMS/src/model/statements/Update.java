@@ -21,40 +21,41 @@ public class Update implements Query {
     }
 
     @Override
-    public void parse(String s) {
+    public boolean parse(String s) {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
-            this.callForFailure();
+            return false;
+        return true;
     }
 
     private boolean checkRegex(String s) {
         String[] groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_UPDATE);
         if (App.checkForExistence(groups)) {
             this.extractTable(groups[1].trim());
-            this.fillColumns(groups[2].trim());
-            return true;
+            return this.fillColumns(groups[2].trim());
         }
         return false;
     }
 
-    private void fillColumns(String s) {
+    private boolean fillColumns(String s) {
         Pair<String, String> pair = null;
         String[] temp;
         String[] columns = this.extractColumns(s.trim());
         if (App.checkForExistence(columns))
-            this.callForFailure();
+            return false;
         for (int i = 0; i < columns.length; i++) {
             temp = this.isOnForm(columns[i].trim());
             if (App.checkForExistence(temp))
                 pair = new Pair<String, String>(temp[0], temp[1]);
             else
-                this.callForFailure();
+                return false;
             this.columns.add(pair);
         }
+        return true;
     }
 
     private String[] extractColumns(String s) {
         if (!s.matches(Regex.PARSE_WITH_UPDATE_TRIM_MATCH))
-            this.callForFailure();
+            return null;
         if (s.split(Regex.PARSE_WITH_UPDATE_SPLIT_PATTERN1).length <= s
                 .split(Regex.PARSE_WITH_UPDATE_SPLIT_PATTERN2).length)
             return s.split(Regex.PARSE_WITH_UPDATE_SPLIT_PATTERN1);
@@ -86,10 +87,6 @@ public class Update implements Query {
 
     private void extractTable(String s) {
         this.tableIdentifier = s.trim();
-    }
-
-    private void callForFailure(/* Exception e */) {
-
     }
 
     public String getTableIdentifier() {

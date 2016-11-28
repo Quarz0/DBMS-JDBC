@@ -20,9 +20,10 @@ public class Select implements Query {
     }
 
     @Override
-    public void parse(String s) {
+    public boolean parse(String s) {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
-            this.callForFailure();
+            return false;
+        return true;
     }
 
     public boolean checkRegex(String s) {
@@ -35,14 +36,13 @@ public class Select implements Query {
             groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_SELECT_FROM);
             if (App.checkForExistence(groups)) {
                 this.extractTable(groups[2].trim());
-                this.extractColIdentifiers(groups[1].trim());
-                return true;
+                return this.extractColIdentifiers(groups[1].trim());
             }
         }
         return false;
     }
 
-    private void extractColIdentifiers(String s) {
+    private boolean extractColIdentifiers(String s) {
         String[] colmuns = s.split(",");
         String tableName;
         for (int i = 0; i < colmuns.length; i++) {
@@ -50,17 +50,14 @@ public class Select implements Query {
             if (RegexEvaluator.isMatch(tableName, Regex.LEGAL_IDENTIFIER)) {
                 this.columns.add(tableName);
             } else {
-                this.callForFailure();
+                return false;
             }
         }
+        return true;
     }
 
     public void addColumn(String col) {
         columns.add(col);
-    }
-
-    private void callForFailure(/* Exception e */) {
-
     }
 
     private void extractTable(String s) {
