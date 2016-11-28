@@ -11,6 +11,10 @@ public class Record {
         this.values = values;
     }
 
+    public Record(List<Object> values) {
+        this.values = values;
+    }
+
     public List<String> getColumns() {
         return columns;
     }
@@ -19,7 +23,7 @@ public class Record {
         return values;
     }
 
-    public Pair<String, Object> getCell(int index) {
-        return new Pair<String, Object>(columns.get(index), values.get(index));
+    public void addToRecord(Object obj) {
+        values.add(obj);
     }
 }

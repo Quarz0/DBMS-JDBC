@@ -1,80 +1,55 @@
 package model;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import de.vandermeer.asciitable.v2.RenderedTable;
-import de.vandermeer.asciitable.v2.V2_AsciiTable;
-import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
-import de.vandermeer.asciitable.v2.render.WidthLongestLine;
-import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
 
 public class Table {
-    private List<Column<?>> columnsList;
-    private List<String> header;
-    private String tableName;
-    private String tableDir;
-    private File tableFile;
+    private File tableDir;
+    private File xmlFile;
+    private File dtdFile;
 
-    public Table(String tableName, String tableDirc, List<String> colName, List<Class<?>> types) {
-        header = colName;
-        this.tableDir = tableDirc;
-        this.tableName = tableName;
-        // createTableDir();
-        columnsList = new ArrayList<>();
-        for (int i = 0; i < types.size(); i++) {
-            Column<?> temp = ColumnBuilder.buildColumn(types.get(i), colName.get(i));
-            columnsList.add(temp);
-        }
-    }
-
-    private void createTableDir() {
-        tableFile = new File(tableDir);
-        if (!tableFile.mkdir()) {
-            throw new RuntimeException("Cannot create table directory");
-        }
-        tableDir += File.separator;
+    public Table(File tableDir) {
+        this.tableDir = tableDir;
+        createDir();
     }
 
     public String getTableName() {
-        return tableName;
+        return tableDir.getName();
     }
 
-    public List<String> getHeader() {
-        return header;
+    public File getXML() {
+        if (!xmlFile.exists()) {
+            return null;
+        }
+        return xmlFile;
     }
 
-    public Column<?> getColumn(int index) {
-        return columnsList.get(index);
+    public File getDTD() {
+        if (!dtdFile.exists()) {
+            return null;
+        }
+        return dtdFile;
     }
 
-    public Class<?> getColumnType(int index) {
-        return columnsList.get(index).getType();
+    public String getTablePath() {
+        return tableDir.getAbsolutePath();
     }
 
-    @Override
-    public String toString() {
-        V2_AsciiTable asciiTable = new V2_AsciiTable();
-        asciiTable.addStrongRule();
-        asciiTable.addRow(this.header.toArray());
-        asciiTable.addStrongRule();
-        V2_AsciiTableRenderer asciiTableRenderer = new V2_AsciiTableRenderer();
-        asciiTableRenderer.setTheme(V2_E_TableThemes.UTF_LIGHT.get());
-        asciiTableRenderer.setWidth(new WidthLongestLine());
-        RenderedTable renderedTable = asciiTableRenderer.render(asciiTable);
-        return renderedTable.toString();
+    public File getTableDir() {
+        return tableDir;
     }
-    // Test
-     public static void main(String[] args) {
-    
-     List<String> col = new ArrayList<>();
-     col.add("Hello                       d");
-     col.add("worlddds sd sd s s\nya fsdfs");
-     List<Class<?>> type = new ArrayList<>();
-     type.add(String.class);
-     type.add(String.class);
-     Table table = new Table("", null, col, type);
-     System.out.println(table.toString());
-     }
+
+    private void createDir() {
+        if (tableDir.exists()) {
+            return;
+        }
+        if (!tableDir.mkdir()) {
+            throw new RuntimeException("Cannot create table directory");
+        }
+    }
+
+    public void registerFiles(File xmlFile, File dtdFile) {
+        this.xmlFile = xmlFile;
+        this.dtdFile = dtdFile;
+    }
+
 }

@@ -18,8 +18,8 @@ public class Column<T> {
         return type;
     }
 
-    public void addData(T data) {
-        column.add(data);
+    public void addData(Object data) {
+        column.add((T) data);
     }
 
     public T getData(int index) {
