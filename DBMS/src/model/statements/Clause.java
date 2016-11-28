@@ -1,6 +1,6 @@
 package model.statements;
 
-public interface Clause extends Parser {
+public interface Clause {
 
     // marker
 
