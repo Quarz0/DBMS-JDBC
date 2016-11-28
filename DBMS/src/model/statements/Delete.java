@@ -10,12 +10,8 @@ public class Delete implements Query {
     private boolean isAll;
     private Where where;
 
-    public Delete(Where where) {
-        this.where = where;
-        if (!App.checkForExistence(this.where))
-            this.isAll = true;
-        else
-            this.isAll = false;
+    public Delete() {
+        this.isAll = false;
     }
 
     @Override
@@ -27,10 +23,20 @@ public class Delete implements Query {
     private boolean checkRegex(String s) {
         String[] groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_DELETE_ALL);
         if (App.checkForExistence(groups)) {
-            this.extractTable(groups[1].trim());
+            this.extractTable(groups[2].trim());
+            this.isAllFromRegex(groups[1]);
             return true;
         }
         return false;
+    }
+
+    private void isAllFromRegex(String s) {
+        if (App.checkForExistence(s) && App.checkForExistence(this.where))
+            this.callForFailure();
+        else if (App.checkForExistence(s))
+            this.isAll = true;
+        else
+            this.isAll = false;
     }
 
     private void extractTable(String s) {
@@ -47,6 +53,10 @@ public class Delete implements Query {
 
     public boolean isAll() {
         return this.isAll;
+    }
+
+    public void setWhere(Where where) {
+        this.where = where;
     }
 
     public Where getWhere() {

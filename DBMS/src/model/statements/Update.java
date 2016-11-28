@@ -15,13 +15,9 @@ public class Update implements Query {
     private boolean isAll;
     private Where where;
 
-    public Update(Where where) {
+    public Update() {
         this.columns = new ArrayList<>();
-        this.where = where;
-        if (!App.checkForExistence(this.where))
-            this.isAll = true;
-        else
-            this.isAll = false;
+        this.isAll = true;
     }
 
     @Override
@@ -106,6 +102,14 @@ public class Update implements Query {
 
     public boolean isAll() {
         return isAll;
+    }
+
+    public void setWhere(Where where) {
+        this.where = where;
+        if (!App.checkForExistence(this.where))
+            this.isAll = true;
+        else
+            this.isAll = false;
     }
 
     public Where getWhere() {
