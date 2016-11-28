@@ -1,9 +1,6 @@
 package model;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import controller.DatabaseController;
 
 public class DatabaseHelper {

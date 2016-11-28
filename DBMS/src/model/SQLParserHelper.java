@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import controller.DBMSController;
-import model.statements.Clause;
 import model.statements.Query;
 
 public class SQLParserHelper {
