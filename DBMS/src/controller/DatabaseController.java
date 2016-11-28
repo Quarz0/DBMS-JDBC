@@ -208,15 +208,25 @@ public class DatabaseController implements DBMS, Observer {
         try {
             dbmsController.getXMLController().updateTable(table, colNames, values, condition);
         } catch (Exception e) {
-//            throw new RuntimeException("Something went wrong Cannot update table.");
-            e.printStackTrace();
+            throw new RuntimeException("Something went wrong Cannot update table.");
+            // return false;
         }
         return true;
     }
 
     @Override
-    public boolean deleteFromTable(String tableName, List<String> colNames, String condition) {
-        return false;
+    public boolean deleteFromTable(String tableName, String condition) {
+        Table table = getTable(tableName);
+        if (table == null) {
+            throw new RuntimeException("Cannot find table");
+        }
+        try {
+            dbmsController.getXMLController().removeFromTable(table, condition);
+        } catch (Exception e) {
+            throw new RuntimeException("Something went wrong Cannot remove from table.");
+            // return false;
+        }
+        return true;
     }
 
     public boolean evaluate(String expression, Record record) throws ScriptException {

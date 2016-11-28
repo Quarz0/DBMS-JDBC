@@ -23,5 +23,5 @@ public interface DBMS {
     public boolean updateTable(String tableName, List<String> colNames, List<Object> values,
             String condition);
 
-    public boolean deleteFromTable(String tableName, List<String> colNames, String condition);
+    public boolean deleteFromTable(String tableName, String condition);
 }

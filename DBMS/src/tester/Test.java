@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import controller.DBMSController;
-import model.SelectionTable;
 
 public class Test {
 
@@ -55,7 +54,7 @@ public class Test {
         List<Object> obj = new ArrayList<>();
         obj.add("heree");
         obj.add(100);
-        db.getDatabaseController().updateTable("Modaa", lst, obj, " col3 == null ");
+        db.getDatabaseController().deleteFromTable("Modaa", "col1 == \"here\" || col2 == \"null\"");
         // boolean t = db.getDatabaseController().selectFromTable("Modaa", temp,
         // "1==1");
         // SelectionTable tempp = db.getDatabaseController().getHelper().getSelectedTable();
