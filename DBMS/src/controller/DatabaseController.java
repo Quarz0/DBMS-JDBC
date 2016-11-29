@@ -116,12 +116,12 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public boolean useDatabase(String databaseName) {
-        File usedDatabase = getDatabase(databaseName);
-        if (!App.checkForExistence(usedDatabase)) {
+        File usedDatabaseDir = getDatabase(databaseName);
+        if (!App.checkForExistence(usedDatabaseDir)) {
             throw new RuntimeException("Database doesnot exist");
             // return false;
         }
-        dbHelper.getCurrentDatabase().useDatabase(usedDatabase);
+        dbHelper.setDatabase(usedDatabaseDir);
         reLoadTables(dbHelper.getCurrentDatabase());
         return true;
     }
