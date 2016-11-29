@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.script.ScriptException;
+
 import model.ClassFactory;
 import model.Database;
 import model.DatabaseFilterGenerator;
@@ -105,7 +107,7 @@ public class DatabaseController implements DBMS, Observer {
 
     private void handleSelect(Select select) {
         this.dbmsController.getCLIController()
-                .status(this.selectFromTable(select.getTableIdentifier(), select.getColumns(),
+                .draw(this.selectFromTable(select.getTableIdentifier(), select.getColumns(),
                         select.getWhere().getExpression()));
     }
 
@@ -263,12 +265,9 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     @Override
-    public boolean selectFromTable(String tableName, List<String> colNames, String condition) {
-        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
-            throw new RuntimeException("No database selected.");
-            // return false;
-        }
+    public String selectFromTable(String tableName, List<String> colNames, String condition) {
         Table table = getTable(tableName);
+        SelectionTable selectedTable;
         if (!App.checkForExistence(table)) {
             throw new RuntimeException("Cannot find table");
         }
@@ -281,15 +280,15 @@ public class DatabaseController implements DBMS, Observer {
             // return false;
         }
         try {
-            SelectionTable selectedTable = dbmsController.getXMLController().selectFromTable(table,
-                    colNames, condition);
+            selectedTable = dbmsController.getXMLController().selectFromTable(table, colNames,
+                    condition);
             selectedTable = reformTable(selectedTable, colNames);
             dbHelper.setSelectedTable(selectedTable);
         } catch (Exception e) {
             throw new RuntimeException("Cannot read Table");
             // return false;
         }
-        return true;
+        return selectedTable.toString();
     }
 
     @Override

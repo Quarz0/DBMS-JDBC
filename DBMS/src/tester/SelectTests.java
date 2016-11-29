@@ -3,6 +3,7 @@ package tester;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class SelectTests {
     }
 
     @Test(expected = RuntimeException.class)
-    public final void createTableWithoutDatabase() {
+    public final void select1() {
         List<String> columns = new ArrayList<>();
         columns.add("Name");
         columns.add("Age");
@@ -33,5 +34,12 @@ public class SelectTests {
         values.add("20");
         values.add("false");
         db.insertIntoTable("Table1", values);
+        String table = "  Table: Table1\n" + "+------+-----+---------+\n"
+                + "| Name | Age | Married |\n" + "+------+-----+---------+\n"
+                + "| Rob  | 20  | false   |\n" + "+------+-----+---------+\n" + "  Records: 1\n\n";
+        Assert.assertEquals(table, db.selectFromTable("Table1", columns, null));
+        table = "  Table: Table1\n" + "+------+-----+---------+\n" + "| Name | Age | Married |\n"
+                + "+------+-----+---------+\n" + "  Records: 0\n\n";
+        Assert.assertEquals(table, db.selectFromTable("Table1", columns, "age != 20"));
     }
 }
