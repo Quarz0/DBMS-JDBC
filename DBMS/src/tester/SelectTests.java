@@ -16,8 +16,8 @@ public class SelectTests {
     public final void init() {
         db = new DatabaseController(null);
     }
-    
-    @Test (expected = RuntimeException.class)
+
+    @Test(expected = RuntimeException.class)
     public final void createTableWithoutDatabase() {
         List<String> columns = new ArrayList<>();
         columns.add("Name");
@@ -28,10 +28,10 @@ public class SelectTests {
         types.add(Integer.class);
         types.add(Boolean.class);
         db.createTable("Table1", columns, types);
-        List<Object> values = new ArrayList<>();
+        List<String> values = new ArrayList<>();
         values.add("Rob");
-        values.add(20);
-        values.add(false);
+        values.add("20");
+        values.add("false");
         db.insertIntoTable("Table1", values);
     }
 }
