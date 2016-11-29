@@ -11,9 +11,8 @@ public class DatabaseHelper {
     private File workspaceDir;
 
     public DatabaseHelper(DatabaseController databaseController) {
-        currentDatabase = new Database();
+        currentDatabase = null;
         this.dbController = databaseController;
-        this.currentDatabase = null;
     }
 
     public Database getCurrentDatabase() {
