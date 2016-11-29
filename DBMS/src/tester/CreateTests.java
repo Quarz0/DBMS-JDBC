@@ -18,10 +18,11 @@ public class CreateTests {
     public final void init() {
         db = new DatabaseController(null);
     }
+
     /**
      * Exception.
      */
-    @Test (expected = RuntimeException.class)
+    @Test(expected = RuntimeException.class)
     public final void createTableWithoutDatabase() {
         List<String> columns = new ArrayList<>();
         columns.add("Name");
@@ -33,8 +34,8 @@ public class CreateTests {
         types.add(Boolean.class);
         db.createTable("Table1", columns, types);
     }
-    
-    @Test (expected = RuntimeException.class)
+
+    @Test(expected = RuntimeException.class)
     public final void createTableWithoutUsingDatabase() {
         db.createDatabase("Database1");
         List<String> columns = new ArrayList<>();
@@ -43,19 +44,19 @@ public class CreateTests {
         types.add(String.class);
         db.createTable("Table1", columns, types);
     }
-    
-    @Test (expected = RuntimeException.class)
+
+    @Test(expected = RuntimeException.class)
     public final void usingNonExistingDatabase() {
         db.createDatabase("Database1");
         db.useDatabase("Database2");
     }
-    
+
     @Test
     public final void creatingAndUsingDatabase() {
         db.createDatabase("Database1");
-        Assert.assertEquals(true, db.useDatabase("Database1"));        
+        Assert.assertEquals(true, db.useDatabase("Database1"));
     }
-    
+
     @Test
     public final void creatingDatabaseAndTable() {
         Assert.assertEquals(true, db.createDatabase("Database1"));
@@ -66,5 +67,5 @@ public class CreateTests {
         Assert.assertEquals(true, db.useDatabase("Database1"));
         Assert.assertEquals(true, db.createTable("Table1", columns, types));
     }
-    
+
 }

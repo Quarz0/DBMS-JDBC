@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.script.ScriptException;
-
 import model.ClassFactory;
 import model.Database;
 import model.DatabaseFilterGenerator;
 import model.DatabaseHelper;
+import model.ObjectFactory;
 import model.Observer;
 import model.Record;
 import model.SelectionTable;
@@ -33,10 +32,12 @@ public class DatabaseController implements DBMS, Observer {
     private DatabaseHelper dbHelper;
     private DatabaseFilterGenerator databaseFilter;
     private ClassFactory classFactory;
+    private ObjectFactory objectFactory;
 
     public DatabaseController(DBMSController dbmsController) {
         databaseFilter = new DatabaseFilterGenerator();
         classFactory = new ClassFactory();
+        objectFactory = new ObjectFactory();
         this.dbmsController = dbmsController;
         this.dbHelper = new DatabaseHelper(this);
     }
@@ -116,7 +117,7 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public boolean useDatabase(String databaseName) {
         File usedDatabase = getDatabase(databaseName);
-        if (usedDatabase == null) {
+        if (!App.checkForExistence(usedDatabase)) {
             throw new RuntimeException("Database doesnot exist");
             // return false;
         }
@@ -137,6 +138,10 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public boolean createTable(String tableName, List<String> colNames, List<Class<?>> types) {
+        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
+            throw new RuntimeException("No database selected");
+            // return false;
+        }
         if (colNames.size() != types.size() || containsDublicates(colNames)) {
             throw new RuntimeException("Wrong data entered");
         }
@@ -157,6 +162,10 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public boolean dropTable(String tableName) {
+        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
+            throw new RuntimeException("No database selected.");
+            // return false;
+        }
         int index = 0;
         for (Table table : dbHelper.getCurrentDatabase().getTables()) {
             if (equalStrings(table.getTableName(), tableName)) {
@@ -171,7 +180,7 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public boolean dropDatabase(String databaseName) {
         File database = getDatabase(databaseName);
-        if (database == null) {
+        if (!App.checkForExistence(database)) {
             return false;
         }
         deleteDir(database);
@@ -179,17 +188,23 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     @Override
-    public boolean insertIntoTable(String tableName, List<String> colNames, List<Object> values) {
-        if (containsDublicates(colNames) || colNames.size() != values.size()) {
+    public boolean insertIntoTable(String tableName, List<String> colNames,
+            List<String> valuesAsString) {
+        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
+            throw new RuntimeException("No database selected.");
+            // return false;
+        }
+        if (containsDublicates(colNames) || colNames.size() != valuesAsString.size()) {
             return false;
         }
         Table table = getTable(tableName);
-        if (table == null) {
+        if (!App.checkForExistence(table)) {
             throw new RuntimeException("Cannot find table");
         }
         List<String> typesAsStrings = dbmsController.getXMLController().getTypes(table);
         List<String> tableColNames = dbmsController.getXMLController().getColumnsNames(table);
         List<Class<?>> types = getTypesFromStrings(typesAsStrings);
+        List<Object> values = getObjectsFromStrings(types, valuesAsString);
         for (String colName : colNames) {
             if (!tableColNames.contains(colName)) {
                 throw new RuntimeException("Data doesnot match table.");
@@ -217,13 +232,18 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     @Override
-    public boolean insertIntoTable(String tableName, List<Object> values) {
+    public boolean insertIntoTable(String tableName, List<String> valuesAsString) {
+        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
+            throw new RuntimeException("No database selected.");
+            // return false;
+        }
         Table table = getTable(tableName);
-        if (table == null) {
+        if (!App.checkForExistence(table)) {
             throw new RuntimeException("Cannot find table");
         }
         List<String> typesAsStrings = dbmsController.getXMLController().getTypes(table);
         List<Class<?>> types = getTypesFromStrings(typesAsStrings);
+        List<Object> values = getObjectsFromStrings(types, valuesAsString);
         if (values.size() != types.size()) {
             throw new RuntimeException("Wrong data");
         }
@@ -238,8 +258,12 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public boolean selectFromTable(String tableName, List<String> colNames, String condition) {
+        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
+            throw new RuntimeException("No database selected.");
+            // return false;
+        }
         Table table = getTable(tableName);
-        if (table == null) {
+        if (!App.checkForExistence(table)) {
             throw new RuntimeException("Cannot find table");
         }
         if (containsDublicates(colNames)) {
@@ -263,15 +287,20 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     @Override
-    public boolean updateTable(String tableName, List<String> colNames, List<Object> values,
+    public boolean updateTable(String tableName, List<String> colNames, List<String> valuesAsString,
             String condition) {
+        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
+            throw new RuntimeException("No database selected.");
+            // return false;
+        }
         Table table = getTable(tableName);
-        if (table == null) {
+        if (!App.checkForExistence(table)) {
             throw new RuntimeException("Cannot find table");
         }
         List<String> tableColNames = dbmsController.getXMLController().getColumnsNames(table);
         List<String> typesAsStrings = dbmsController.getXMLController().getTypes(table);
         List<Class<?>> types = getTypesFromStrings(typesAsStrings);
+        List<Object> values = getObjectsFromStrings(types, valuesAsString);
         if (colNames.size() != values.size() || containsDublicates(colNames)
                 || !isMatched(tableColNames, colNames, types, values)) {
             throw new RuntimeException("Wrong data inserted");
@@ -288,8 +317,12 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public boolean deleteFromTable(String tableName, String condition) {
+        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
+            throw new RuntimeException("No database selected.");
+            // return false;
+        }
         Table table = getTable(tableName);
-        if (table == null) {
+        if (!App.checkForExistence(table)) {
             throw new RuntimeException("Cannot find table");
         }
         try {
@@ -311,6 +344,10 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     private Table getTable(String tableName) {
+        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
+            throw new RuntimeException("No database selected.");
+            // return false;
+        }
         for (Table table : dbHelper.getCurrentDatabase().getTables()) {
             if (equalStrings(table.getTableName(), tableName)) {
                 return table;
@@ -337,13 +374,17 @@ public class DatabaseController implements DBMS, Observer {
 
     private boolean databaseExists(String databaseName) {
         File database = getDatabase(databaseName);
-        if (database == null) {
+        if (!App.checkForExistence(database)) {
             return false;
         }
         return true;
     }
 
     private boolean tableExists(String tableName) {
+        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
+            throw new RuntimeException("No database selected.");
+            // return false;
+        }
         for (Table table : dbHelper.getCurrentDatabase().getTables()) {
             if (equalStrings(table.getTableName(), tableName)) {
                 return true;
@@ -354,7 +395,7 @@ public class DatabaseController implements DBMS, Observer {
 
     private void deleteDir(File file) {
         File[] contents = file.listFiles();
-        if (contents != null) {
+        if (App.checkForExistence(contents)) {
             for (File f : contents) {
                 deleteDir(f);
             }
@@ -452,5 +493,13 @@ public class DatabaseController implements DBMS, Observer {
             }
         }
         return true;
+    }
+
+    private List<Object> getObjectsFromStrings(List<Class<?>> types, List<String> values) {
+        List<Object> ret = new ArrayList<>();
+        for (int i = 0; i < values.size(); i++) {
+            ret.add(objectFactory.parseToObject(types.get(i), values.get(i)));
+        }
+        return ret;
     }
 }
