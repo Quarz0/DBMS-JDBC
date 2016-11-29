@@ -11,7 +11,7 @@ import controller.DBMS;
 import controller.DBMSController;
 import controller.DatabaseController;
 
-public class DeleteTests {
+public class UpdateTests {
     private DBMS db;
     private DBMSController dbmsController;
 
@@ -35,31 +35,27 @@ public class DeleteTests {
         List<String> values1 = new ArrayList<>();
         values1.add("Rob");
         values1.add("20");
-        values1.add("false");
+        values1.add("true");
         List<String> values2 = new ArrayList<>();
         values2.add("Edward");
         values2.add("15");
         values2.add("false");
         db.insertIntoTable("Table1", values1);        
         db.insertIntoTable("Table1", values2);
-        db.deleteFromTable("Table1", "age <= 15");
+        values2.set(0, "Ed");
+        values2.set(1, "1");
+        values2.remove(2);
         columns.remove(2);
+        db.updateTable("Table1", columns, values2, "married == false");
         String table = "  Table: Table1\n" +
-                "+------+-----+\n" +
-                "| Name | Age |\n" +
-                "+------+-----+\n" +
-                "| Rob  | 20  |\n" +
-                "+------+-----+\n" +
-                "  Records: 1\n\n";
-        Assert.assertEquals(table, db.selectFromTable("Table1", columns, "age != 20"));
-        columns.remove(1);
-        db.insertIntoTable("Table1", values2);
-        db.deleteFromTable("Table1", null);
-        table = "  Table: Table1\n" +
-                "+------+\n" +
-                "| Name |\n" +
-                "+------+\n" +
-                "  Records: 0\n\n";
+                "+------+-----+---------+\n" +
+                "| Name | Age | Married |\n" +
+                "+------+-----+---------+\n" +
+                "| Rob  | 20  | false   |\n" +
+                "| Ed   | 1   | false   |\n" +
+                "+------+-----+---------+\n" +
+                "  Records: 2\n";
         Assert.assertEquals(table, db.selectFromTable("Table1", columns, null));
+        
     }
 }

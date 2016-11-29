@@ -79,8 +79,8 @@ public class SelectionTable {
         r1.add(19);
         Record r = new Record(null, values);
         List<Object> values2 = new ArrayList<>();
-        values2.add("Edward");
-        values2.add(15);
+        values2.add("Ed");
+        values2.add("1");
         values2.add(false);
         Record rr = new Record(null, values2);
 
