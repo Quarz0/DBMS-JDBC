@@ -275,6 +275,9 @@ public class DatabaseController implements DBMS, Observer {
             // return false;
         }
         try {
+            if (condition.equals("*")) {
+                condition = "true";
+            }
             SelectionTable selectedTable = dbmsController.getXMLController().selectFromTable(table,
                     colNames, condition);
             selectedTable = reformTable(selectedTable, colNames);
@@ -307,6 +310,9 @@ public class DatabaseController implements DBMS, Observer {
             // return false;
         }
         try {
+            if (condition.equals("*")) {
+                condition = "true";
+            }
             dbmsController.getXMLController().updateTable(table, colNames, values, condition);
         } catch (Exception e) {
             throw new RuntimeException("Something went wrong Cannot update table.");
@@ -326,6 +332,9 @@ public class DatabaseController implements DBMS, Observer {
             throw new RuntimeException("Cannot find table");
         }
         try {
+            if (condition.equals("*")) {
+                condition = "true";
+            }
             dbmsController.getXMLController().removeFromTable(table, condition);
         } catch (Exception e) {
             throw new RuntimeException("Something went wrong Cannot remove from table.");
