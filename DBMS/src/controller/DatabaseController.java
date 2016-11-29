@@ -69,31 +69,48 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     private void handleCreate(Create create) {
-
+        if (create.isDatabase()) {
+            this.dbmsController.getCLIController()
+                    .status(this.createDatabase(create.getDatabaseIdentifier()));
+        } else {
+            this.dbmsController.getCLIController().status(this.createTable(
+                    create.getTableIdentifier(), create.getColumns(), create.getTypes()));
+        }
     }
 
     private void handleDelete(Delete delete) {
-
+        this.dbmsController.getCLIController().status(this
+                .deleteFromTable(delete.getTableIdentifier(), delete.getWhere().getExpression()));
     }
 
     private void handleDrop(Drop drop) {
-
+        if (drop.isDatabase())
+            this.dbmsController.getCLIController()
+                    .status(this.dropDatabase(drop.getDatabaseIdentifier()));
+        else
+            this.dbmsController.getCLIController()
+                    .status(this.dropTable(drop.getTableIdentifier()));
     }
 
     private void handleInsert(Insert insert) {
-
+        if (insert.isDefaultSelection()) {
+            // this.insertIntoTable(insert.getTableIdentifier(), insert.getValues());
+        }
     }
 
     private void handleSelect(Select select) {
-
+        this.dbmsController.getCLIController()
+                .status(this.selectFromTable(select.getTableIdentifier(), select.getColumns(),
+                        select.getWhere().getExpression()));
     }
 
     private void handleUpdate(Update update) {
-
+        // this.updateTable(u, colNames, values, condition)
     }
 
     private void handleUse(Use use) {
-        // TODO Auto-generated method stub
+        this.dbmsController.getCLIController()
+                .status(this.useDatabase(use.getDatabaseIdentifier()));
     }
 
     @Override
@@ -111,8 +128,8 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public boolean createDatabase(String databaseName) {
         if (databaseExists(databaseName)) {
-            throw new RuntimeException("Database already exists");
-            // return false;
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.DATABASE_DUPLICATION);
+            return false;
         }
         new Database(this.dbHelper.getWorkspaceDir().getAbsolutePath(), databaseName);
         return true;
@@ -123,7 +140,7 @@ public class DatabaseController implements DBMS, Observer {
         if (colNames.size() != types.size() || containsDublicates(colNames)) {
             throw new RuntimeException("Wrong data entered");
         }
-        if (tableExists(tableName)) {
+        if (this.tableExists(tableName)) {
             throw new RuntimeException("Table already exists");
         }
         File tableFile = new File(

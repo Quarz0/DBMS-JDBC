@@ -8,7 +8,7 @@ public final class App {
 
     public static final String DEFAULT_DIR_PATH = System.getProperty("user.home")
             + File.separatorChar + "DBMS" + File.separatorChar;
-    public static final String PS1 = DEFAULT_DIR_PATH + ">> ";
+    public static final String PS1 =  "sql>> ";
 
     public static boolean checkForExistence(Object object) {
         if (object == null)

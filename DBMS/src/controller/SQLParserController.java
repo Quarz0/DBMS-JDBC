@@ -45,14 +45,14 @@ public class SQLParserController {
         String[] groups;
         boolean whereExists = false;
         boolean errorExists = false;
-        if (App.checkForExistence(s))
+        if (!App.checkForExistence(s))
             this.callForFailure(ErrorCode.SYNTAX_ERROR);
         groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_WHERE);
-        if (App.checkForExistence(groups))
+        if (!App.checkForExistence(groups))
             this.callForFailure(ErrorCode.SYNTAX_ERROR);
         whereExists = App.checkForExistence(groups[Regex.PARSE_WITH_WHERE_GROUP_ID]);
         query = this.locateQuery(groups[1].trim());
-        if (App.checkForExistence(query))
+        if (!App.checkForExistence(query))
             this.callForFailure(ErrorCode.SYNTAX_ERROR);
         if (whereExists) {
             where = new Where(groups[Regex.PARSE_WITH_WHERE_GROUP_ID + 1]);
@@ -61,7 +61,7 @@ public class SQLParserController {
         } else {
             errorExists = query.parse(groups[Regex.PARSE_WITH_WHERE_GROUP_ID + 1]);
         }
-        if (errorExists)
+        if (!errorExists)
             this.sqlParserHelper.setCurrentQuery(null);
         else
             this.sqlParserHelper.setCurrentQuery(query);

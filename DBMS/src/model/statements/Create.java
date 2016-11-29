@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.ClassFactory;
-import model.Pair;
 import util.App;
 import util.Regex;
 import util.RegexEvaluator;
@@ -13,11 +12,13 @@ public class Create implements Query {
 
     private String databaseIdentifier;
     private String tableIdentifier;
-    private List<Pair<String, Class<?>>> columns;
+    private List<String> columns;
+    private List<Class<?>> types;
     private boolean isDatabase;
 
     public Create() {
         this.columns = new ArrayList<>();
+        this.types = new ArrayList<>();
         this.isDatabase = false;
     }
 
@@ -55,13 +56,12 @@ public class Create implements Query {
     private boolean extractColIdentifiers(String s) {
         String[] colmuns = s.split(",");
         String[] colmun;
-        ClassFactory classFactroy = new ClassFactory();
+        ClassFactory classFactory = new ClassFactory();
         for (int i = 0; i < colmuns.length; i++) {
             colmun = colmuns[i].trim().split(" ");
-            if (App.checkForExistence(classFactroy.getClass(colmun[1].trim()))) {
-                Pair<String, Class<?>> pair = new Pair<String, Class<?>>(colmun[0].trim(),
-                        classFactroy.getClass(colmun[1].trim()));
-                this.columns.add(pair);
+            if (App.checkForExistence(classFactory.getClass(colmun[1].trim()))) {
+                this.columns.add(colmun[0].trim());
+                this.types.add(classFactory.getClass(colmun[1].trim()));
             } else {
                 return false;
             }
@@ -77,10 +77,6 @@ public class Create implements Query {
         return this.tableIdentifier;
     }
 
-    public List<Pair<String, Class<?>>> getColumns() {
-        return this.columns;
-    }
-
     public boolean isDatabase() {
         return this.isDatabase;
     }
@@ -88,6 +84,14 @@ public class Create implements Query {
     @Override
     public void setClause(Clause clause) {
 
+    }
+
+    public List<String> getColumns() {
+        return columns;
+    }
+
+    public List<Class<?>> getTypes() {
+        return types;
     }
 
 }

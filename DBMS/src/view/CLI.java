@@ -34,8 +34,7 @@ public class CLI {
     private void print(String s) throws IOException {
         if (App.checkForExistence(s))
             System.out.println(s);
-        else
-            System.out.print(App.PS1);
+        System.out.print(App.PS1);
         this.scan();
     }
 

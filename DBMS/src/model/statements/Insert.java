@@ -3,7 +3,6 @@ package model.statements;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Pair;
 import util.App;
 import util.Regex;
 import util.RegexEvaluator;
@@ -11,11 +10,13 @@ import util.RegexEvaluator;
 public class Insert implements Query {
 
     private String tableIdentifier;
-    private List<Pair<String, String>> columns;
+    private List<String> values;
+    private List<String> identifiers;
     private boolean isDefaultSelection;
 
     public Insert() {
-        this.columns = new ArrayList<>();
+        this.values = new ArrayList<>();
+        this.identifiers = new ArrayList<>();
         this.isDefaultSelection = false;
     }
 
@@ -49,15 +50,15 @@ public class Insert implements Query {
     }
 
     private boolean fillColumns(String[] values, String[] identifiers) {
-        Pair<String, String> pair;
         if (App.checkForExistence(identifiers) && values.length != identifiers.length)
             return false;
         for (int i = 0; i < values.length; i++) {
-            if (App.checkForExistence(identifiers))
-                pair = new Pair<String, String>(values[i], identifiers[i]);
-            else
-                pair = new Pair<String, String>(values[i], null);
-            this.columns.add(pair);
+            if (App.checkForExistence(identifiers)) {
+                this.values.add(values[i].trim());
+                this.identifiers.add(identifiers[i].trim());
+            } else {
+                this.values.add(values[i].trim());
+            }
         }
         return true;
     }
@@ -84,10 +85,6 @@ public class Insert implements Query {
         return this.tableIdentifier;
     }
 
-    public List<Pair<String, String>> getColumns() {
-        return columns;
-    }
-
     public boolean isDefaultSelection() {
         return isDefaultSelection;
     }
@@ -96,6 +93,14 @@ public class Insert implements Query {
     public void setClause(Clause clause) {
         // TODO Auto-generated method stub
 
+    }
+
+    public List<String> getValues() {
+        return values;
+    }
+
+    public List<String> getIdentifiers() {
+        return identifiers;
     }
 
 }

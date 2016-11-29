@@ -18,6 +18,7 @@ public class DBMSController {
         this.databaseController = new DatabaseController(this);
         this.sqlParserController = new SQLParserController(this);
         this.xmlController = new XMLController(this);
+        this.registerObservers();
         this.createAppPath();
         this.cliController.begin();
     }
@@ -31,7 +32,7 @@ public class DBMSController {
         File workspace = new File(App.DEFAULT_DIR_PATH);
         if (!workspace.exists()) {
             if (!workspace.mkdir()) {
-                throw new RuntimeException(ErrorCode.FAILED_TO_CREATE_DEFAULT_DATABASE);
+                this.cliController.callForFailure(ErrorCode.FAILED_TO_CREATE_DEFAULT_DATABASE);
             }
         }
         this.databaseController.getHelper().setWorkspaceDir(workspace);
@@ -51,5 +52,9 @@ public class DBMSController {
 
     public XMLController getXMLController() {
         return this.xmlController;
+    }
+
+    private void registerObservers() {
+        this.sqlParserController.getSqlParserHelper().registerObserver(this.databaseController);
     }
 }

@@ -1,5 +1,6 @@
 package controller;
 
+import util.ErrorCode;
 import view.CLI;
 
 public class CLIController {
@@ -33,7 +34,10 @@ public class CLIController {
     }
 
     public void status(Boolean status) {
-
+        if (status)
+            this.cli.newPrompt(ErrorCode.QUERY_IS_OK);
+        else
+            this.cli.newPrompt(ErrorCode.QUERY_IS_NOT_OK);
     }
 
 }
