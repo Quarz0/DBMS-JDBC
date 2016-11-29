@@ -11,6 +11,9 @@ public final class ErrorCode {
     public static final String DATABASE_DUPLICATION = "Database already exists!";
     public static final String DATABASE_NOT_FOUND = "Database doesn't exist!";
     public static final String DATABASE_IS_NOT_SELECTED = "No database selected!";
+    public static final String TABLE_NOT_FOUND = "Cannot find table!";
+    public static final String WRONG_DATA = "Wrong data";
+    public static final String ERROR = "ERROR!";
 
     public static final String LOCATE_QUERY = "Query not found!";
     public static final String FAILED_TO_CREATE_DEFAULT_DATABASE = "Cannot create workspace directory";

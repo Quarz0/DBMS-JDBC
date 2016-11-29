@@ -29,8 +29,6 @@ public class SQLParserController {
                     + queryIdentifier.substring(1).toLowerCase());
             query = (Query) cls.getConstructor().newInstance();
         } catch (Exception e) {
-            System.out.println(ErrorCode.LOCATE_QUERY);
-            e.printStackTrace();
             return null;
         }
         if (Query.class.isAssignableFrom(cls))

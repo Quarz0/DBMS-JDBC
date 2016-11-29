@@ -110,7 +110,7 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     private void handleSelect(Select select) {
-        if (select.isAll())
+        if (select.isAll() || !App.checkForExistence(select.getWhere()))
             this.dbmsController.getCLIController().draw(
                     this.selectFromTable(select.getTableIdentifier(), select.getColumns(), null));
         else
@@ -164,10 +164,12 @@ public class DatabaseController implements DBMS, Observer {
             return false;
         }
         if (colNames.size() != types.size() || containsDublicates(colNames)) {
-            throw new RuntimeException("Wrong data entered");
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+            return false;
         }
         if (this.tableExists(tableName)) {
-            throw new RuntimeException("Table already exists");
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+            return false;
         }
         File tableFile = new File(
                 dbHelper.getCurrentDatabase().getPath() + File.separator + tableName);
@@ -184,8 +186,8 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public boolean dropTable(String tableName) {
         if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
-            throw new RuntimeException("No database selected.");
-            // return false;
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+            return false;
         }
         int index = 0;
         for (Table table : dbHelper.getCurrentDatabase().getTables()) {
@@ -212,15 +214,16 @@ public class DatabaseController implements DBMS, Observer {
     public boolean insertIntoTable(String tableName, List<String> colNames,
             List<String> valuesAsString) {
         if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
-            throw new RuntimeException("No database selected.");
-            // return false;
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+            return false;
         }
         if (containsDublicates(colNames) || colNames.size() != valuesAsString.size()) {
             return false;
         }
         Table table = getTable(tableName);
         if (!App.checkForExistence(table)) {
-            throw new RuntimeException("Cannot find table");
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+            return false;
         }
         List<String> typesAsStrings = dbmsController.getXMLController().getTypes(table);
         List<String> tableColNames = dbmsController.getXMLController().getColumnsNames(table);
@@ -228,11 +231,13 @@ public class DatabaseController implements DBMS, Observer {
         List<Object> values = getObjectsFromStrings(types, valuesAsString);
         for (String colName : colNames) {
             if (!tableColNames.contains(colName)) {
-                throw new RuntimeException("Data doesnot match table.");
+                this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+                return false;
             }
         }
         if (!isMatched(tableColNames, colNames, types, values)) {
-            throw new RuntimeException("Data doesnot match table.");
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+            return false;
         }
         List<Object> generateValues = new ArrayList<>();
         for (int i = 0; i < tableColNames.size(); i++) {
@@ -255,22 +260,25 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public boolean insertIntoTable(String tableName, List<String> valuesAsString) {
         if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
-            throw new RuntimeException("No database selected.");
-            // return false;
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.DATABASE_NOT_FOUND);
+            return false;
         }
         Table table = getTable(tableName);
         if (!App.checkForExistence(table)) {
-            throw new RuntimeException("Cannot find table");
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.TABLE_NOT_FOUND);
+            return false;
         }
         List<String> typesAsStrings = dbmsController.getXMLController().getTypes(table);
         List<Class<?>> types = getTypesFromStrings(typesAsStrings);
         List<Object> values = getObjectsFromStrings(types, valuesAsString);
         if (values.size() != types.size()) {
-            throw new RuntimeException("Wrong data");
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.WRONG_DATA);
+            return false;
         }
         for (int i = 0; i < types.size(); i++) {
             if (!types.get(i).isInstance(values.get(i))) {
-                throw new RuntimeException("Wrong data");
+                this.dbmsController.getCLIController().callForFailure(ErrorCode.WRONG_DATA);
+                return false;
             }
         }
         Record record = new Record(values);
@@ -282,29 +290,35 @@ public class DatabaseController implements DBMS, Observer {
         Table table = getTable(tableName);
         SelectionTable selectedTable;
         if (!App.checkForExistence(table)) {
-            throw new RuntimeException("Cannot find table");
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.DATABASE_NOT_FOUND);
+            return null;
         }
         if (containsDublicates(colNames)) {
-            throw new RuntimeException("Data contains dublicates");
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+            return null;
         }
         List<String> tableColNames = dbmsController.getXMLController().getColumnsNames(table);
         if (!containsAllStrings(tableColNames, colNames)) {
-            throw new RuntimeException("Wrong column names");
-            // return false;
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+            return null;
         }
         try {
-
             if (!App.checkForExistence(condition)) {
+                if (colNames.isEmpty()) {
+                    colNames = tableColNames;
+                }
                 condition = "true";
             }
-            selectedTable = dbmsController.getXMLController().selectFromTable(table, colNames,
+             selectedTable = dbmsController.getXMLController().selectFromTable(table,
                     condition);
             selectedTable = reformTable(selectedTable, colNames);
             dbHelper.setSelectedTable(selectedTable);
         } catch (Exception e) {
-            throw new RuntimeException("Cannot read Table");
-            // return false;
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+            return null;
         }
+        if (selectedTable.getRecordList().isEmpty())
+            return null;
         return selectedTable.toString();
     }
 
@@ -312,12 +326,13 @@ public class DatabaseController implements DBMS, Observer {
     public boolean updateTable(String tableName, List<String> colNames, List<String> valuesAsString,
             String condition) {
         if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
-            throw new RuntimeException("No database selected.");
-            // return false;
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+            return false;
         }
         Table table = getTable(tableName);
         if (!App.checkForExistence(table)) {
-            throw new RuntimeException("Cannot find table");
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.DATABASE_NOT_FOUND);
+            return false;
         }
         List<String> tableColNames = dbmsController.getXMLController().getColumnsNames(table);
         List<String> typesAsStrings = dbmsController.getXMLController().getTypes(table);
@@ -325,17 +340,17 @@ public class DatabaseController implements DBMS, Observer {
         List<Object> values = getObjectsFromStrings(types, valuesAsString);
         if (colNames.size() != values.size() || containsDublicates(colNames)
                 || !isMatched(tableColNames, colNames, types, values)) {
-            throw new RuntimeException("Wrong data inserted");
-            // return false;
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+            return false;
         }
         try {
-            if (condition.equals("*")) {
+            if (!App.checkForExistence(condition)) {
                 condition = "true";
             }
             dbmsController.getXMLController().updateTable(table, colNames, values, condition);
         } catch (Exception e) {
-            throw new RuntimeException("Something went wrong Cannot update table.");
-            // return false;
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+            return false;
         }
         return true;
     }
@@ -343,21 +358,21 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public boolean deleteFromTable(String tableName, String condition) {
         if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
-            throw new RuntimeException("No database selected.");
-            // return false;
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+            return false;
         }
         Table table = getTable(tableName);
         if (!App.checkForExistence(table)) {
-            throw new RuntimeException("Cannot find table");
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+            return false;
         }
         try {
-            if (condition.equals("*")) {
+            if (!App.checkForExistence(condition)) {
                 condition = "true";
             }
             dbmsController.getXMLController().removeFromTable(table, condition);
         } catch (Exception e) {
-            throw new RuntimeException("Something went wrong Cannot remove from table.");
-            // return false;
+            e.printStackTrace();
         }
         return true;
     }
@@ -373,8 +388,8 @@ public class DatabaseController implements DBMS, Observer {
 
     private Table getTable(String tableName) {
         if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
-            throw new RuntimeException("No database selected.");
-            // return false;
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+            return null;
         }
         for (Table table : dbHelper.getCurrentDatabase().getTables()) {
             if (equalStrings(table.getTableName(), tableName)) {
@@ -410,8 +425,8 @@ public class DatabaseController implements DBMS, Observer {
 
     private boolean tableExists(String tableName) {
         if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
-            throw new RuntimeException("No database selected.");
-            // return false;
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
+            return false;
         }
         for (Table table : dbHelper.getCurrentDatabase().getTables()) {
             if (equalStrings(table.getTableName(), tableName)) {
@@ -451,7 +466,7 @@ public class DatabaseController implements DBMS, Observer {
             File dtdFile = new File(
                     table.getTablePath() + File.separator + table.getTableName() + ".dtd");
             if (!(xmlFile.exists() && dtdFile.exists())) {
-                throw new RuntimeException("Missing table files");
+                this.dbmsController.getCLIController().callForFailure(ErrorCode.ERROR);
             }
             table.registerFiles(xmlFile, dtdFile);
             database.getTables().add(table);
@@ -461,7 +476,7 @@ public class DatabaseController implements DBMS, Observer {
     private String getFilledExpression(String expression, Record record) {
         String exp = expression.toLowerCase();
         for (int i = 0; i < record.getColumns().size(); i++) {
-            if (record.getValues().get(i) instanceof String) {
+            if (exp.charAt(0) == '\"') {
                 exp = App.replace(exp, record.getColumns().get(i).toLowerCase(),
                         "\"" + record.getValues().get(i).toString() + "\"");
             } else {
@@ -491,7 +506,7 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     private SelectionTable reformTable(SelectionTable selectedTable, List<String> colNames) {
-        SelectionTable ret = new SelectionTable(colNames);
+        SelectionTable ret = new SelectionTable(selectedTable.getTableName(), colNames);
         List<Object> values;
         for (int i = 0; i < selectedTable.getRecordList().size(); i++) {
             values = new ArrayList<>();

@@ -11,7 +11,6 @@ public class ClassFactory {
         case "integer":
             return Integer.class;
         case "varchar":
-            return String.class;
         case "string":
             return String.class;
         case "float":

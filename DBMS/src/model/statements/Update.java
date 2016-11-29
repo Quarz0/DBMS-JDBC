@@ -40,7 +40,7 @@ public class Update implements Query {
     private boolean fillColumns(String s) {
         String[] temp;
         String[] columns = this.extractColumns(s.trim());
-        if (App.checkForExistence(columns))
+        if (!App.checkForExistence(columns))
             return false;
         for (int i = 0; i < columns.length; i++) {
             temp = this.isOnForm(columns[i].trim());

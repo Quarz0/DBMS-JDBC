@@ -121,7 +121,7 @@ public class XMLController {
             for (int i = 0; i < record.getValues().size(); i++) {
                 Element temp;
                 if (record.getValues().get(i) == null)
-                    temp = new Element(names.get(i)).setText("");
+                    temp = new Element(names.get(i)).setText("null");
                 else
                     temp = new Element(names.get(i)).setText(record.getValues().get(i).toString());
                 newRecord.addContent(temp);
@@ -136,7 +136,7 @@ public class XMLController {
         return true;
     }
 
-    public SelectionTable selectFromTable(Table table, List<String> colNames, String condition) {
+    public SelectionTable selectFromTable(Table table, String condition) {
         List<Object> values = new ArrayList<>();
         List<String> names = getColumnsNames(table);
         SelectionTable selectionTable = new SelectionTable(table.getTableName(), names);
@@ -153,7 +153,7 @@ public class XMLController {
                     if (!(startElementName.equals("Record")
                             || startElementName.equals(table.getTableName()))) {
                         Characters chars = (Characters) eventReader.nextEvent();
-                        if (chars.getData().length() == 0)
+                        if (chars.getData() == "null")
                             values.add(null);
                         else
                             values.add(chars.getData());
@@ -196,7 +196,7 @@ public class XMLController {
             for (int j = 0; j < children.size(); j++) {
                 names.add(children.get(j).getName());
                 String temp = children.get(j).getText();
-                if (temp.length() == 0)
+                if (temp == "null")
                     vals.add(null);
                 else
                     vals.add(temp);
@@ -208,12 +208,12 @@ public class XMLController {
                     if (tempIndex != -1) {
                         System.out.println(children.get(j) + " " + values.get(tempIndex));
                         if (values.get(tempIndex) == null)
-                            children.get(j).setText("");
+                            children.get(j).setText("null");
                         else
                             children.get(j).setText(values.get(tempIndex).toString());
                     }
                     names.add(children.get(j).getName());
-                    if (children.get(j).getText().length() == 0)
+                    if (children.get(j).getText() == "null")
                         vals.add(null);
                     else
                         vals.add(children.get(j).getText());
@@ -238,7 +238,7 @@ public class XMLController {
             List<Object> vals = new ArrayList<>();
             for (int j = 0; j < children.size(); j++) {
                 names.add(children.get(j).getName());
-                if (children.get(j).getText().length() == 0)
+                if (children.get(j).getText() == "null")
                     vals.add(null);
                 else
                     vals.add(children.get(j).getText());

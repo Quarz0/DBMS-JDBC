@@ -63,31 +63,4 @@ public class SelectionTable {
                 + this.recordList.size() + "\n\n";
     }
 
-    // Test
-    public static void main(String[] args) {
-
-        List<String> columns = new ArrayList<>();
-        columns.add("Name");
-        columns.add("Age");
-        columns.add("Married");
-        List<Object> values = new ArrayList<>();
-        values.add("Rob");
-        values.add(20);
-        values.add(false);
-        List<Object> r1 = new ArrayList<>();
-        r1.add("marwan");
-        r1.add(19);
-        Record r = new Record(null, values);
-        List<Object> values2 = new ArrayList<>();
-        values2.add("Edward");
-        values2.add(15);
-        values2.add(false);
-        Record rr = new Record(null, values2);
-
-        SelectionTable table = new SelectionTable("Table1", columns);
-        table.addRecord(r);
-        table.addRecord(rr);
-        System.out.println(table.toString());
-
-    }
 }
