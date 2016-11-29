@@ -9,6 +9,8 @@ public final class ErrorCode {
     public static final String QUERY_IS_OK = "Query is ok";
     public static final String QUERY_IS_NOT_OK = "Query failed";
     public static final String DATABASE_DUPLICATION = "Database already exists!";
+    public static final String DATABASE_NOT_FOUND = "Database doesn't exist!";
+    public static final String DATABASE_IS_NOT_SELECTED = "No database selected!";
 
     public static final String LOCATE_QUERY = "Query not found!";
     public static final String FAILED_TO_CREATE_DEFAULT_DATABASE = "Cannot create workspace directory";

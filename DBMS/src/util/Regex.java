@@ -19,7 +19,7 @@ public final class Regex {
     public static final String PARSE_WITH_SELECT_FROM = "\\A\\s*(.*?)\\s+FROM\\s+([a-zA-Z_]\\w*)\\s*\\Z";
     public static final String PARSE_WITH_SELECT_ALL_FROM = "\\A\\s*\\*?\\s+FROM\\s+([a-zA-Z_]\\w*)\\s*\\Z";
 
-    public static final String PARSE_WITH_USE = "\\A\\s*DATABASE\\s+([a-zA-Z_]\\w*)\\s*\\Z";
+    public static final String PARSE_WITH_USE = "\\A\\s*([a-zA-Z_]\\w*)\\s*\\Z";
 
     public static final String PARSE_WITH_INSERT = "\\A\\s*INTO\\s+([a-zA-Z_]\\w*)(?:\\(\\s*([a-zA-Z_]\\w*\\s*(?:,\\s*[a-zA-Z_]\\w*\\s*)*)\\))?\\s+VALUES\\s*\\((.+)\\)\\s*\\Z";
     public static final String PARSE_WITH_INSERT_TRIM_MATCH = ".+(?<!,)";

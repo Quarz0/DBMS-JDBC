@@ -116,12 +116,12 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public boolean useDatabase(String databaseName) {
-        File usedDatabase = getDatabase(databaseName);
-        if (!App.checkForExistence(usedDatabase)) {
-            throw new RuntimeException("Database doesnot exist");
-            // return false;
+        File usedDatabaseDir = getDatabase(databaseName);
+        if (!App.checkForExistence(usedDatabaseDir)) {
+            this.dbmsController.getCLIController().callForFailure(ErrorCode.DATABASE_NOT_FOUND);
+            return false;
         }
-        dbHelper.getCurrentDatabase().useDatabase(usedDatabase);
+        this.dbHelper.setDatabase(usedDatabaseDir);
         reLoadTables(dbHelper.getCurrentDatabase());
         return true;
     }
@@ -139,8 +139,9 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public boolean createTable(String tableName, List<String> colNames, List<Class<?>> types) {
         if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
-            throw new RuntimeException("No database selected");
-            // return false;
+            this.dbmsController.getCLIController()
+                    .callForFailure(ErrorCode.DATABASE_IS_NOT_SELECTED);
+            return false;
         }
         if (colNames.size() != types.size() || containsDublicates(colNames)) {
             throw new RuntimeException("Wrong data entered");

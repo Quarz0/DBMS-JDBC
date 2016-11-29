@@ -40,4 +40,9 @@ public class DatabaseHelper {
         this.workspaceDir = workspaceDir;
     }
 
+    public void setDatabase(File usedDatabaseDir) {
+        currentDatabase = new Database(usedDatabaseDir.getAbsolutePath(),
+                usedDatabaseDir.getName());
+    }
+
 }
