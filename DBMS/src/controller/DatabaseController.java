@@ -122,7 +122,7 @@ public class DatabaseController implements DBMS, Observer {
             return false;
         }
         this.dbHelper.setDatabase(usedDatabaseDir);
-        reLoadTables(dbHelper.getCurrentDatabase());
+        this.reLoadTables(dbHelper.getCurrentDatabase());
         return true;
     }
 

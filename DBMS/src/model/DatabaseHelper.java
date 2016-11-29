@@ -41,8 +41,8 @@ public class DatabaseHelper {
     }
 
     public void setDatabase(File usedDatabaseDir) {
-        currentDatabase = new Database(usedDatabaseDir.getAbsolutePath(),
-                usedDatabaseDir.getName());
-    }
 
+        currentDatabase = new Database();
+        currentDatabase.useDatabase(usedDatabaseDir);
+    }
 }

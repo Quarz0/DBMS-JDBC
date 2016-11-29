@@ -8,15 +8,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 import controller.DBMS;
+import controller.DBMSController;
 import controller.DatabaseController;
 
 public class CreateTests {
 
     private DBMS db;
+    private DBMSController dbmsController;
 
     @Before
     public final void init() {
         db = new DatabaseController(null);
+        dbmsController = new DBMSController();
     }
 
     /**

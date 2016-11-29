@@ -11,6 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.script.ScriptException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -25,6 +28,11 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.XMLReader;
 
 import model.Record;
 import model.SelectionTable;
@@ -60,8 +68,6 @@ public class XMLController {
             xmlStreamWriter = fileWriter.createXMLStreamWriter(writer, "UTF-8");
             xmlStreamWriter.writeStartDocument("UTF-8", "1.0");
             xmlStreamWriter.writeCharacters("\n");
-            // xmlStreamWriter.writeDTD(
-            // "<!DOCTYPE " + tableName + " SYSTEM " + "\"" + tableName + ".dtd\">\n");
             xmlStreamWriter.writeStartElement(tableName);
             xmlStreamWriter.writeAttribute("colNames", listToString(colNames));
             xmlStreamWriter.writeAttribute("types", classToString(types));
@@ -83,7 +89,7 @@ public class XMLController {
             writer = new FileOutputStream(dtdFile);
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.append("<!ELEMENT " + tableName + " (Record*)>\n");
-            strBuilder.append("<!ElEMENT Record (");
+            strBuilder.append("<!ELEMENT Record (");
             for (int i = 0; i < colNames.size(); i++) {
                 strBuilder.append(colNames.get(i));
                 if (i != colNames.size() - 1) {
@@ -115,7 +121,7 @@ public class XMLController {
             for (int i = 0; i < record.getValues().size(); i++) {
                 Element temp;
                 if (record.getValues().get(i) == null)
-                    temp = new Element(names.get(i)).setText("null");
+                    temp = new Element(names.get(i)).setText("");
                 else
                     temp = new Element(names.get(i)).setText(record.getValues().get(i).toString());
                 newRecord.addContent(temp);
@@ -147,7 +153,10 @@ public class XMLController {
                     if (!(startElementName.equals("Record")
                             || startElementName.equals(table.getTableName()))) {
                         Characters chars = (Characters) eventReader.nextEvent();
-                        values.add(chars.getData());
+                        if (chars.getData().length() == 0)
+                            values.add(null);
+                        else
+                            values.add(chars.getData());
                         eventReader.nextEvent();
                     } else {
                         values = new ArrayList<>();
@@ -173,6 +182,7 @@ public class XMLController {
     public void updateTable(Table table, List<String> colNames, List<Object> values,
             String condition)
             throws XMLStreamException, JDOMException, IOException, ScriptException {
+
         File tableXML = table.getXML();
         eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
         document = saxBuilder.build(tableXML);
@@ -185,27 +195,33 @@ public class XMLController {
             List<Object> vals = new ArrayList<>();
             for (int j = 0; j < children.size(); j++) {
                 names.add(children.get(j).getName());
-                vals.add(children.get(j).getText());
+                String temp = children.get(j).getText();
+                if (temp.length() == 0)
+                    vals.add(null);
+                else
+                    vals.add(temp);
             }
             Record tempRecord = new Record(names, vals);
             if (dbmsController.getDatabaseController().evaluate(condition, tempRecord)) {
                 for (int j = 0; j < children.size(); j++) {
                     int tempIndex = colNames.indexOf(children.get(j).getName());
-                    System.out.println(tempIndex);
-
                     if (tempIndex != -1) {
                         System.out.println(children.get(j) + " " + values.get(tempIndex));
                         if (values.get(tempIndex) == null)
-                            children.get(j).setText("null");
+                            children.get(j).setText("");
                         else
                             children.get(j).setText(values.get(tempIndex).toString());
                     }
                     names.add(children.get(j).getName());
-                    vals.add(children.get(j).getText());
+                    if (children.get(j).getText().length() == 0)
+                        vals.add(null);
+                    else
+                        vals.add(children.get(j).getText());
                 }
             }
         }
         xmlOutput.output(document, new FileWriter(tableXML));
+
     }
 
     public void removeFromTable(Table table, String condition)
@@ -222,7 +238,10 @@ public class XMLController {
             List<Object> vals = new ArrayList<>();
             for (int j = 0; j < children.size(); j++) {
                 names.add(children.get(j).getName());
-                vals.add(children.get(j).getText());
+                if (children.get(j).getText().length() == 0)
+                    vals.add(null);
+                else
+                    vals.add(children.get(j).getText());
             }
             Record tempRecord = new Record(names, vals);
             if (dbmsController.getDatabaseController().evaluate(condition, tempRecord)) {
@@ -288,4 +307,42 @@ public class XMLController {
         }
         return types;
     }
+
+    public static boolean validateWithDTDUsingSAX(File xmlFile)
+            throws ParserConfigurationException, IOException {
+        try {
+
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            factory.setValidating(true);
+            factory.setNamespaceAware(true);
+
+            SAXParser parser = factory.newSAXParser();
+            XMLReader reader = parser.getXMLReader();
+
+            reader.setErrorHandler(new ErrorHandler() {
+                public void warning(SAXParseException e) throws SAXException {
+                    System.out.println("WARNING : " + e.getMessage()); // do nothing
+                }
+
+                public void error(SAXParseException e) throws SAXException {
+                    System.out.println("ERROR : " + e.getMessage());
+                    throw e;
+                }
+
+                public void fatalError(SAXParseException e) throws SAXException {
+                    System.out.println("FATAL : " + e.getMessage());
+                    throw e;
+                }
+            });
+            reader.parse(new InputSource(new FileReader(xmlFile)));
+            return true;
+        } catch (ParserConfigurationException pce) {
+            throw pce;
+        } catch (IOException io) {
+            throw io;
+        } catch (SAXException se) {
+            return false;
+        }
+    }
+
 }
