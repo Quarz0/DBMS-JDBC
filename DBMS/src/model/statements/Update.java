@@ -3,7 +3,6 @@ package model.statements;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Pair;
 import util.App;
 import util.Regex;
 import util.RegexEvaluator;
@@ -11,12 +10,14 @@ import util.RegexEvaluator;
 public class Update implements Query {
 
     private String tableIdentifier;
-    private List<Pair<String, String>> columns;
+    private List<String> columns;
+    private List<String> values;
     private boolean isAll;
     private Where where;
 
     public Update() {
         this.columns = new ArrayList<>();
+        this.values = new ArrayList<>();
         this.isAll = true;
     }
 
@@ -37,18 +38,17 @@ public class Update implements Query {
     }
 
     private boolean fillColumns(String s) {
-        Pair<String, String> pair = null;
         String[] temp;
         String[] columns = this.extractColumns(s.trim());
         if (App.checkForExistence(columns))
             return false;
         for (int i = 0; i < columns.length; i++) {
             temp = this.isOnForm(columns[i].trim());
-            if (App.checkForExistence(temp))
-                pair = new Pair<String, String>(temp[0], temp[1]);
-            else
+            if (App.checkForExistence(temp)) {
+                this.columns.add(temp[0].trim());
+                this.values.add(temp[1].trim());
+            } else
                 return false;
-            this.columns.add(pair);
         }
         return true;
     }
@@ -93,10 +93,6 @@ public class Update implements Query {
         return tableIdentifier;
     }
 
-    public List<Pair<String, String>> getColumns() {
-        return columns;
-    }
-
     public boolean isAll() {
         return isAll;
     }
@@ -113,6 +109,14 @@ public class Update implements Query {
             this.isAll = true;
         else
             this.isAll = false;
+    }
+
+    public List<String> getColumns() {
+        return columns;
+    }
+
+    public List<String> getValues() {
+        return values;
     }
 
 }

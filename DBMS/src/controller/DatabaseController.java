@@ -95,7 +95,11 @@ public class DatabaseController implements DBMS, Observer {
 
     private void handleInsert(Insert insert) {
         if (insert.isDefaultSelection()) {
-            // this.insertIntoTable(insert.getTableIdentifier(), insert.getValues());
+            this.dbmsController.getCLIController()
+                    .status(this.insertIntoTable(insert.getTableIdentifier(), insert.getValues()));
+        } else {
+            this.dbmsController.getCLIController().status(this.insertIntoTable(
+                    insert.getTableIdentifier(), insert.getIdentifiers(), insert.getValues()));
         }
     }
 
@@ -106,7 +110,8 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     private void handleUpdate(Update update) {
-        // this.updateTable(u, colNames, values, condition)
+        this.dbmsController.getCLIController().status(this.updateTable(update.getTableIdentifier(),
+                update.getColumns(), update.getValues(), update.getWhere().getExpression()));
     }
 
     private void handleUse(Use use) {
