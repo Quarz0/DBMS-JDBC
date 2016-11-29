@@ -17,8 +17,8 @@ public class DeleteTests {
     public final void init() {
         db = new DatabaseController(null);
     }
-    
-    @Test (expected = RuntimeException.class)
+
+    @Test(expected = RuntimeException.class)
     public final void select1() {
         List<String> columns = new ArrayList<>();
         columns.add("Name");
@@ -37,26 +37,18 @@ public class DeleteTests {
         values2.add("Edward");
         values2.add(15);
         values2.add(false);
-        db.insertIntoTable("Table1", values1);        
-        db.insertIntoTable("Table1", values2);
+        // db.insertIntoTable("Table1", values1);
+        // db.insertIntoTable("Table1", values2);
         db.deleteFromTable("Table1", "age <= 15");
         columns.remove(2);
-        String table = "  Table: Table1\n" +
-                "+------+-----+\n" +
-                "| Name | Age |\n" +
-                "+------+-----+\n" +
-                "| Rob  | 20  |\n" +
-                "+------+-----+\n" +
-                "  Records: 1\n\n";
+        String table = "  Table: Table1\n" + "+------+-----+\n" + "| Name | Age |\n"
+                + "+------+-----+\n" + "| Rob  | 20  |\n" + "+------+-----+\n" + "  Records: 1\n\n";
         Assert.assertEquals(table, db.selectFromTable("Table1", columns, "age != 20"));
         columns.remove(1);
-        db.insertIntoTable("Table1", values2);
+        // db.insertIntoTable("Table1", values2);
         db.deleteFromTable("Table1", null);
-        table = "  Table: Table1\n" +
-                "+------+\n" +
-                "| Name |\n" +
-                "+------+\n" +
-                "  Records: 0\n\n";
+        table = "  Table: Table1\n" + "+------+\n" + "| Name |\n" + "+------+\n"
+                + "  Records: 0\n\n";
         Assert.assertEquals(table, db.selectFromTable("Table1", columns, null));
     }
 }

@@ -82,8 +82,12 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     private void handleDelete(Delete delete) {
-        this.dbmsController.getCLIController().status(this
-                .deleteFromTable(delete.getTableIdentifier(), delete.getWhere().getExpression()));
+        if (delete.isAll())
+            this.dbmsController.getCLIController()
+                    .status(this.deleteFromTable(delete.getTableIdentifier(), null));
+        else
+            this.dbmsController.getCLIController().status(this.deleteFromTable(
+                    delete.getTableIdentifier(), delete.getWhere().getExpression()));
     }
 
     private void handleDrop(Drop drop) {
@@ -106,14 +110,23 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     private void handleSelect(Select select) {
-        this.dbmsController.getCLIController()
-                .draw(this.selectFromTable(select.getTableIdentifier(), select.getColumns(),
-                        select.getWhere().getExpression()));
+        if (select.isAll())
+            this.dbmsController.getCLIController().draw(
+                    this.selectFromTable(select.getTableIdentifier(), select.getColumns(), null));
+        else
+            this.dbmsController.getCLIController()
+                    .draw(this.selectFromTable(select.getTableIdentifier(), select.getColumns(),
+                            select.getWhere().getExpression()));
     }
 
     private void handleUpdate(Update update) {
-        this.dbmsController.getCLIController().status(this.updateTable(update.getTableIdentifier(),
-                update.getColumns(), update.getValues(), update.getWhere().getExpression()));
+        if (update.isAll())
+            this.dbmsController.getCLIController().status(this.updateTable(
+                    update.getTableIdentifier(), update.getColumns(), update.getValues(), null));
+        else
+            this.dbmsController.getCLIController()
+                    .status(this.updateTable(update.getTableIdentifier(), update.getColumns(),
+                            update.getValues(), update.getWhere().getExpression()));
     }
 
     private void handleUse(Use use) {
