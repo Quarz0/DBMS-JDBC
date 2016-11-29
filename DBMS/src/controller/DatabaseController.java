@@ -8,6 +8,8 @@ import java.util.Set;
 
 import javax.script.ScriptException;
 
+import com.sun.javafx.scene.control.SelectedCellsMap;
+
 import model.ClassFactory;
 import model.Database;
 import model.DatabaseFilterGenerator;
@@ -220,8 +222,9 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     @Override
-    public boolean selectFromTable(String tableName, List<String> colNames, String condition) {
+    public String selectFromTable(String tableName, List<String> colNames, String condition) {
         Table table = getTable(tableName);
+        SelectionTable selectedTable;
         if (table == null) {
             throw new RuntimeException("Cannot find table");
         }
@@ -234,7 +237,7 @@ public class DatabaseController implements DBMS, Observer {
             // return false;
         }
         try {
-            SelectionTable selectedTable = dbmsController.getXMLController().selectFromTable(table,
+            selectedTable = dbmsController.getXMLController().selectFromTable(table,
                     colNames, condition);
             selectedTable = reformTable(selectedTable, colNames);
             dbHelper.setSelectedTable(selectedTable);
@@ -242,7 +245,7 @@ public class DatabaseController implements DBMS, Observer {
             throw new RuntimeException("Cannot read Table");
             // return false;
         }
-        return true;
+        return selectedTable.toString();
     }
 
     @Override
