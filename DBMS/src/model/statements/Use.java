@@ -11,13 +11,6 @@ public class Use implements Query {
     public Use() {
     }
 
-    @Override
-    public boolean parse(String s) {
-        if (!App.checkForExistence(s) || !this.checkRegex(s))
-            return false;
-        return true;
-    }
-
     private boolean checkRegex(String s) {
         String[] groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_USE);
         if (App.checkForExistence(groups)) {
@@ -33,6 +26,13 @@ public class Use implements Query {
 
     public String getDatabaseIdentifier() {
         return this.databaseIdentifier;
+    }
+
+    @Override
+    public boolean parse(String s) {
+        if (!App.checkForExistence(s) || !this.checkRegex(s))
+            return false;
+        return true;
     }
 
     @Override

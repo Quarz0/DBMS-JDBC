@@ -7,18 +7,11 @@ import util.RegexEvaluator;
 public class Drop implements Query {
 
     private String databaseIdentifier;
-    private String tableIdentifier;
     private boolean isDatabase;
+    private String tableIdentifier;
 
     public Drop() {
         this.isDatabase = false;
-    }
-
-    @Override
-    public boolean parse(String s) {
-        if (!App.checkForExistence(s) || !this.checkRegex(s))
-            return false;
-        return true;
     }
 
     private boolean checkRegex(String s) {
@@ -58,8 +51,14 @@ public class Drop implements Query {
     }
 
     @Override
+    public boolean parse(String s) {
+        if (!App.checkForExistence(s) || !this.checkRegex(s))
+            return false;
+        return true;
+    }
+
+    @Override
     public void setClause(Clause clause) {
-        // TODO Auto-generated method stub
 
     }
 

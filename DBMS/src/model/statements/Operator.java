@@ -1,11 +1,8 @@
 package model.statements;
 
 public enum Operator {
-    NONE(0), EQUAL(1), NOT_EQUAL(2), GREATER_THAN(3), LESS_THAN(4), GREATER_OR_EQUAL(
-            5), LESS_OR_EQUAL(6);
-
-    Operator(int strokeWidth) {
-    }
+    EQUAL(1), GREATER_OR_EQUAL(
+            5), GREATER_THAN(3), LESS_OR_EQUAL(6), LESS_THAN(4), NONE(0), NOT_EQUAL(2);
 
     public static Operator fromInteger(int op) {
         switch (op) {
@@ -63,5 +60,8 @@ public enum Operator {
             break;
         }
         return null;
+    }
+
+    Operator(int strokeWidth) {
     }
 }

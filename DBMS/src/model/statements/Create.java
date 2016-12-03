@@ -10,23 +10,16 @@ import util.RegexEvaluator;
 
 public class Create implements Query {
 
-    private String databaseIdentifier;
-    private String tableIdentifier;
     private List<String> columns;
-    private List<Class<?>> types;
+    private String databaseIdentifier;
     private boolean isDatabase;
+    private String tableIdentifier;
+    private List<Class<?>> types;
 
     public Create() {
         this.columns = new ArrayList<>();
         this.types = new ArrayList<>();
         this.isDatabase = false;
-    }
-
-    @Override
-    public boolean parse(String s) {
-        if (!App.checkForExistence(s) || !this.checkRegex(s))
-            return false;
-        return true;
     }
 
     private boolean checkRegex(String s) {
@@ -41,16 +34,6 @@ public class Create implements Query {
             return this.extractColIdentifiers(groups[2].trim());
         }
         return false;
-    }
-
-    private void extractDatabase(String s) {
-        this.databaseIdentifier = s.trim();
-        this.isDatabase = true;
-    }
-
-    private void extractTable(String s) {
-        this.tableIdentifier = s.trim();
-        this.isDatabase = false;
     }
 
     private boolean extractColIdentifiers(String s) {
@@ -69,6 +52,20 @@ public class Create implements Query {
         return true;
     }
 
+    private void extractDatabase(String s) {
+        this.databaseIdentifier = s.trim();
+        this.isDatabase = true;
+    }
+
+    private void extractTable(String s) {
+        this.tableIdentifier = s.trim();
+        this.isDatabase = false;
+    }
+
+    public List<String> getColumns() {
+        return columns;
+    }
+
     public String getDatabaseIdentifier() {
         return this.databaseIdentifier;
     }
@@ -77,21 +74,24 @@ public class Create implements Query {
         return this.tableIdentifier;
     }
 
+    public List<Class<?>> getTypes() {
+        return types;
+    }
+
     public boolean isDatabase() {
         return this.isDatabase;
     }
 
     @Override
+    public boolean parse(String s) {
+        if (!App.checkForExistence(s) || !this.checkRegex(s))
+            return false;
+        return true;
+    }
+
+    @Override
     public void setClause(Clause clause) {
 
-    }
-
-    public List<String> getColumns() {
-        return columns;
-    }
-
-    public List<Class<?>> getTypes() {
-        return types;
     }
 
 }

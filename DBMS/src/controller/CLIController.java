@@ -5,8 +5,8 @@ import view.CLI;
 
 public class CLIController {
 
-    private DBMSController dbmsController;
     private CLI cli;
+    private DBMSController dbmsController;
 
     public CLIController(DBMSController dbmsController) {
         this.dbmsController = dbmsController;
@@ -17,20 +17,20 @@ public class CLIController {
         this.cli.run();
     }
 
-    public void end() {
-
-    }
-
-    public void newInput(String s) {
-        this.dbmsController.getSQLParserController().parse(s);
-    }
-
     public void callForFailure(String errorMessage) {
         this.cli.newPrompt(errorMessage);
     }
 
     public void draw(String shape) {
         this.cli.newPrompt(shape);
+    }
+
+    public void end() {
+
+    }
+
+    public void newInput(String s) {
+        this.dbmsController.getSQLParserController().parse(s);
     }
 
     public void status(Boolean status) {

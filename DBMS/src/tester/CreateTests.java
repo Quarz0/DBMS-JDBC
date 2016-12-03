@@ -16,12 +16,6 @@ public class CreateTests {
     private DBMS db;
     private DBMSController dbmsController;
 
-    @Before
-    public final void init() {
-        db = new DatabaseController(null);
-        dbmsController = new DBMSController();
-    }
-
     /**
      * Exception.
      */
@@ -48,12 +42,6 @@ public class CreateTests {
         db.createTable("Table1", columns, types);
     }
 
-    @Test(expected = RuntimeException.class)
-    public final void usingNonExistingDatabase() {
-        db.createDatabase("Database1");
-        db.useDatabase("Database2");
-    }
-
     @Test
     public final void creatingAndUsingDatabase() {
         db.createDatabase("Database1");
@@ -69,6 +57,18 @@ public class CreateTests {
         types.add(String.class);
         Assert.assertEquals(true, db.useDatabase("Database1"));
         Assert.assertEquals(true, db.createTable("Table1", columns, types));
+    }
+
+    @Before
+    public final void init() {
+        db = new DatabaseController(null);
+        dbmsController = new DBMSController();
+    }
+
+    @Test(expected = RuntimeException.class)
+    public final void usingNonExistingDatabase() {
+        db.createDatabase("Database1");
+        db.useDatabase("Database2");
     }
 
 }

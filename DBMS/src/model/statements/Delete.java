@@ -6,19 +6,12 @@ import util.RegexEvaluator;
 
 public class Delete implements Query {
 
-    private String tableIdentifier;
     private boolean isAll;
+    private String tableIdentifier;
     private Where where;
 
     public Delete() {
         this.isAll = false;
-    }
-
-    @Override
-    public boolean parse(String s) {
-        if (!App.checkForExistence(s) || !this.checkRegex(s))
-            return false;
-        return true;
     }
 
     private boolean checkRegex(String s) {
@@ -28,6 +21,22 @@ public class Delete implements Query {
             return this.isAllFromRegex(groups[1]);
         }
         return false;
+    }
+
+    private void extractTable(String s) {
+        this.tableIdentifier = s.trim();
+    }
+
+    public String getTableIdentifier() {
+        return this.tableIdentifier;
+    }
+
+    public Where getWhere() {
+        return this.where;
+    }
+
+    public boolean isAll() {
+        return this.isAll;
     }
 
     private boolean isAllFromRegex(String s) {
@@ -40,20 +49,11 @@ public class Delete implements Query {
         return true;
     }
 
-    private void extractTable(String s) {
-        this.tableIdentifier = s.trim();
-    }
-
-    public String getTableIdentifier() {
-        return this.tableIdentifier;
-    }
-
-    public boolean isAll() {
-        return this.isAll;
-    }
-
-    public Where getWhere() {
-        return this.where;
+    @Override
+    public boolean parse(String s) {
+        if (!App.checkForExistence(s) || !this.checkRegex(s))
+            return false;
+        return true;
     }
 
     @Override

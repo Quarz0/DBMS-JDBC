@@ -10,8 +10,8 @@ import util.RegexEvaluator;
 public class Select implements Query {
 
     private List<String> columns;
-    private String tableIdentifier;
     private boolean isAll;
+    private String tableIdentifier;
     private Where where;
 
     public Select() {
@@ -19,11 +19,8 @@ public class Select implements Query {
         this.isAll = false;
     }
 
-    @Override
-    public boolean parse(String s) {
-        if (!App.checkForExistence(s) || !this.checkRegex(s))
-            return false;
-        return true;
+    public void addColumn(String col) {
+        columns.add(col);
     }
 
     public boolean checkRegex(String s) {
@@ -56,28 +53,31 @@ public class Select implements Query {
         return true;
     }
 
-    public void addColumn(String col) {
-        columns.add(col);
-    }
-
     private void extractTable(String s) {
         this.tableIdentifier = s.trim();
-    }
-
-    public String getTableIdentifier() {
-        return this.tableIdentifier;
     }
 
     public List<String> getColumns() {
         return this.columns;
     }
 
-    public boolean isAll() {
-        return isAll;
+    public String getTableIdentifier() {
+        return this.tableIdentifier;
     }
 
     public Where getWhere() {
         return where;
+    }
+
+    public boolean isAll() {
+        return isAll;
+    }
+
+    @Override
+    public boolean parse(String s) {
+        if (!App.checkForExistence(s) || !this.checkRegex(s))
+            return false;
+        return true;
     }
 
     @Override

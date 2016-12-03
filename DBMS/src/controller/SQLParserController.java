@@ -21,6 +21,14 @@ public class SQLParserController {
         this.sqlParserHelper = new SQLParserHelper(dbmsController);
     }
 
+    public void callForFailure(String errorMessage) {
+        this.dbmsController.getCLIController().callForFailure(errorMessage);
+    }
+
+    public SQLParserHelper getSqlParserHelper() {
+        return sqlParserHelper;
+    }
+
     private Query locateQuery(String queryIdentifier) {
         Class<?> cls;
         Query query;
@@ -63,14 +71,6 @@ public class SQLParserController {
             this.sqlParserHelper.setCurrentQuery(null);
         else
             this.sqlParserHelper.setCurrentQuery(query);
-    }
-
-    public void callForFailure(String errorMessage) {
-        this.dbmsController.getCLIController().callForFailure(errorMessage);
-    }
-
-    public SQLParserHelper getSqlParserHelper() {
-        return sqlParserHelper;
     }
 
 }

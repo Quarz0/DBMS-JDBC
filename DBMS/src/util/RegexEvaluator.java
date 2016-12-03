@@ -5,9 +5,6 @@ import java.util.regex.Pattern;
 
 public final class RegexEvaluator {
 
-    private RegexEvaluator() {
-    }
-
     public static String[] evaluate(String text, String pattern) {
         Pattern r = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
         Matcher m = r.matcher(text);
@@ -28,6 +25,9 @@ public final class RegexEvaluator {
         Matcher m = r.matcher(text);
 
         return m.find();
+    }
+
+    private RegexEvaluator() {
     }
 
 }

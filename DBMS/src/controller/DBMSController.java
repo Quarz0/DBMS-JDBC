@@ -23,11 +23,6 @@ public class DBMSController {
         this.cliController.begin();
     }
 
-    public void exit() {
-        this.cliController.end();
-        Main.exit();
-    }
-
     private void createAppPath() {
         File workspace = new File(App.DEFAULT_DIR_PATH);
         if (!workspace.exists()) {
@@ -36,6 +31,11 @@ public class DBMSController {
             }
         }
         this.databaseController.getHelper().setWorkspaceDir(workspace);
+    }
+
+    public void exit() {
+        this.cliController.end();
+        Main.exit();
     }
 
     public CLIController getCLIController() {

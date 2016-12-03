@@ -10,16 +10,12 @@ import util.ErrorCode;
 
 public class CLI {
 
-    private DBMSController dbmsController;
     private BufferedReader bufferedReader;
+    private DBMSController dbmsController;
 
     public CLI(DBMSController dbmsController) {
         this.dbmsController = dbmsController;
         this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-    }
-
-    public void run() {
-        this.newPrompt("");
     }
 
     public void close() {
@@ -31,17 +27,6 @@ public class CLI {
         }
     }
 
-    private void print(String s) throws IOException {
-        if (App.checkForExistence(s))
-            System.out.println(s);
-        System.out.print(App.PS1);
-        this.scan();
-    }
-
-    private void scan() throws IOException {
-        this.dbmsController.getCLIController().newInput(this.bufferedReader.readLine());
-    }
-
     public void newPrompt(String s) {
         try {
             this.print(s);
@@ -49,6 +34,21 @@ public class CLI {
             e.printStackTrace();
             System.out.println(ErrorCode.CLI_READLINE + " " + e.getMessage());
         }
+    }
+
+    private void print(String s) throws IOException {
+        if (App.checkForExistence(s))
+            System.out.println(s);
+        System.out.print(App.PS1);
+        this.scan();
+    }
+
+    public void run() {
+        this.newPrompt("");
+    }
+
+    private void scan() throws IOException {
+        this.dbmsController.getCLIController().newInput(this.bufferedReader.readLine());
     }
 
 }

@@ -8,26 +8,15 @@ public final class App {
 
     public static final String DEFAULT_DIR_PATH = System.getProperty("user.home")
             + File.separatorChar + "DBMS" + File.separatorChar;
-    public static final String PS1 =  "sql>> ";
+    public static final String PS1 = "sql>> ";
 
     public static boolean checkForExistence(Object object) {
         if (object == null)
             return false;
 
         if (object instanceof String)
-            return !(object.equals(null) || ((String) object).isEmpty());
-        return !object.equals(null);
-    }
-
-    public static Object[] swapArrayOfTwo(Object[] objects) {
-        List<Object> result = new ArrayList<>();
-        result.add(objects[1]);
-        result.add(objects[0]);
-        return result.toArray();
-    }
-
-    public static boolean isColumnIdentifier(String s) {
-        return s.matches(Regex.LEGAL_IDENTIFIER);
+            return !(((String) object).isEmpty());
+        return true;
     }
 
     private static boolean isBalancedQuotedString(String s) {
@@ -38,6 +27,14 @@ public final class App {
             }
         }
         return cnt % 2 == 0;
+    }
+
+    public static boolean isColumnIdentifier(String s) {
+        return s.matches(Regex.LEGAL_IDENTIFIER);
+    }
+
+    private static boolean isValidChar(char c) {
+        return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_' || (c >= '0' && c <= 9);
     }
 
     public static String replace(String s, String _old, String _new) {
@@ -63,8 +60,11 @@ public final class App {
         return s;
     }
 
-    private static boolean isValidChar(char c) {
-        return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_' || (c >= '0' && c <= 9);
+    public static Object[] swapArrayOfTwo(Object[] objects) {
+        List<Object> result = new ArrayList<>();
+        result.add(objects[1]);
+        result.add(objects[0]);
+        return result.toArray();
     }
 
     private App() {

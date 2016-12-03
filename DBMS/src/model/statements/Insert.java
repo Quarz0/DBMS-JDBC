@@ -9,22 +9,15 @@ import util.RegexEvaluator;
 
 public class Insert implements Query {
 
-    private String tableIdentifier;
-    private List<String> values;
     private List<String> identifiers;
     private boolean isDefaultSelection;
+    private String tableIdentifier;
+    private List<String> values;
 
     public Insert() {
         this.values = new ArrayList<>();
         this.identifiers = new ArrayList<>();
         this.isDefaultSelection = false;
-    }
-
-    @Override
-    public boolean parse(String s) {
-        if (!App.checkForExistence(s) || !this.checkRegex(s))
-            return false;
-        return true;
     }
 
     private boolean checkRegex(String s) {
@@ -49,6 +42,24 @@ public class Insert implements Query {
         return false;
     }
 
+    private String[] extractIdentifiers(String s) {
+        return s.split(",");
+    }
+
+    private void extractTable(String s) {
+        this.tableIdentifier = s.trim();
+    }
+
+    private String[] extractValues(String s) {
+        if (!s.matches(Regex.PARSE_WITH_INSERT_TRIM_MATCH))
+            return null;
+        if (s.split(Regex.PARSE_WITH_INSERT_SPLIT_PATTERN1).length <= s
+                .split(Regex.PARSE_WITH_INSERT_SPLIT_PATTERN2).length)
+            return s.split(Regex.PARSE_WITH_INSERT_SPLIT_PATTERN1);
+        else
+            return s.split(Regex.PARSE_WITH_INSERT_SPLIT_PATTERN2);
+    }
+
     private boolean fillColumns(String[] values, String[] identifiers) {
         if (App.checkForExistence(identifiers) && values.length != identifiers.length)
             return false;
@@ -63,26 +74,16 @@ public class Insert implements Query {
         return true;
     }
 
-    private String[] extractValues(String s) {
-        if (!s.matches(Regex.PARSE_WITH_INSERT_TRIM_MATCH))
-            return null;
-        if (s.split(Regex.PARSE_WITH_INSERT_SPLIT_PATTERN1).length <= s
-                .split(Regex.PARSE_WITH_INSERT_SPLIT_PATTERN2).length)
-            return s.split(Regex.PARSE_WITH_INSERT_SPLIT_PATTERN1);
-        else
-            return s.split(Regex.PARSE_WITH_INSERT_SPLIT_PATTERN2);
-    }
-
-    private String[] extractIdentifiers(String s) {
-        return s.split(",");
-    }
-
-    private void extractTable(String s) {
-        this.tableIdentifier = s.trim();
+    public List<String> getIdentifiers() {
+        return identifiers;
     }
 
     public String getTableIdentifier() {
         return this.tableIdentifier;
+    }
+
+    public List<String> getValues() {
+        return values;
     }
 
     public boolean isDefaultSelection() {
@@ -90,17 +91,16 @@ public class Insert implements Query {
     }
 
     @Override
+    public boolean parse(String s) {
+        if (!App.checkForExistence(s) || !this.checkRegex(s))
+            return false;
+        return true;
+    }
+
+    @Override
     public void setClause(Clause clause) {
         // TODO Auto-generated method stub
 
-    }
-
-    public List<String> getValues() {
-        return values;
-    }
-
-    public List<String> getIdentifiers() {
-        return identifiers;
     }
 
 }

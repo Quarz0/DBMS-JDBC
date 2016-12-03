@@ -5,9 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Database {
+    private File databaseDir;
     private String databaseName;
     private List<Table> tables;
-    private File databaseDir;
+
+    public Database() {
+        tables = new ArrayList<>();
+    }
 
     public Database(String workspaceDirc, String databaseName) {
         createDatabaseDir(workspaceDirc + File.separator + databaseName);
@@ -15,41 +19,8 @@ public class Database {
         this.databaseName = databaseName;
     }
 
-    public Database() {
-        tables = new ArrayList<>();
-    }
-
     public void clearTableList() {
         tables.clear();
-    }
-
-    public String getDatabaseName() {
-        return databaseName;
-    }
-
-    public File getDatabaseDir() {
-        return databaseDir;
-    }
-
-    public String getPath() {
-        return databaseDir.getAbsolutePath();
-    }
-
-    public void registerTable(Table table) {
-        tables.add(table);
-    }
-
-    public void dropTable(Table table) {
-        tables.remove(table);
-    }
-
-    public void useDatabase(File databaseDir) {
-        this.databaseDir = databaseDir;
-        databaseName = databaseDir.getName();
-    }
-
-    public List<Table> getTables() {
-        return tables;
     }
 
     private void createDatabaseDir(String databasePath) {
@@ -57,5 +28,34 @@ public class Database {
         if (!databaseDir.mkdir()) {
             throw new RuntimeException("Cannot create database directory");
         }
+    }
+
+    public void dropTable(Table table) {
+        tables.remove(table);
+    }
+
+    public File getDatabaseDir() {
+        return databaseDir;
+    }
+
+    public String getDatabaseName() {
+        return databaseName;
+    }
+
+    public String getPath() {
+        return databaseDir.getAbsolutePath();
+    }
+
+    public List<Table> getTables() {
+        return tables;
+    }
+
+    public void registerTable(Table table) {
+        tables.add(table);
+    }
+
+    public void useDatabase(File databaseDir) {
+        this.databaseDir = databaseDir;
+        databaseName = databaseDir.getName();
     }
 }

@@ -6,10 +6,12 @@ import javax.script.ScriptException;
 
 public final class BooleanEvaluator {
 
-    private static ScriptEngineManager mgr;
     private static ScriptEngine engine;
+    private static ScriptEngineManager mgr;
 
-    private BooleanEvaluator() {
+    public static boolean evaluate(String exp) throws ScriptException {
+        BooleanEvaluator.initialize();
+        return (Boolean) engine.eval(exp);
     };
 
     private static void initialize() {
@@ -19,9 +21,7 @@ public final class BooleanEvaluator {
         engine = mgr.getEngineByName("JavaScript");
     }
 
-    public static boolean evaluate(String exp) throws ScriptException {
-        BooleanEvaluator.initialize();
-        return (Boolean) engine.eval(exp);
+    private BooleanEvaluator() {
     }
 
 }

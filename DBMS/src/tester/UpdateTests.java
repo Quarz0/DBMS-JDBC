@@ -20,8 +20,8 @@ public class UpdateTests {
         db = new DatabaseController(null);
         dbmsController = new DBMSController();
     }
-    
-    @Test (expected = RuntimeException.class)
+
+    @Test(expected = RuntimeException.class)
     public final void select1() {
         List<String> columns = new ArrayList<>();
         columns.add("Name");
@@ -40,22 +40,18 @@ public class UpdateTests {
         values2.add("Edward");
         values2.add("15");
         values2.add("false");
-        db.insertIntoTable("Table1", values1);        
+        db.insertIntoTable("Table1", values1);
         db.insertIntoTable("Table1", values2);
         values2.set(0, "Ed");
         values2.set(1, "1");
         values2.remove(2);
         columns.remove(2);
         db.updateTable("Table1", columns, values2, "married == false");
-        String table = "  Table: Table1\n" +
-                "+------+-----+---------+\n" +
-                "| Name | Age | Married |\n" +
-                "+------+-----+---------+\n" +
-                "| Rob  | 20  | false   |\n" +
-                "| Ed   | 1   | false   |\n" +
-                "+------+-----+---------+\n" +
-                "  Records: 2\n";
+        String table = "  Table: Table1\n" + "+------+-----+---------+\n"
+                + "| Name | Age | Married |\n" + "+------+-----+---------+\n"
+                + "| Rob  | 20  | false   |\n" + "| Ed   | 1   | false   |\n"
+                + "+------+-----+---------+\n" + "  Records: 2\n";
         Assert.assertEquals(table, db.selectFromTable("Table1", columns, null));
-        
+
     }
 }

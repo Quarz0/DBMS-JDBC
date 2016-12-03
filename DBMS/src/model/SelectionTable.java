@@ -10,9 +10,14 @@ import de.vandermeer.asciitable.v2.render.WidthLongestWordMaxCol;
 import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
 
 public class SelectionTable {
-    private List<Record> recordList;
     private List<String> header;
+    private List<Record> recordList;
     private String tableName;
+
+    public SelectionTable(List<String> colNames) {
+        header = colNames;
+        recordList = new ArrayList<>();
+    }
 
     public SelectionTable(String tableName, List<String> colNames) {
         header = colNames;
@@ -20,13 +25,8 @@ public class SelectionTable {
         recordList = new ArrayList<>();
     }
 
-    public SelectionTable(List<String> colNames) {
-        header = colNames;
-        recordList = new ArrayList<>();
-    }
-
-    public String getTableName() {
-        return tableName;
+    public void addRecord(Record record) {
+        recordList.add(record);
     }
 
     public List<String> getHeader() {
@@ -37,8 +37,8 @@ public class SelectionTable {
         return recordList;
     }
 
-    public void addRecord(Record record) {
-        recordList.add(record);
+    public String getTableName() {
+        return tableName;
     }
 
     @Override

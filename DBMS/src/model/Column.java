@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Column<T> {
-    private List<T> column;
     private String colName;
+    private List<T> column;
     private Class<?> type;
 
     public Column(String colName, Class<?> cls) {
@@ -14,19 +14,19 @@ public class Column<T> {
         column = new ArrayList<>();
     }
 
-    public Class<?> getType() {
-        return type;
-    }
-
     public void addData(Object data) {
         column.add((T) data);
+    }
+
+    public String getColName() {
+        return colName;
     }
 
     public T getData(int index) {
         return column.get(index);
     }
 
-    public String getColName() {
-        return colName;
+    public Class<?> getType() {
+        return type;
     }
 }

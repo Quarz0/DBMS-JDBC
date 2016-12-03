@@ -23,11 +23,6 @@ public class DatabaseHelper {
         return workspaceDir;
     }
 
-    public void setSelectedTable(SelectionTable selectedTable) {
-
-        this.selectedTable = selectedTable;
-    }
-
     public SelectionTable getSelectedTable() {
         return selectedTable;
     }
@@ -36,13 +31,18 @@ public class DatabaseHelper {
         return workspaceDir;
     }
 
-    public void setWorkspaceDir(File workspaceDir) {
-        this.workspaceDir = workspaceDir;
-    }
-
     public void setDatabase(File usedDatabaseDir) {
 
         currentDatabase = new Database();
         currentDatabase.useDatabase(usedDatabaseDir);
+    }
+
+    public void setSelectedTable(SelectionTable selectedTable) {
+
+        this.selectedTable = selectedTable;
+    }
+
+    public void setWorkspaceDir(File workspaceDir) {
+        this.workspaceDir = workspaceDir;
     }
 }
