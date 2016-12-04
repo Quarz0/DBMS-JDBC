@@ -1,13 +1,15 @@
 package model.statements;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import controller.DBMS;
 import util.App;
 import util.Regex;
 import util.RegexEvaluator;
 
-public class Select implements Query {
+public class Select extends Query {
 
     private List<String> columns;
     private boolean isAll;
@@ -15,6 +17,7 @@ public class Select implements Query {
     private Where where;
 
     public Select() {
+        super();
         this.columns = new ArrayList<>();
         this.isAll = false;
     }
@@ -37,6 +40,12 @@ public class Select implements Query {
             }
         }
         return false;
+    }
+
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        // TODO Auto-generated method stub
+
     }
 
     private boolean extractColIdentifiers(String s) {
@@ -74,16 +83,9 @@ public class Select implements Query {
     }
 
     @Override
-    public boolean parse(String s) {
+    public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
-            return false;
-        return true;
-    }
-
-    @Override
-    public void setClause(Clause clause) {
-        if (clause instanceof Where)
-            this.where = (Where) clause;
+            throw new ParseException("Invalid", 0);
     }
 
 }

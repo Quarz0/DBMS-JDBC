@@ -1,13 +1,15 @@
 package model.statements;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import controller.DBMS;
 import util.App;
 import util.Regex;
 import util.RegexEvaluator;
 
-public class Insert implements Query {
+public class Insert extends Query {
 
     private List<String> identifiers;
     private boolean isDefaultSelection;
@@ -15,6 +17,7 @@ public class Insert implements Query {
     private List<String> values;
 
     public Insert() {
+        super();
         this.values = new ArrayList<>();
         this.identifiers = new ArrayList<>();
         this.isDefaultSelection = false;
@@ -40,6 +43,12 @@ public class Insert implements Query {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        // TODO Auto-generated method stub
+
     }
 
     private String[] extractIdentifiers(String s) {
@@ -91,16 +100,9 @@ public class Insert implements Query {
     }
 
     @Override
-    public boolean parse(String s) {
+    public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
-            return false;
-        return true;
-    }
-
-    @Override
-    public void setClause(Clause clause) {
-        // TODO Auto-generated method stub
-
+            throw new ParseException("Invalid", 0);
     }
 
 }

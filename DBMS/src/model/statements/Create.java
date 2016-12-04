@@ -1,14 +1,16 @@
 package model.statements;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import controller.DBMS;
 import model.ClassFactory;
 import util.App;
 import util.Regex;
 import util.RegexEvaluator;
 
-public class Create implements Query {
+public class Create extends Query {
 
     private List<String> columns;
     private String databaseIdentifier;
@@ -17,6 +19,7 @@ public class Create implements Query {
     private List<Class<?>> types;
 
     public Create() {
+        super();
         this.columns = new ArrayList<>();
         this.types = new ArrayList<>();
         this.isDatabase = false;
@@ -34,6 +37,12 @@ public class Create implements Query {
             return this.extractColIdentifiers(groups[2].trim());
         }
         return false;
+    }
+
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        // TODO Auto-generated method stub
+
     }
 
     private boolean extractColIdentifiers(String s) {
@@ -83,15 +92,9 @@ public class Create implements Query {
     }
 
     @Override
-    public boolean parse(String s) {
+    public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
-            return false;
-        return true;
-    }
-
-    @Override
-    public void setClause(Clause clause) {
-
+            throw new ParseException("Invalid", 0);
     }
 
 }

@@ -1,14 +1,18 @@
 package model.statements;
 
+import java.text.ParseException;
+
+import controller.DBMS;
 import util.App;
 import util.Regex;
 import util.RegexEvaluator;
 
-public class Use implements Query {
+public class Use extends Query {
 
     private String databaseIdentifier;
 
     public Use() {
+        super();
     }
 
     private boolean checkRegex(String s) {
@@ -20,6 +24,12 @@ public class Use implements Query {
         return false;
     }
 
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        // TODO Auto-generated method stub
+
+    }
+
     private void extractDatabase(String s) {
         this.databaseIdentifier = s.trim();
     }
@@ -29,16 +39,9 @@ public class Use implements Query {
     }
 
     @Override
-    public boolean parse(String s) {
+    public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
-            return false;
-        return true;
-    }
-
-    @Override
-    public void setClause(Clause clause) {
-        // TODO Auto-generated method stub
-
+            throw new ParseException("Invalid", 0);
     }
 
 }
