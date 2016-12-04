@@ -53,6 +53,7 @@ public class SQLParserController {
         boolean errorExists = false;
         if (!App.checkForExistence(s))
             this.callForFailure(ErrorCode.SYNTAX_ERROR);
+        s = App.replace(App.replace(s, "(", " ("), ")", ") ");
         groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_WHERE);
         if (!App.checkForExistence(groups))
             this.callForFailure(ErrorCode.SYNTAX_ERROR);

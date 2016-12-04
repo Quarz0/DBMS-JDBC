@@ -79,6 +79,7 @@ public class XMLController {
             return false;
         }
     }
+
     private DBMSController dbmsController;
     private org.jdom2.Document document;
     private XMLEventReader eventReader;
