@@ -37,7 +37,7 @@ public class DatabaseController implements DBMS, Observer {
         objectFactory = new ObjectFactory();
         this.dbmsController = dbmsController;
         this.dbHelper = new DatabaseHelper(this);
-        this.dbmsClause = new ClauseController();
+        this.dbmsClause = new ClauseController(dbmsController);
 
     }
 
