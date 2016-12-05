@@ -35,6 +35,7 @@ public class DatabaseController implements DBMS, Observer {
     private DatabaseHelper dbHelper;
     private DBMSController dbmsController;
     private ObjectFactory objectFactory;
+    private DBMSClause dbmsClause;
 
     public DatabaseController(DBMSController dbmsController) {
         databaseFilter = new DatabaseFilterGenerator();
@@ -42,6 +43,8 @@ public class DatabaseController implements DBMS, Observer {
         objectFactory = new ObjectFactory();
         this.dbmsController = dbmsController;
         this.dbHelper = new DatabaseHelper(this);
+        this.dbmsClause = new ClauseController();
+
     }
 
     private boolean containsAllStrings(List<String> list1, List<String> list2) {

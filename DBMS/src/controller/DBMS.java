@@ -4,24 +4,26 @@ import java.util.List;
 
 public interface DBMS {
 
-    public boolean createDatabase(String databaseName);
+    public void createDatabase(String databaseName) throws RuntimeException;
 
-    public boolean createTable(String tableName, List<String> colNames, List<Class<?>> types);
+    public void createTable(String tableName, List<String> colNames, List<Class<?>> types)
+            throws RuntimeException;
 
-    public boolean deleteFromTable(String tableName, String condition);
+    public void deleteFromTable(String tableName) throws RuntimeException;
 
-    public boolean dropDatabase(String databaseName);
+    public void dropDatabase(String databaseName) throws RuntimeException;
 
-    public boolean dropTable(String tableName);
+    public void dropTable(String tableName) throws RuntimeException;
 
-    public boolean insertIntoTable(String tableName, List<String> values);
+    public void insertIntoTable(String tableName, List<String> values) throws RuntimeException;
 
-    public boolean insertIntoTable(String tableName, List<String> colNames, List<String> values);
+    public void insertIntoTable(String tableName, List<String> colNames, List<String> values)
+            throws RuntimeException;
 
-    public String selectFromTable(String tableName, List<String> colNames, String condition);
+    public String selectFromTable(String tableName, List<String> colNames) throws RuntimeException;
 
-    public boolean updateTable(String tableName, List<String> colNames, List<String> values,
-            String condition);
+    public void updateTable(String tableName, List<String> colNames, List<String> values)
+            throws RuntimeException;
 
-    public boolean useDatabase(String databaseName);
+    public void useDatabase(String databaseName) throws RuntimeException;
 }

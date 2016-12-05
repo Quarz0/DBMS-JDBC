@@ -1,6 +1,5 @@
 package model.statements;
 
-public interface Clause {
+public abstract class Clause implements Executable, Parsable {
 
-    // marker
 }

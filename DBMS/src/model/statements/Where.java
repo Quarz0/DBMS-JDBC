@@ -1,6 +1,10 @@
 package model.statements;
 
-public class Where implements Clause {
+import java.text.ParseException;
+
+import controller.DBMS;
+
+public class Where extends Clause {
 
     private String expression;
 
@@ -14,6 +18,18 @@ public class Where implements Clause {
 
     public void setExpression(String exp) {
         expression = exp;
+    }
+
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void parse(String s) throws ParseException {
+        // TODO Auto-generated method stub
+
     }
 
 }
