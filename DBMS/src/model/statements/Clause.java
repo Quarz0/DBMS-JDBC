@@ -1,5 +1,5 @@
 package model.statements;
 
-public abstract class Clause implements Executable, Parsable {
+public abstract class Clause implements ExecutableClause, Parsable {
 
 }

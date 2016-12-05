@@ -2,7 +2,7 @@ package model.statements;
 
 import java.text.ParseException;
 
-import controller.DBMS;
+import controller.DBMSClause;
 
 public class Where extends Clause {
 
@@ -21,13 +21,13 @@ public class Where extends Clause {
     }
 
     @Override
-    public void execute(DBMS dbms) throws RuntimeException {
+    public void parse(String s) throws ParseException {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void parse(String s) throws ParseException {
+    public void execute(DBMSClause dbms) throws RuntimeException {
         // TODO Auto-generated method stub
 
     }

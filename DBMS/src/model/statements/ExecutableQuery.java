@@ -2,7 +2,7 @@ package model.statements;
 
 import controller.DBMS;
 
-public interface Executable {
+public interface ExecutableQuery {
 
     public void execute(DBMS dbms) throws RuntimeException;
 }

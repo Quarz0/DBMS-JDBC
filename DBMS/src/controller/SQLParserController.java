@@ -4,6 +4,7 @@ import java.text.ParseException;
 
 import model.SQLParserHelper;
 import model.statements.Query;
+import model.statements.Where;
 import util.App;
 import util.ErrorCode;
 import util.Regex;
@@ -48,22 +49,25 @@ public class SQLParserController {
 
     public void parse(String s) throws ParseException {
         Query query = null;
+        Where where = null;
         String[] groups;
         boolean whereExists = false;
         if (!App.checkForExistence(s))
-            this.callForFailure(ErrorCode.SYNTAX_ERROR);
+            throw new ParseException("Invalid", 0);
         s = App.replace(App.replace(s, "(", " ("), ")", ") ");
         groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_WHERE);
         if (!App.checkForExistence(groups))
-            this.callForFailure(ErrorCode.SYNTAX_ERROR);
-        whereExists = App.checkForExistence(groups[Regex.PARSE_WITH_WHERE_GROUP_ID]);
+            throw new ParseException("Invalid", 0);
+        whereExists = App.checkForExistence(groups[2]) && App.checkForExistence(groups[3]);
         query = this.locateQuery(groups[1].trim());
         if (!App.checkForExistence(query))
-            this.callForFailure(ErrorCode.SYNTAX_ERROR);
+            throw new ParseException("Invalid", 0);
         if (whereExists) {
-            query.parse(groups[Regex.PARSE_WITH_WHERE_GROUP_ID - 1]);
+            where = new Where(groups[3]);
+            query.parse(groups[2]);
+            query.addClause(where);
         } else {
-            query.parse(groups[Regex.PARSE_WITH_WHERE_GROUP_ID + 1]);
+            query.parse(groups[3]);
         }
         this.sqlParserHelper.setCurrentQuery(query);
     }
