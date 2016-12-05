@@ -1,16 +1,20 @@
 package model.statements;
 
+import java.text.ParseException;
+
+import controller.DBMS;
 import util.App;
 import util.Regex;
 import util.RegexEvaluator;
 
-public class Delete implements Query {
+public class Delete extends Query {
 
     private boolean isAll;
     private String tableIdentifier;
     private Where where;
 
     public Delete() {
+        super();
         this.isAll = false;
     }
 
@@ -21,6 +25,12 @@ public class Delete implements Query {
             return this.isAllFromRegex(groups[1]);
         }
         return false;
+    }
+
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        // TODO Auto-generated method stub
+
     }
 
     private void extractTable(String s) {
@@ -50,16 +60,9 @@ public class Delete implements Query {
     }
 
     @Override
-    public boolean parse(String s) {
+    public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
-            return false;
-        return true;
-    }
-
-    @Override
-    public void setClause(Clause clause) {
-        if (clause instanceof Where)
-            this.where = (Where) clause;
+            throw new ParseException("Invalid", 0);
     }
 
 }

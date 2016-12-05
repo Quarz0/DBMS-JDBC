@@ -1,8 +1,9 @@
 package controller;
 
+import java.text.ParseException;
+
 import model.SQLParserHelper;
 import model.statements.Query;
-import model.statements.Where;
 import util.App;
 import util.ErrorCode;
 import util.Regex;
@@ -45,12 +46,10 @@ public class SQLParserController {
             return null;
     }
 
-    public void parse(String s) {
+    public void parse(String s) throws ParseException {
         Query query = null;
-        Where where = null;
         String[] groups;
         boolean whereExists = false;
-        boolean errorExists = false;
         if (!App.checkForExistence(s))
             this.callForFailure(ErrorCode.SYNTAX_ERROR);
         s = App.replace(App.replace(s, "(", " ("), ")", ") ");
@@ -62,16 +61,11 @@ public class SQLParserController {
         if (!App.checkForExistence(query))
             this.callForFailure(ErrorCode.SYNTAX_ERROR);
         if (whereExists) {
-            where = new Where(groups[Regex.PARSE_WITH_WHERE_GROUP_ID + 1]);
-            errorExists = query.parse(groups[Regex.PARSE_WITH_WHERE_GROUP_ID - 1]);
-            query.setClause(where);
+            query.parse(groups[Regex.PARSE_WITH_WHERE_GROUP_ID - 1]);
         } else {
-            errorExists = query.parse(groups[Regex.PARSE_WITH_WHERE_GROUP_ID + 1]);
+            query.parse(groups[Regex.PARSE_WITH_WHERE_GROUP_ID + 1]);
         }
-        if (!errorExists)
-            this.sqlParserHelper.setCurrentQuery(null);
-        else
-            this.sqlParserHelper.setCurrentQuery(query);
+        this.sqlParserHelper.setCurrentQuery(query);
     }
 
 }

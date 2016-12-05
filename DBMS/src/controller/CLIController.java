@@ -1,5 +1,7 @@
 package controller;
 
+import java.text.ParseException;
+
 import util.ErrorCode;
 import view.CLI;
 
@@ -30,7 +32,12 @@ public class CLIController {
     }
 
     public void newInput(String s) {
-        this.dbmsController.getSQLParserController().parse(s);
+        try {
+            this.dbmsController.getSQLParserController().parse(s);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public void status(Boolean status) {
