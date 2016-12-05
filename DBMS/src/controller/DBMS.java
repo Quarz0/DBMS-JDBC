@@ -1,12 +1,12 @@
 package controller;
 
-import java.util.List;
+import java.util.Map;
 
 public interface DBMS {
 
     public void createDatabase(String databaseName) throws RuntimeException;
 
-    public void createTable(String tableName, List<String> colNames, List<Class<?>> types)
+    public void createTable(String tableName, Map<String, Class<?>> columns)
             throws RuntimeException;
 
     public void deleteFromTable(String tableName) throws RuntimeException;
@@ -15,15 +15,16 @@ public interface DBMS {
 
     public void dropTable(String tableName) throws RuntimeException;
 
-    public void insertIntoTable(String tableName, List<String> values) throws RuntimeException;
+    public void insertIntoTable(String tableName, String... values) throws RuntimeException;
 
-    public void insertIntoTable(String tableName, List<String> colNames, List<String> values)
+    public void insertIntoTable(String tableName, Map<String, String> columns)
             throws RuntimeException;
 
-    public String selectFromTable(String tableName, List<String> colNames) throws RuntimeException;
+    public void selectFromTable(String tableName, String... colNames) throws RuntimeException;
 
-    public void updateTable(String tableName, List<String> colNames, List<String> values)
-            throws RuntimeException;
+    public void selectAllFromTable(String tableName) throws RuntimeException;
+
+    public void updateTable(String tableName, Map<String, String> columns) throws RuntimeException;
 
     public void useDatabase(String databaseName) throws RuntimeException;
 }
