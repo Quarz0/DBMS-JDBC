@@ -23,9 +23,10 @@ public final class Regex {
     public static final String PARSE_WITH_INSERT_SPLIT_PATTERN2 = ",(?=(?:[^\']*\'[^\']*\')*[^\']*$)";
     public static final String PARSE_WITH_INSERT_TRIM_MATCH = ".+(?<!,)";
 
-    public static final String PARSE_WITH_SELECT_ALL_FROM = "\\A\\s*\\*?\\s+FROM\\s+([a-zA-Z_]\\w*)\\s*\\Z";
-
-    public static final String PARSE_WITH_SELECT_FROM = "\\A\\s*(.*?)\\s+FROM\\s+([a-zA-Z_]\\w*)\\s*\\Z";
+    public static final String PARSE_WITH_SELECT_ALL_FROM = "\\A\\s*(DISINCT\\s+)?\\*?\\s+FROM\\s+([a-zA-Z_]\\w*)\\s*\\Z";
+    public static final String PARSE_WITH_SELECT_FROM = "\\A\\s*(DISINCT\\s+)?(.*?)\\s+FROM\\s+([a-zA-Z_]\\w*)\\s*\\Z";
+    
+    
     public static final String PARSE_WITH_UPDATE = "\\A\\s*([a-zA-Z_]\\w*)\\s+SET\\s+(.+)\\Z";
     public static final String PARSE_WITH_UPDATE_SPLIT_PATTERN_LEFT = "\\A\\s*([a-zA-Z_]\\w*)\\s*=\\s*(.*)\\Z";
     public static final String PARSE_WITH_UPDATE_SPLIT_PATTERN_RIGHT = "\\A\\s*(.*)=\\s*([a-zA-Z_]\\w*)\\Z";
@@ -40,7 +41,9 @@ public final class Regex {
     public static final String PARSE_WITH_USE = "\\A\\s*([a-zA-Z_]\\w*)\\s*\\Z";
     public static final String PARSE_WITH_WHERE = "(\\w+)\\s+((.*)\\s+(WHERE\\s))?(.*)";
     public static final int PARSE_WITH_WHERE_GROUP_ID = 4;
-
+    
+    public static final String PARSE_WITH_ORDER_BY = "\\A.*\\s+ORDER\\s+BY\\s+\\s*([a-zA-Z_]\\w*(\\s+ASC|\\s+DESC)?\\s*(,\\s*[a-zA-Z_]\\w*(\\s+ASC|\\s+DESC)?\\s*)*)\\Z";
+    
     private Regex() {
     }
 }

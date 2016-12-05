@@ -93,7 +93,7 @@ public class Update extends Query {
         if (s.trim().matches(Regex.PARSE_WITH_UPDATE_TRIM_MATCH_LEFT)) {
             String[] check = RegexEvaluator.evaluate(s.trim(),
                     Regex.PARSE_WITH_UPDATE_SPLIT_PATTERN_LEFT);
-            if (!App.checkForExistence(check) || !App.isColumnIdentifier(check[1].trim())) {
+            if (!App.checkForExistence(check) || !App.isLegalIdentifier(check[1].trim())) {
                 return null;
             } else {
                 return check;
@@ -101,7 +101,7 @@ public class Update extends Query {
         } else if (s.trim().matches(Regex.PARSE_WITH_UPDATE_TRIM_MATCH_RIGHT)) {
             String[] check = RegexEvaluator.evaluate(s.trim(),
                     Regex.PARSE_WITH_UPDATE_SPLIT_PATTERN_RIGHT);
-            if (!App.checkForExistence(check) || !App.isColumnIdentifier(check[2].trim())) {
+            if (!App.checkForExistence(check) || !App.isLegalIdentifier(check[2].trim())) {
                 return null;
             } else {
                 return (String[]) App.swapArrayOfTwo(check);

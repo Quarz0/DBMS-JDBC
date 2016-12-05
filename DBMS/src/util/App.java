@@ -30,7 +30,7 @@ public final class App {
         return true;
     }
 
-    public static boolean isColumnIdentifier(String s) {
+    public static boolean isLegalIdentifier(String s) {
         return s.matches(Regex.LEGAL_IDENTIFIER);
     }
 

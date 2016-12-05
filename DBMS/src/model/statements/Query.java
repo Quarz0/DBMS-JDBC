@@ -11,7 +11,7 @@ public abstract class Query implements Executable, Parsable {
         clauses = new ArrayList<>();
     }
 
-    public void addClauses(Clause clause) {
+    public void addClause(Clause clause) {
         this.clauses.add(clause);
     }
 }

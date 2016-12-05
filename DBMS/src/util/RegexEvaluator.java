@@ -20,13 +20,6 @@ public final class RegexEvaluator {
         }
     }
 
-    public static boolean isMatch(String text, String pattern) {
-        Pattern r = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-        Matcher m = r.matcher(text);
-
-        return m.find();
-    }
-
     private RegexEvaluator() {
     }
 

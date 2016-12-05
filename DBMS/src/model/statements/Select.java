@@ -13,6 +13,7 @@ public class Select extends Query {
 
     private List<String> columns;
     private boolean isAll;
+    private boolean isDistinct;
     private String tableIdentifier;
     private Where where;
 
@@ -20,6 +21,7 @@ public class Select extends Query {
         super();
         this.columns = new ArrayList<>();
         this.isAll = false;
+        this.isDistinct = false;
     }
 
     public void addColumn(String col) {
@@ -29,14 +31,16 @@ public class Select extends Query {
     public boolean checkRegex(String s) {
         String[] groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_SELECT_ALL_FROM);
         if (App.checkForExistence(groups)) {
-            this.extractTable(groups[1].trim());
+            this.extractTable(groups[2].trim());
             this.isAll = true;
+            this.isDistinct = App.checkForExistence(groups[1].trim());
             return true;
         } else {
             groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_SELECT_FROM);
             if (App.checkForExistence(groups)) {
-                this.extractTable(groups[2].trim());
-                return this.extractColIdentifiers(groups[1].trim());
+                this.extractTable(groups[3].trim());
+                this.isDistinct = App.checkForExistence(groups[1].trim());
+                return this.extractColIdentifiers(groups[2].trim());
             }
         }
         return false;
@@ -53,7 +57,7 @@ public class Select extends Query {
         String tableName;
         for (int i = 0; i < colmuns.length; i++) {
             tableName = colmuns[i].trim();
-            if (RegexEvaluator.isMatch(tableName, Regex.LEGAL_IDENTIFIER)) {
+            if (App.isLegalIdentifier(tableName)) {
                 this.columns.add(tableName);
             } else {
                 return false;
