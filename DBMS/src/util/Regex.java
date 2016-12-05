@@ -9,6 +9,10 @@ public final class Regex {
 
     public static final String PARSE_WITH_DELETE_ALL = "\\A\\s*(\\*\\s+)?FROM\\s+([a-zA-Z_]\\w*)\\s*\\Z";
 
+    public static final String PARSE_WITH_ALTER_TABLE_ADD = "\\A\\s*TABLE\\s+([a-zA-Z_]\\w*)\\s+ADD\\s+([a-zA-Z_]\\w*)\\s+([a-zA-Z]+)\\s*\\Z";
+    public static final String PARSE_WITH_ALTER_TABLE_DROP_COLUMN = "\\A\\s*TABLE\\s+([a-zA-Z_]\\w*)\\s+DROP\\s+COLUMN\\s+([a-zA-Z_]\\w*)\\s*\\Z";
+    public static final String PARSE_WITH_ALTER_TABLE_MODIFY_COLUMN = "\\A\\s*TABLE\\s+([a-zA-Z_]\\w*)\\s+MODIFY\\s+COLUMN\\s+([a-zA-Z_]\\w*)\\s+([a-zA-Z]+)\\s*\\Z";
+
     public static final String PARSE_WITH_DROP_DATABASE = "\\A\\s*DATABASE\\s+([a-zA-Z_]\\w*)\\s*\\Z";
 
     public static final String PARSE_WITH_DROP_TABLE = "\\A\\s*TABLE\\s+([a-zA-Z_]\\w*)\\s*\\Z";
