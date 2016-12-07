@@ -2,6 +2,7 @@ package controller;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -38,7 +39,7 @@ import model.Record;
 import model.SelectionTable;
 import model.Table;
 
-public class XMLController {
+public class XMLController implements Readable {
 
     public static boolean validateWithDTDUsingSAX(File xmlFile)
             throws ParserConfigurationException, IOException {
@@ -347,6 +348,73 @@ public class XMLController {
         }
         xmlOutput.output(document, new FileWriter(tableXML));
 
+    }
+
+    @Override
+    public SelectionTable readTable(Table table) throws FileNotFoundException {
+        List<Object> values = new ArrayList<>();
+        List<String> names = getColumnsNames(table);
+        SelectionTable selectionTable = new SelectionTable(table.getTableName(), names);
+        File tableXML = table.getXML();
+        try {
+            eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
+        } catch (XMLStreamException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        try {
+            document = saxBuilder.build(tableXML);
+        } catch (JDOMException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        System.out.println(document.getRootElement().getName());
+        while (eventReader.hasNext()) {
+            XMLEvent event = null;
+            try {
+                event = eventReader.nextEvent();
+            } catch (XMLStreamException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            switch (event.getEventType()) {
+            case XMLStreamConstants.START_ELEMENT:
+                String startElementName = event.asStartElement().getName().getLocalPart();
+                if (!(startElementName.equals("Record")
+                        || startElementName.equals(table.getTableName()))) {
+                    Characters chars = null;
+                    try {
+                        chars = (Characters) eventReader.nextEvent();
+                    } catch (XMLStreamException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    if (chars.getData() == "null")
+                        values.add(null);
+                    else
+                        values.add(chars.getData());
+                    try {
+                        eventReader.nextEvent();
+                    } catch (XMLStreamException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                } else {
+                    values = new ArrayList<>();
+                }
+                break;
+            case XMLStreamConstants.END_ELEMENT:
+                String endElementName = event.asEndElement().getName().getLocalPart();
+                if (endElementName.equals("Record")) {
+                    Record tempRecord = new Record(names, values);
+                    selectionTable.addRecord(tempRecord);
+                }
+            }
+        }
+        return selectionTable;
     }
 
 }

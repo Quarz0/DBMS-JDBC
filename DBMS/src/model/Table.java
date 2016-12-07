@@ -9,7 +9,7 @@ public class Table {
 
     public Table(File tableDir) {
         this.tableDir = tableDir;
-        createDir();
+        this.createDir();
     }
 
     private void createDir() {
