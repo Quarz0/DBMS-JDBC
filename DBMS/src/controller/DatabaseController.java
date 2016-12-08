@@ -79,6 +79,16 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     @Override
+    public void useDatabase(String databaseName) throws RuntimeException {
+        File usedDatabaseDir = this.dbHelper.getDatabase(databaseName);
+        if (!App.checkForExistence(usedDatabaseDir)) {
+            throw new RuntimeException();
+        }
+        this.dbHelper.setDatabase(usedDatabaseDir);
+        this.dbHelper.loadTables(dbHelper.getCurrentDatabase());
+    }
+
+    @Override
     public void createTable(String tableName, Map<String, Class<?>> columns)
             throws RuntimeException {
         if (!App.checkForExistence(dbHelper.getCurrentDatabase())
@@ -94,15 +104,6 @@ public class DatabaseController implements DBMS, Observer {
         File dtdFile = dbmsController.getXMLController().initializeDTD(table.getTablePath(),
                 tableName, new ArrayList<>(columns.keySet()), new ArrayList<>(columns.values()));
         table.registerFiles(xmlFile, dtdFile);
-    }
-
-    @Override
-    public void deleteFromTable(String tableName) throws RuntimeException {
-        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
-            throw new RuntimeException("Database not selected!");
-        }
-        this.dbHelper.readTable(tableName);
-        dbHelper.getSelectedTable().getRecordList().clear();
     }
 
     @Override
@@ -130,10 +131,13 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     @Override
+    public void deleteFromTable(String tableName) throws RuntimeException {
+        this.dbHelper.readTable(tableName);
+        dbHelper.getSelectedTable().getRecordList().clear();
+    }
+
+    @Override
     public void insertIntoTable(String tableName, String... values) throws RuntimeException {
-        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
-            throw new RuntimeException("Database not selected!");
-        }
         dbHelper.readTable(tableName);
         Map<String, Class<?>> tableColumns = dbHelper.getSelectedTable().getHeader();
         if (values.length != tableColumns.size()) {
@@ -154,9 +158,6 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public void insertIntoTable(String tableName, Map<String, String> columns)
             throws RuntimeException {
-        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
-            throw new RuntimeException("Database not selected!");
-        }
         dbHelper.readTable(tableName);
         Map<String, Class<?>> tableColumns = dbHelper.getSelectedTable().getHeader();
         Record record = new Record();
@@ -183,26 +184,17 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public void selectFromTable(String tableName, String... colNames) throws RuntimeException {
-        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
-            throw new RuntimeException("Database not selected!");
-        }
         dbHelper.readTable(tableName);
         dbHelper.setSelectedTable(formSelectionTable(dbHelper.getSelectedTable(), colNames));
     }
 
     @Override
     public void selectAllFromTable(String tableName) throws RuntimeException {
-        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
-            throw new RuntimeException("Database not selected!");
-        }
         dbHelper.readTable(tableName);
     }
 
     @Override
     public void updateTable(String tableName, Map<String, String> columns) throws RuntimeException {
-        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
-            throw new RuntimeException("Database not selected!");
-        }
         dbHelper.readTable(tableName);
         Map<String, Class<?>> tableColumns = dbHelper.getSelectedTable().getHeader();
         Map<Integer, Object> newValues = new Hashtable<>();
@@ -220,16 +212,6 @@ public class DatabaseController implements DBMS, Observer {
             index++;
         }
         updateTable(dbHelper.getSelectedTable(), newValues);
-    }
-
-    @Override
-    public void useDatabase(String databaseName) throws RuntimeException {
-        File usedDatabaseDir = this.dbHelper.getDatabase(databaseName);
-        if (!App.checkForExistence(usedDatabaseDir)) {
-            throw new RuntimeException();
-        }
-        this.dbHelper.setDatabase(usedDatabaseDir);
-        this.dbHelper.loadTables(dbHelper.getCurrentDatabase());
     }
 
     private SelectionTable formSelectionTable(SelectionTable selectedTable, String... colNames) {
