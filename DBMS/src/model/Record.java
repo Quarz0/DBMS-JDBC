@@ -15,6 +15,10 @@ public class Record implements Cloneable {
         this.values = values;
     }
 
+    public Record() {
+        values = new ArrayList<>();
+    }
+
     public void addToRecord(Object obj) {
         values.add(obj);
     }

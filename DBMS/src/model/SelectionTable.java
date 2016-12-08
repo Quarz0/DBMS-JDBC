@@ -16,7 +16,7 @@ public class SelectionTable implements Cloneable {
     private Map<String, Class<?>> header;
     private List<Record> recordList;
     private String tableName;
-//    private Table w
+    // private Table w
 
     public SelectionTable(String tableName, Map<String, Class<?>> colNames) {
         this(tableName);

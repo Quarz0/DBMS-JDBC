@@ -112,7 +112,7 @@ public class XMLController implements BackEndWriter {
         return strBuilder.toString();
     }
 
-    public Map<String, Class<?>> getColumnsNames(Table table) {
+    public Map<String, Class<?>> getColumns(Table table) {
         File tableXML = table.getXML();
         Map<String, Class<?>> ret = new LinkedHashMap<>();
         try {

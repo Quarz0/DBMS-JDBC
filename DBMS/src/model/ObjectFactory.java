@@ -1,20 +1,20 @@
 package model;
 
 public class ObjectFactory {
-    public Object parseToObject(Class<?> cls, String str) {
-        if (Integer.class == cls) {
+    public Object parseToObject(Class<?> cls, String str) throws ClassCastException {
+        if (Integer.class.equals(cls)) {
             return Integer.valueOf(str);
-        } else if (Double.class == cls) {
+        } else if (Double.class.equals(cls)) {
             return Double.valueOf(str);
-        } else if (Float.class == cls) {
+        } else if (Float.class.equals(cls)) {
             return Float.valueOf(str);
-        } else if (String.class == cls) {
+        } else if (String.class.equals(cls)) {
             return String.valueOf(str);
-        } else if (Boolean.class == cls) {
+        } else if (Boolean.class.equals(cls)) {
             return Boolean.valueOf(str);
-        } else if (Character.class == cls) {
+        } else if (Character.class.equals(cls)) {
             return Character.valueOf(str.charAt(0));
-        } else if (Byte.class == cls) {
+        } else if (Byte.class.equals(cls)) {
             return Byte.valueOf(str);
         } else {
             return str;

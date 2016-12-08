@@ -1,14 +1,22 @@
 package controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import model.ClassFactory;
 import model.Database;
 import model.DatabaseHelper;
 import model.ObjectFactory;
 import model.Observer;
+import model.Record;
+import model.SelectionTable;
 import model.Table;
 import util.App;
 
@@ -92,7 +100,7 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public void deleteFromTable(String tableName) throws RuntimeException {
         this.dbHelper.readTable(tableName);
-        
+
     }
 
     @Override
@@ -121,33 +129,136 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public void insertIntoTable(String tableName, String... values) throws RuntimeException {
-        // TODO Auto-generated method stub
-
+        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
+            throw new RuntimeException("Database not selected!");
+        }
+        Table table = getTable(tableName);
+        if (!App.checkForExistence(table)) {
+            throw new RuntimeException("Table not found!");
+        }
+        Map<String, Class<?>> tableColNames = dbmsController.getXMLController().getColumns(table);
+        if (values.length != tableColNames.size()) {
+            throw new RuntimeException("Wrong data!");
+        }
+        int index = 0;
+        Record record = new Record();
+        for (Class<?> type : tableColNames.values()) {
+            try {
+                record.addToRecord(objectFactory.parseToObject(type, values[index++]));
+            } catch (Exception e) {
+                throw new RuntimeException("Wrong data!");
+            }
+        }
+        try {
+            dbHelper.setSelectedTable(setOperatingTable(table));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Cannot find data file!");
+        }
+        dbHelper.getSelectedTable().addRecord(record);
     }
 
     @Override
     public void insertIntoTable(String tableName, Map<String, String> columns)
             throws RuntimeException {
-        // TODO Auto-generated method stub
-
+        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
+            throw new RuntimeException("Database not selected!");
+        }
+        Table table = getTable(tableName);
+        if (!App.checkForExistence(table)) {
+            throw new RuntimeException("Table not found!");
+        }
+        Map<String, Class<?>> tableColumns = dbmsController.getXMLController().getColumns(table);
+        Record record = new Record();
+        int keysFound = 0;
+        for (Entry<String, Class<?>> entry : tableColumns.entrySet()) {
+            String colName = entry.getKey().toLowerCase();
+            if (columns.containsKey(colName)) {
+                try {
+                    record.addToRecord(
+                            objectFactory.parseToObject(entry.getValue(), columns.get(colName)));
+                } catch (Exception e) {
+                    throw new RuntimeException("Wrong data");
+                }
+                keysFound++;
+            } else {
+                record.addToRecord(null);
+            }
+        }
+        if (keysFound != columns.size()) {
+            throw new RuntimeException("Wrong data!");
+        }
+        try {
+            dbHelper.setSelectedTable(setOperatingTable(table));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Cannot find data file!");
+        }
+        dbHelper.getSelectedTable().addRecord(record);
     }
 
     @Override
     public void selectFromTable(String tableName, String... colNames) throws RuntimeException {
-        // TODO Auto-generated method stub
-
+        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
+            throw new RuntimeException("Database not selected!");
+        }
+        Table table = getTable(tableName);
+        if (!App.checkForExistence(table)) {
+            throw new RuntimeException("Table not found!");
+        }
+        SelectionTable selectedTable;
+        try {
+            selectedTable = setOperatingTable(table);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Cannot find data file!");
+        }
+        dbHelper.setSelectedTable(formSelectionTable(selectedTable, colNames));
     }
 
     @Override
     public void selectAllFromTable(String tableName) throws RuntimeException {
-        // TODO Auto-generated method stub
-
+        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
+            throw new RuntimeException("Database not selected!");
+        }
+        Table table = getTable(tableName);
+        if (!App.checkForExistence(table)) {
+            throw new RuntimeException("Table not found!");
+        }
+        try {
+            dbHelper.setSelectedTable(setOperatingTable(table));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Cannot find data file!");
+        }
     }
 
     @Override
     public void updateTable(String tableName, Map<String, String> columns) throws RuntimeException {
-        // TODO Auto-generated method stub
-
+        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
+            throw new RuntimeException("Database not selected!");
+        }
+        Table table = getTable(tableName);
+        if (!App.checkForExistence(table)) {
+            throw new RuntimeException("Table not found!");
+        }
+        Map<String, Class<?>> tableColumns = dbmsController.getXMLController().getColumns(table);
+        Map<Integer, Object> newValues = new Hashtable<>();
+        int index = 0;
+        for (Entry<String, Class<?>> entry : tableColumns.entrySet()) {
+            String key = entry.getKey().toLowerCase();
+            if (columns.containsKey(key)) {
+                try {
+                    newValues.put(index,
+                            objectFactory.parseToObject(entry.getValue(), columns.get(key)));
+                } catch (Exception e) {
+                    throw new RuntimeException("Wrong data");
+                }
+            }
+            index++;
+        }
+        try {
+            dbHelper.setSelectedTable(setOperatingTable(table));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Cannot find data file!");
+        }
+        updateTable(dbHelper.getSelectedTable(), newValues);
     }
 
     @Override
@@ -160,4 +271,51 @@ public class DatabaseController implements DBMS, Observer {
         this.dbHelper.loadTables(dbHelper.getCurrentDatabase());
     }
 
+    private Table getTable(String tableName) {
+        for (Table table : dbHelper.getCurrentDatabase().getTables()) {
+            if (tableName.equalsIgnoreCase(dbHelper.getSelectedTable().getTableName())) {
+                return table;
+            }
+        }
+        return null;
+    }
+
+    private SelectionTable setOperatingTable(Table table) throws FileNotFoundException {
+        if (table.getTableName().equalsIgnoreCase(dbHelper.getSelectedTable().getTableName())) {
+            return dbHelper.getSelectedTable();
+        }
+        return dbmsController.getXMLController().readTable(table);
+    }
+
+    private SelectionTable formSelectionTable(SelectionTable selectedTable, String... colNames) {
+        Map<String, Integer> tableColNamesLowerCase = new Hashtable<>();
+        Map<String, Class<?>> header = new LinkedHashMap<>();
+        int index = 0;
+        for (Entry<String, Class<?>> entry : selectedTable.getHeader().entrySet()) {
+            tableColNamesLowerCase.put(entry.getKey().toLowerCase(), index++);
+            header.put(entry.getKey(), entry.getValue());
+        }
+        LinkedList<Integer> selectedColIndices = new LinkedList<Integer>();
+        for (String colName : colNames) {
+            selectedColIndices.add(tableColNamesLowerCase.get(colName));
+        }
+        SelectionTable result = new SelectionTable(selectedTable.getTableName(), header);
+        for (Record record : selectedTable.getRecordList()) {
+            Record newRecord = new Record();
+            ListIterator<Integer> it = selectedColIndices.listIterator();
+            while (it.hasNext()) {
+                newRecord.addToRecord(record.getValues().get(it.next()));
+            }
+            result.addRecord(newRecord);
+        }
+        return result;
+    }
+
+    private void updateTable(SelectionTable selectedTable, Map<Integer, Object> values) {
+        for (Record record : selectedTable.getRecordList()) {
+            for (Entry<Integer, Object> entry : values.entrySet()) {
+                record.getValues().set(entry.getKey(), entry.getValue());
+            }
+        }
+    }
 }
