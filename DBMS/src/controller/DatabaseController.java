@@ -28,29 +28,6 @@ public class DatabaseController implements DBMS, Observer {
 
     }
 
-    // public boolean evaluate(String expression, Record record) throws ScriptException {
-    // String exp = getFilledExpression(expression, record);
-    // exp = exp.toLowerCase();
-    // exp = App.replace(exp, "and", " && ");
-    // exp = App.replace(exp, "or", " || ");
-    // exp = App.replace(exp, "not", " ! ");
-    // return BooleanEvaluator.evaluate(exp);
-    // }
-
-    // private String getFilledExpression(String expression, Record record) {
-    // String exp = expression.toLowerCase();
-    // for (int i = 0; i < record.getColumns().size(); i++) {
-    // if (exp.charAt(0) == '\"') {
-    // exp = App.replace(exp, record.getColumns().get(i).toLowerCase(),
-    // "\"" + record.getValues().get(i).toString() + "\"");
-    // } else {
-    // exp = App.replace(exp, record.getColumns().get(i).toLowerCase(),
-    // record.getValues().get(i).toString());
-    // }
-    // }
-    // return exp;
-    // }
-
     public DatabaseHelper getHelper() {
         return dbHelper;
     }

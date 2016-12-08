@@ -2,6 +2,7 @@ package model.statements;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 import controller.DBMSClause;
 import model.Pair;
@@ -9,7 +10,7 @@ import model.Pair;
 public class Order extends Clause {
 
     private String expression;
-    private List<Pair<String, Boolean>> columns;
+    private Map<String, String> columns;
 
     public Order(String s) {
         this.expression = s;
@@ -19,7 +20,7 @@ public class Order extends Clause {
         return this.expression;
     }
 
-    public List<Pair<String, Boolean>> getColumns() {
+    public Map<String, String> getColumns() {
         return this.columns;
     }
 
@@ -27,8 +28,7 @@ public class Order extends Clause {
         String[] cols = exp.trim().split(",");
         for (int i = 0; i < cols.length; i++) {
             String[] column = cols[i].trim().split(" ");
-            this.columns.add(new Pair<String, Boolean>(column[0],
-                    column.length == 1 || column[1].equals("ASC")));
+            this.columns.put(column[0], column[1]);
         }
     }
 

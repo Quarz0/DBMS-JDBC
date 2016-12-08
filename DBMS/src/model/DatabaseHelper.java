@@ -32,6 +32,10 @@ public class DatabaseHelper {
         return selectedTable;
     }
 
+    public SelectionTable getTempTable() {
+        return tempTable;
+    }
+    
     public File getWorkspaceDir() {
         return workspaceDir;
     }
@@ -43,7 +47,6 @@ public class DatabaseHelper {
     }
 
     public void setSelectedTable(SelectionTable selectedTable) {
-
         this.selectedTable = selectedTable;
     }
 
