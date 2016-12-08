@@ -2,7 +2,9 @@ package model.statements;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import controller.DBMS;
 import util.App;
@@ -11,17 +13,12 @@ import util.RegexEvaluator;
 
 public class Update extends Query {
 
-    private List<String> columns;
-    private boolean isAll;
+    Map<String, String> columns;
     private String tableIdentifier;
-    private List<String> values;
-    private Where where;
 
     public Update() {
         super();
-        this.columns = new ArrayList<>();
-        this.values = new ArrayList<>();
-        this.isAll = true;
+        this.columns = new LinkedHashMap<>();
     }
 
     private boolean checkRegex(String s) {
@@ -31,12 +28,6 @@ public class Update extends Query {
             return this.fillColumns(groups[2].trim());
         }
         return false;
-    }
-
-    @Override
-    public void execute(DBMS dbms) throws RuntimeException {
-        // TODO Auto-generated method stub
-
     }
 
     private String[] extractColumns(String s) {
@@ -61,32 +52,19 @@ public class Update extends Query {
         for (int i = 0; i < columns.length; i++) {
             temp = this.isOnForm(columns[i].trim());
             if (App.checkForExistence(temp)) {
-                this.columns.add(temp[1].trim());
-                this.values.add(temp[2].trim());
+                this.columns.put(temp[1].trim(), temp[2].trim());
             } else
                 return false;
         }
         return true;
     }
 
-    public List<String> getColumns() {
+    public Map<String, String> getColumns() {
         return columns;
     }
 
     public String getTableIdentifier() {
         return tableIdentifier;
-    }
-
-    public List<String> getValues() {
-        return values;
-    }
-
-    public Where getWhere() {
-        return where;
-    }
-
-    public boolean isAll() {
-        return isAll;
     }
 
     private String[] isOnForm(String s) {
@@ -117,4 +95,8 @@ public class Update extends Query {
             throw new ParseException("Invalid", 0);
     }
 
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        dbms.updateTable(this.getTableIdentifier(), this.getColumns());
+    }
 }

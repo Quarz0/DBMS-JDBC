@@ -24,12 +24,6 @@ public class Use extends Query {
         return false;
     }
 
-    @Override
-    public void execute(DBMS dbms) throws RuntimeException {
-        // TODO Auto-generated method stub
-
-    }
-
     private void extractDatabase(String s) {
         this.databaseIdentifier = s.trim();
     }
@@ -43,5 +37,9 @@ public class Use extends Query {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
             throw new ParseException("Invalid", 0);
     }
-
+    
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        dbms.useDatabase(this.getDatabaseIdentifier());
+    }
 }

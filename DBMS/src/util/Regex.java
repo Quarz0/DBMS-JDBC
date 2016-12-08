@@ -23,8 +23,8 @@ public final class Regex {
     public static final String PARSE_WITH_INSERT_SPLIT_PATTERN2 = ",(?=(?:[^\']*\'[^\']*\')*[^\']*$)";
     public static final String PARSE_WITH_INSERT_TRIM_MATCH = ".+(?<!,)";
 
-    public static final String PARSE_WITH_SELECT_ALL_FROM = "\\A\\s*(DISINCT\\s+)?\\*?\\s+FROM\\s+([a-zA-Z_]\\w*)\\s*\\Z";
-    public static final String PARSE_WITH_SELECT_FROM = "\\A\\s*(DISINCT\\s+)?(.*?)\\s+FROM\\s+([a-zA-Z_]\\w*)\\s*\\Z";
+    public static final String PARSE_WITH_SELECT_ALL_FROM = "\\A\\s*\\*\\s+FROM\\s+([a-zA-Z_]\\w*)\\s*\\Z";
+    public static final String PARSE_WITH_SELECT_FROM = "\\A\\s*(.*?)\\s+FROM\\s+([a-zA-Z_]\\w*)\\s*\\Z";
 
     public static final String PARSE_WITH_UPDATE = "\\A\\s*([a-zA-Z_]\\w*)\\s+SET\\s+(.+)\\Z";
     public static final String PARSE_WITH_UPDATE_SPLIT_PATTERN_LEFT = "\\A\\s*([a-zA-Z_]\\w*)\\s*=\\s*(.*)\\Z";

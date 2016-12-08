@@ -2,7 +2,9 @@ package model.statements;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import controller.DBMS;
 import model.ClassFactory;
@@ -12,16 +14,14 @@ import util.RegexEvaluator;
 
 public class Create extends Query {
 
-    private List<String> columns;
+    private Map<String, Class<?>> columns;
     private String databaseIdentifier;
     private boolean isDatabase;
     private String tableIdentifier;
-    private List<Class<?>> types;
 
     public Create() {
         super();
-        this.columns = new ArrayList<>();
-        this.types = new ArrayList<>();
+        this.columns = new LinkedHashMap<>();
         this.isDatabase = false;
     }
 
@@ -39,21 +39,14 @@ public class Create extends Query {
         return false;
     }
 
-    @Override
-    public void execute(DBMS dbms) throws RuntimeException {
-        // TODO Auto-generated method stub
-
-    }
-
     private boolean extractColIdentifiers(String s) {
         String[] colmuns = s.split(",");
-        String[] colmun;
-        ClassFactory classFactory = new ClassFactory();
+        String[] column;
+
         for (int i = 0; i < colmuns.length; i++) {
-            colmun = colmuns[i].trim().split(" ");
-            if (App.checkForExistence(classFactory.getClass(colmun[1].trim()))) {
-                this.columns.add(colmun[0].trim());
-                this.types.add(classFactory.getClass(colmun[1].trim()));
+            column = colmuns[i].trim().split(" ");
+            if (App.checkForExistence(ClassFactory.getClass(column[1].trim()))) {
+                this.columns.put(column[0].trim(),  ClassFactory.getClass(column[1].trim()));
             } else {
                 return false;
             }
@@ -71,7 +64,7 @@ public class Create extends Query {
         this.isDatabase = false;
     }
 
-    public List<String> getColumns() {
+    public Map<String, Class<?>> getColumns() {
         return columns;
     }
 
@@ -83,10 +76,6 @@ public class Create extends Query {
         return this.tableIdentifier;
     }
 
-    public List<Class<?>> getTypes() {
-        return types;
-    }
-
     public boolean isDatabase() {
         return this.isDatabase;
     }
@@ -95,6 +84,16 @@ public class Create extends Query {
     public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
             throw new ParseException("Invalid", 0);
+    }
+    
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+       if (this.isDatabase()) {
+           dbms.createDatabase(this.getDatabaseIdentifier());
+       }
+       else {
+           dbms.createTable(this.getDatabaseIdentifier(), this.getColumns());
+       }
     }
 
 }
