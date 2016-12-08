@@ -38,10 +38,13 @@ public final class Regex {
     public static final String PARSE_WITH_UPDATE_TRIM_MATCH_RIGHT = "\\A\\s*.*=\\s*"
             + Regex.LEGAL_IDENTIFIER + "\\Z";
     public static final String PARSE_WITH_USE = "\\A\\s*([a-zA-Z_]\\w*)\\s*\\Z";
-    public static final String PARSE_WITH_WHERE = "(\\w+)\\s+((.*)\\s+(WHERE\\s))?(.*)";
+    
 //    public static final String PARSE = "\\A(\\w+)\\s+(.*)$";
-
-    public static final String PARSE_WITH_ORDER_BY = "\\A.*\\s+ORDER\\s+BY\\s+\\s*([a-zA-Z_]\\w*(\\s+ASC|\\s+DESC)?\\s*(,\\s*[a-zA-Z_]\\w*(\\s+ASC|\\s+DESC)?\\s*)*)\\Z";
+    public static final String PARSE_WITH_DISTINCT = "\\s*SELECT\\s+DISTINCT\\s+(.*)";
+    public static final String PARSE_WITH_WHERE = "(.*?)\\s+WHERE\\s+(.*?)\\s+(ORDER\\s+(.*))?";
+    public static final String PARSE_WITH_ORDER_BY = "(.*?)\\s+ORDER\\s+BY\\s+(.*?)\\s+(WHERE\\s+(.*))?";
+    
+    public static final String PARSE_WITH_ORDER_BY_PATTERN = "\\A\\s*([a-zA-Z_]\\w*(\\s+ASC|\\s+DESC)?\\s*(,\\s*[a-zA-Z_]\\w*(\\s+ASC|\\s+DESC)?\\s*)*)\\s*\\Z";
 
     private Regex() {
     }

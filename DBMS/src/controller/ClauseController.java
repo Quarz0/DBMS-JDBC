@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,6 +13,9 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 
 import model.Record;
 import model.SelectionTable;
+import model.statements.Delete;
+import model.statements.Select;
+import model.statements.Update;
 import util.App;
 import util.BooleanEvaluator;
 
@@ -55,6 +57,9 @@ public class ClauseController implements DBMSClause {
 
     @Override
     public void whereForDelete(String condition) throws RuntimeException {
+        if (!(this.dbmsController.getSQLParserController().getSqlParserHelper()
+                .getCurrentQuery() instanceof Delete))
+            return;
         SelectionTable originalTable = this.dbmsController.getDatabaseController().getHelper()
                 .getTempTable();
         for (int i = 0; i < originalTable.getRecordList().size(); i++) {
@@ -68,6 +73,9 @@ public class ClauseController implements DBMSClause {
 
     @Override
     public void whereForSelect(String condition) throws RuntimeException {
+        if (!(this.dbmsController.getSQLParserController().getSqlParserHelper()
+                .getCurrentQuery() instanceof Select))
+            return;
         SelectionTable originalTable = this.dbmsController.getDatabaseController().getHelper()
                 .getTempTable();
         for (int i = originalTable.getRecordList().size(); i >= 0; i--) {
@@ -80,6 +88,9 @@ public class ClauseController implements DBMSClause {
 
     @Override
     public void whereForUpdate(String condition) throws RuntimeException {
+        if (!(this.dbmsController.getSQLParserController().getSqlParserHelper()
+                .getCurrentQuery() instanceof Update))
+            return;
         SelectionTable originalTable = this.dbmsController.getDatabaseController().getHelper()
                 .getTempTable();
         for (int i = 0; i < originalTable.getRecordList().size(); i++) {
@@ -120,7 +131,7 @@ public class ClauseController implements DBMSClause {
     }
 
     @Override
-    public void distinct(List<String> columns) throws RuntimeException {
+    public void distinct() throws RuntimeException {
         SelectionTable table = this.dbmsController.getDatabaseController().getHelper()
                 .getSelectedTable();
         Set<Record> distinctRecords = new LinkedHashSet<>();

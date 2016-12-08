@@ -1,6 +1,5 @@
 package controller;
 
-import java.util.List;
 import java.util.Map;
 
 public interface DBMSClause {
@@ -13,5 +12,5 @@ public interface DBMSClause {
 
     public void order(Map<String, String> columns) throws RuntimeException;
     
-    public void distinct(List<String> columns) throws RuntimeException;
+    public void distinct() throws RuntimeException;
 }

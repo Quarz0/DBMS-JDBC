@@ -20,8 +20,9 @@ public class Alter extends Query {
     private String column;
 
     public Alter() {
-        tableIdentifier = column = type = null;
-        state = NONE;
+        super();
+        this.tableIdentifier = column = type = null;
+        this.state = NONE;
     }
 
     private boolean checkRegex(String s) {
