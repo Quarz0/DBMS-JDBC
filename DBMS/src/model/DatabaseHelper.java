@@ -115,6 +115,9 @@ public class DatabaseHelper {
     }
 
     public void readTable(String tableIdentifier) throws RuntimeException {
+        if (tableIdentifier.equalsIgnoreCase(selectedTable.getTableName())) {
+            return;
+        }
         SelectionTable selectionTable = null;
         if (!App.checkForExistence(this.getCurrentDatabase())) {
             throw new RuntimeException();
@@ -126,7 +129,6 @@ public class DatabaseHelper {
         try {
             selectionTable = dbmsController.getXMLController().readTable(table);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
         try {
