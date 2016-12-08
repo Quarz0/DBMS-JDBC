@@ -100,7 +100,19 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public void deleteFromTable(String tableName) throws RuntimeException {
         this.dbHelper.readTable(tableName);
-
+        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
+            throw new RuntimeException("Database not selected!");
+        }
+        Table table = getTable(tableName);
+        if (!App.checkForExistence(table)) {
+            throw new RuntimeException("Table not found!");
+        }
+        try {
+            dbHelper.setSelectedTable(setOperatingTable(table));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Cannot find data file!");
+        }
+        dbHelper.getSelectedTable().getRecordList().clear();
     }
 
     @Override
@@ -124,7 +136,7 @@ public class DatabaseController implements DBMS, Observer {
                 return;
             }
         }
-        throw new RuntimeException();
+        throw new RuntimeException("Table not found!");
     }
 
     @Override
@@ -136,23 +148,23 @@ public class DatabaseController implements DBMS, Observer {
         if (!App.checkForExistence(table)) {
             throw new RuntimeException("Table not found!");
         }
-        Map<String, Class<?>> tableColNames = dbmsController.getXMLController().getColumns(table);
-        if (values.length != tableColNames.size()) {
+        try {
+            dbHelper.setSelectedTable(setOperatingTable(table));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Cannot find data file!");
+        }
+        Map<String, Class<?>> tableColumns = dbHelper.getSelectedTable().getHeader();
+        if (values.length != tableColumns.size()) {
             throw new RuntimeException("Wrong data!");
         }
         int index = 0;
         Record record = new Record();
-        for (Class<?> type : tableColNames.values()) {
+        for (Class<?> type : tableColumns.values()) {
             try {
                 record.addToRecord(objectFactory.parseToObject(type, values[index++]));
             } catch (Exception e) {
                 throw new RuntimeException("Wrong data!");
             }
-        }
-        try {
-            dbHelper.setSelectedTable(setOperatingTable(table));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Cannot find data file!");
         }
         dbHelper.getSelectedTable().addRecord(record);
     }
@@ -167,7 +179,12 @@ public class DatabaseController implements DBMS, Observer {
         if (!App.checkForExistence(table)) {
             throw new RuntimeException("Table not found!");
         }
-        Map<String, Class<?>> tableColumns = dbmsController.getXMLController().getColumns(table);
+        try {
+            dbHelper.setSelectedTable(setOperatingTable(table));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Cannot find data file!");
+        }
+        Map<String, Class<?>> tableColumns = dbHelper.getSelectedTable().getHeader();
         Record record = new Record();
         int keysFound = 0;
         for (Entry<String, Class<?>> entry : tableColumns.entrySet()) {
@@ -186,11 +203,6 @@ public class DatabaseController implements DBMS, Observer {
         }
         if (keysFound != columns.size()) {
             throw new RuntimeException("Wrong data!");
-        }
-        try {
-            dbHelper.setSelectedTable(setOperatingTable(table));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Cannot find data file!");
         }
         dbHelper.getSelectedTable().addRecord(record);
     }
@@ -238,7 +250,12 @@ public class DatabaseController implements DBMS, Observer {
         if (!App.checkForExistence(table)) {
             throw new RuntimeException("Table not found!");
         }
-        Map<String, Class<?>> tableColumns = dbmsController.getXMLController().getColumns(table);
+        try {
+            dbHelper.setSelectedTable(setOperatingTable(table));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Cannot find data file!");
+        }
+        Map<String, Class<?>> tableColumns = dbHelper.getSelectedTable().getHeader();
         Map<Integer, Object> newValues = new Hashtable<>();
         int index = 0;
         for (Entry<String, Class<?>> entry : tableColumns.entrySet()) {
@@ -252,11 +269,6 @@ public class DatabaseController implements DBMS, Observer {
                 }
             }
             index++;
-        }
-        try {
-            dbHelper.setSelectedTable(setOperatingTable(table));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Cannot find data file!");
         }
         updateTable(dbHelper.getSelectedTable(), newValues);
     }
