@@ -3,6 +3,8 @@ package controller;
 import java.text.ParseException;
 
 import model.SQLParserHelper;
+import model.statements.Distinct;
+import model.statements.Order;
 import model.statements.Query;
 import model.statements.Where;
 import util.App;
@@ -48,27 +50,35 @@ public class SQLParserController {
     }
 
     public void parse(String s) throws ParseException {
-        Query query = null;
-        Where where = null;
-        String[] groups;
-        boolean whereExists = false;
         if (!App.checkForExistence(s))
             throw new ParseException("Invalid", 0);
-        s = App.replace(App.replace(s, "(", " ("), ")", ") ");
-        groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_WHERE);
-        if (!App.checkForExistence(groups))
-            throw new ParseException("Invalid", 0);
-        whereExists = App.checkForExistence(groups[2]) && App.checkForExistence(groups[3]);
-        query = this.locateQuery(groups[1].trim());
+        s = App.replace(App.replace(s, "(", " ("), ")", ") ").toLowerCase();
+        Query query = this.locateQuery(s.trim().split(" ")[0]);
         if (!App.checkForExistence(query))
             throw new ParseException("Invalid", 0);
-        if (whereExists) {
-            where = new Where(groups[3]);
-            query.parse(groups[2]);
-            query.addClause(where);
-        } else {
-            query.parse(groups[3]);
+
+        String[] groups;
+        String queryParse = s.substring(s.trim().indexOf(" "));
+        if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_DISTINCT))) {
+            Distinct d = new Distinct();
+            d.parse(groups[1]);
+            query.addClause(d);
+            queryParse = groups[1];
         }
+        if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_ORDER_BY))) {
+            Order o = new Order();
+            o.parse(groups[2]);
+            query.addClause(o);
+            queryParse = groups[1];
+        }
+        if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_WHERE))) {
+            Where w = new Where();
+            w.parse(groups[2]);
+            query.addClause(w);
+            queryParse = groups[1];
+        }
+        
+        query.parse(queryParse.trim());
         this.sqlParserHelper.setCurrentQuery(query);
     }
 

@@ -3,6 +3,7 @@ package model.statements;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import controller.DBMS;
 import util.App;
@@ -11,15 +12,13 @@ import util.RegexEvaluator;
 
 public class Insert extends Query {
 
-    private List<String> identifiers;
+    String[] values;
+    private Map<String, String> columns;
     private boolean isDefaultSelection;
     private String tableIdentifier;
-    private List<String> values;
 
     public Insert() {
         super();
-        this.values = new ArrayList<>();
-        this.identifiers = new ArrayList<>();
         this.isDefaultSelection = false;
     }
 
@@ -27,28 +26,20 @@ public class Insert extends Query {
         String[] groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_INSERT);
         if (App.checkForExistence(groups)) {
             this.extractTable(groups[1].trim());
-            String[] values = this.extractValues(groups[3].trim());
+            this.values = this.extractValues(groups[3].trim());
             if (!App.checkForExistence(values))
                 return false;
             if (!App.checkForExistence(groups[2])) {
                 this.isDefaultSelection = true;
-                if (!this.fillColumns(values, null))
-                    return false;
             } else {
                 this.isDefaultSelection = false;
                 String[] identifiers = this.extractIdentifiers(groups[2].trim());
-                if (!this.fillColumns(values, identifiers))
+                if (!this.fillColumns(this.values, identifiers))
                     return false;
             }
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void execute(DBMS dbms) throws RuntimeException {
-        // TODO Auto-generated method stub
-
     }
 
     private String[] extractIdentifiers(String s) {
@@ -73,25 +64,20 @@ public class Insert extends Query {
         if (App.checkForExistence(identifiers) && values.length != identifiers.length)
             return false;
         for (int i = 0; i < values.length; i++) {
-            if (App.checkForExistence(identifiers)) {
-                this.values.add(values[i].trim());
-                this.identifiers.add(identifiers[i].trim());
-            } else {
-                this.values.add(values[i].trim());
-            }
+            this.columns.put(identifiers[i].trim(), values[i].trim());
         }
         return true;
     }
 
-    public List<String> getIdentifiers() {
-        return identifiers;
+    public Map<String, String> getColumns() {
+        return columns;
     }
 
     public String getTableIdentifier() {
         return this.tableIdentifier;
     }
 
-    public List<String> getValues() {
+    public String[] getValues() {
         return values;
     }
 
@@ -103,6 +89,15 @@ public class Insert extends Query {
     public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
             throw new ParseException("Invalid", 0);
+    }
+
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        if (this.isDefaultSelection()) {
+            dbms.insertIntoTable(this.getTableIdentifier(), values);
+        } else {
+            dbms.insertIntoTable(this.getTableIdentifier(), columns);
+        }
     }
 
 }

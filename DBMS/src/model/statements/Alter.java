@@ -20,8 +20,9 @@ public class Alter extends Query {
     private String column;
 
     public Alter() {
-        tableIdentifier = column = type = null;
-        state = NONE;
+        super();
+        this.tableIdentifier = column = type = null;
+        this.state = NONE;
     }
 
     private boolean checkRegex(String s) {
@@ -74,17 +75,27 @@ public class Alter extends Query {
     public String getType() {
         return this.type;
     }
-
+    
     @Override
     public void parse(String s) throws ParseException {
-        //if (!App.checkForExistence(s) || !this.checkRegex(s))
-            // TODO
-    }
-
+        if (!App.checkForExistence(s) || !this.checkRegex(s))
+            throw new ParseException("Invalid", 0);
+    }  
+    
+    // TODO
     @Override
     public void execute(DBMS dbms) throws RuntimeException {
-        // TODO Auto-generated method stub
-
+        switch (this.state) {
+        case ADD:
+//            dbms.addColumn(this.getTableIdentifier(), this.getColumn(), this.getType());
+            break;
+        case DROP:
+//            dbms.dropColumn(this.getTableIdentifier(), this.getColumn());
+            break;
+        case MODIFY:
+//            dbms.modifyColumn(this.getTableIdentifier(), this.getColumn(), this.getType());
+            break;
+        }
     }
 
 }

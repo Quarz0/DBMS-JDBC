@@ -3,33 +3,37 @@ package model.statements;
 import java.text.ParseException;
 
 import controller.DBMSClause;
+import util.App;
 
 public class Where extends Clause {
 
     private String expression;
 
-    public Where(String s) {
-        expression = s;
+    public Where() {
+        super();
     }
 
     public String getExpression() {
-        return expression;
+        return this.expression;
     }
 
     public void setExpression(String exp) {
-        expression = exp;
+        this.expression = exp;
     }
 
     @Override
     public void parse(String s) throws ParseException {
-        // TODO Auto-generated method stub
-
+        if (!App.checkForExistence(s)) {
+            throw new ParseException("Invalid", 0);
+        }
+        this.setExpression(s);
     }
 
     @Override
     public void execute(DBMSClause dbms) throws RuntimeException {
-        // TODO Auto-generated method stub
-
+        dbms.whereForDelete(this.getExpression());
+        dbms.whereForSelect(this.getExpression());
+        dbms.whereForUpdate(this.getExpression());
     }
 
 }
