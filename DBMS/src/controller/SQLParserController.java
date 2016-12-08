@@ -58,25 +58,27 @@ public class SQLParserController {
             throw new ParseException("Invalid", 0);
 
         String[] groups;
+        String queryParse = s.substring(s.trim().indexOf(" "));
         if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_DISTINCT))) {
             Distinct d = new Distinct();
             d.parse(groups[1]);
             query.addClause(d);
-            query.parse(groups[1]);
-        }
-        if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_WHERE))) {
-            Where w = new Where();
-            w.parse(groups[2]);
-            query.addClause(w);
-            query.parse(groups[1]);
+            queryParse = groups[1];
         }
         if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_ORDER_BY))) {
             Order o = new Order();
             o.parse(groups[2]);
             query.addClause(o);
-            query.parse(groups[1]);
+            queryParse = groups[1];
         }
-
+        if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_WHERE))) {
+            Where w = new Where();
+            w.parse(groups[2]);
+            query.addClause(w);
+            queryParse = groups[1];
+        }
+        
+        query.parse(queryParse.trim());
         this.sqlParserHelper.setCurrentQuery(query);
     }
 
