@@ -10,6 +10,7 @@ public class DatabaseHelper {
     private Database currentDatabase;
     private DBMSController dbmsController;
     private SelectionTable selectedTable;
+    private SelectionTable tempTable;
     private File workspaceDir;
     private DatabaseFilterGenerator databaseFilter;
 
@@ -113,7 +114,7 @@ public class DatabaseHelper {
         return null;
     }
 
-    public SelectionTable readTable(String tableIdentifier) throws RuntimeException {
+    public void readTable(String tableIdentifier) throws RuntimeException {
         SelectionTable selectionTable = null;
         if (!App.checkForExistence(this.getCurrentDatabase())) {
             throw new RuntimeException();
@@ -128,7 +129,13 @@ public class DatabaseHelper {
             e.printStackTrace();
             throw new RuntimeException();
         }
-        return selectedTable;
+        try {
+            this.tempTable = (SelectionTable) selectionTable.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
+        this.selectedTable = selectionTable;
     }
 
 }

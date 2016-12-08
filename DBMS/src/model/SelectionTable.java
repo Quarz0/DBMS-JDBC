@@ -1,7 +1,10 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.vandermeer.asciitable.v2.RenderedTable;
 import de.vandermeer.asciitable.v2.V2_AsciiTable;
@@ -10,11 +13,12 @@ import de.vandermeer.asciitable.v2.render.WidthLongestWordMaxCol;
 import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
 
 public class SelectionTable implements Cloneable {
-    private List<String> header;
+    private Map<String, Class<?>> header;
     private List<Record> recordList;
     private String tableName;
+//    private Table w
 
-    public SelectionTable(String tableName, List<String> colNames) {
+    public SelectionTable(String tableName, Map<String, Class<?>> colNames) {
         this(tableName);
         this.header = colNames;
     }
@@ -28,7 +32,7 @@ public class SelectionTable implements Cloneable {
         recordList.add(record);
     }
 
-    public List<String> getHeader() {
+    public Map<String, Class<?>> getHeader() {
         return header;
     }
 
@@ -87,7 +91,7 @@ public class SelectionTable implements Cloneable {
 
         V2_AsciiTable asciiTable = new V2_AsciiTable();
         asciiTable.addStrongRule();
-        asciiTable.addRow(this.header.toArray());
+        asciiTable.addRow(this.header.keySet().toArray());
         asciiTable.addStrongRule();
 
         for (int i = 0; i < recordList.size(); i++) {
@@ -105,10 +109,21 @@ public class SelectionTable implements Cloneable {
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        SelectionTable selectionTable = (SelectionTable) super.clone();
-        return super.clone();
+        SelectionTable selectionTable = new SelectionTable(tableName, copyHeader());
+        for (Iterator<Record> iterator = recordList.iterator(); iterator.hasNext();) {
+            Record object = (Record) iterator.next();
+            selectionTable.addRecord((Record) object.clone());
+        }
+        return selectionTable;
     }
-    
-    
+
+    private Map<String, Class<?>> copyHeader() {
+        Map<String, Class<?>> result = new LinkedHashMap<>();
+        for (Iterator<String> iterator = header.keySet().iterator(); iterator.hasNext();) {
+            String record = (String) iterator.next();
+            result.put(record, header.get(record));
+        }
+        return result;
+    }
 
 }

@@ -1,17 +1,16 @@
 package controller;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.script.ScriptException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -35,11 +34,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
+import model.ClassFactory;
 import model.Record;
 import model.SelectionTable;
 import model.Table;
 
-public class XMLController implements Readable {
+public class XMLController implements BackEndWriter {
 
     public static boolean validateWithDTDUsingSAX(File xmlFile)
             throws ParserConfigurationException, IOException {
@@ -112,23 +112,24 @@ public class XMLController implements Readable {
         return strBuilder.toString();
     }
 
-    public List<String> getColumnsNames(Table table) {
-        File dtdFile = table.getDTD();
-        List<String> colNames = new ArrayList<>();
-        BufferedReader reader;
+    public Map<String, Class<?>> getColumnsNames(Table table) {
+        File tableXML = table.getXML();
+        Map<String, Class<?>> ret = new LinkedHashMap<>();
         try {
-            reader = new BufferedReader(new FileReader(dtdFile));
-            reader.readLine();
-            String line = reader.readLine();
-            line = line.substring(line.indexOf("(") + 1, line.indexOf(")"));
-            String[] arr = line.split(",\\s");
-            colNames = Arrays.asList(arr);
-            reader.close();
+            eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
+            document = saxBuilder.build(tableXML);
+            Element root = document.getRootElement();
+            String names = root.getAttributeValue("colNames");
+            String[] namesArr = names.split(",\\s");
+            String types = root.getAttributeValue("types");
+            String[] typesArr = types.split(",\\s");
+            for (int i = 0; i < namesArr.length; i++) {
+                ret.put(namesArr[i], ClassFactory.getClass(typesArr[i]));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return colNames;
+        return ret;
     }
 
     public List<String> getTypes(Table table) {
@@ -199,30 +200,6 @@ public class XMLController implements Readable {
 
     }
 
-    public boolean insertIntoTable(Table table, Record record) {
-        try {
-            File tableXML = table.getXML();
-            List<String> names = getColumnsNames(table);
-            Element newRecord = new Element("Record");
-            eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
-            for (int i = 0; i < record.getValues().size(); i++) {
-                Element temp;
-                if (record.getValues().get(i) == null)
-                    temp = new Element(names.get(i)).setText("null");
-                else
-                    temp = new Element(names.get(i)).setText(record.getValues().get(i).toString());
-                newRecord.addContent(temp);
-            }
-            document = saxBuilder.build(tableXML);
-            document.getRootElement().addContent(newRecord);
-            xmlOutput.output(document, new FileWriter(tableXML));
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Cannot insert into table");
-        }
-        return true;
-    }
-
     private String listToString(List<?> list) {
         StringBuilder strBuilder = new StringBuilder();
         for (int i = 0; i < list.size(); i++) {
@@ -233,127 +210,10 @@ public class XMLController implements Readable {
         return strBuilder.toString();
     }
 
-    public void removeFromTable(Table table, String condition)
-            throws XMLStreamException, JDOMException, IOException, ScriptException {
-        File tableXML = table.getXML();
-        eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
-        document = saxBuilder.build(tableXML);
-        Element rootElement = document.getRootElement();
-        List<Element> records = rootElement.getChildren("Record");
-        for (int i = 0; i < records.size(); i++) {
-            Element record = records.get(i);
-            List<Element> children = record.getChildren();
-            List<String> names = new ArrayList<>();
-            List<Object> vals = new ArrayList<>();
-            for (int j = 0; j < children.size(); j++) {
-                names.add(children.get(j).getName());
-                if (children.get(j).getText() == "null")
-                    vals.add(null);
-                else
-                    vals.add(children.get(j).getText());
-            }
-            Record tempRecord = new Record(names, vals);
-            if (dbmsController.getDatabaseController().evaluate(condition, tempRecord)) {
-                records.remove(i);
-                i--;
-            }
-        }
-        xmlOutput.output(document, new FileWriter(tableXML));
-
-    }
-
-    public SelectionTable selectFromTable(Table table, String condition) {
-        List<Object> values = new ArrayList<>();
-        List<String> names = getColumnsNames(table);
-        SelectionTable selectionTable = new SelectionTable(table.getTableName(), names);
-        try {
-            File tableXML = table.getXML();
-            eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
-            document = saxBuilder.build(tableXML);
-            System.out.println(document.getRootElement().getName());
-            while (eventReader.hasNext()) {
-                XMLEvent event = eventReader.nextEvent();
-                switch (event.getEventType()) {
-                case XMLStreamConstants.START_ELEMENT:
-                    String startElementName = event.asStartElement().getName().getLocalPart();
-                    if (!(startElementName.equals("Record")
-                            || startElementName.equals(table.getTableName()))) {
-                        Characters chars = (Characters) eventReader.nextEvent();
-                        if (chars.getData() == "null")
-                            values.add(null);
-                        else
-                            values.add(chars.getData());
-                        eventReader.nextEvent();
-                    } else {
-                        values = new ArrayList<>();
-                    }
-                    break;
-                case XMLStreamConstants.END_ELEMENT:
-                    String endElementName = event.asEndElement().getName().getLocalPart();
-                    if (endElementName.equals("Record")) {
-                        Record tempRecord = new Record(names, values);
-                        if (dbmsController.getDatabaseController().evaluate(condition,
-                                tempRecord)) {
-                            selectionTable.addRecord(tempRecord);
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return selectionTable;
-    }
-
-    public void updateTable(Table table, List<String> colNames, List<Object> values,
-            String condition)
-            throws XMLStreamException, JDOMException, IOException, ScriptException {
-
-        File tableXML = table.getXML();
-        eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
-        document = saxBuilder.build(tableXML);
-        Element rootElement = document.getRootElement();
-        List<Element> records = rootElement.getChildren("Record");
-        for (int i = 0; i < records.size(); i++) {
-            Element record = records.get(i);
-            List<Element> children = record.getChildren();
-            List<String> names = new ArrayList<>();
-            List<Object> vals = new ArrayList<>();
-            for (int j = 0; j < children.size(); j++) {
-                names.add(children.get(j).getName());
-                String temp = children.get(j).getText();
-                if (temp == "null")
-                    vals.add(null);
-                else
-                    vals.add(temp);
-            }
-            Record tempRecord = new Record(names, vals);
-            if (dbmsController.getDatabaseController().evaluate(condition, tempRecord)) {
-                for (int j = 0; j < children.size(); j++) {
-                    int tempIndex = colNames.indexOf(children.get(j).getName());
-                    if (tempIndex != -1) {
-                        System.out.println(children.get(j) + " " + values.get(tempIndex));
-                        if (values.get(tempIndex) == null)
-                            children.get(j).setText("null");
-                        else
-                            children.get(j).setText(values.get(tempIndex).toString());
-                    }
-                    names.add(children.get(j).getName());
-                    if (children.get(j).getText() == "null")
-                        vals.add(null);
-                    else
-                        vals.add(children.get(j).getText());
-                }
-            }
-        }
-        xmlOutput.output(document, new FileWriter(tableXML));
-
-    }
-
     @Override
     public SelectionTable readTable(Table table) throws FileNotFoundException {
         List<Object> values = new ArrayList<>();
-        List<String> names = getColumnsNames(table);
+        Map<String, Class<?>> names = getColumnsNames(table);
         SelectionTable selectionTable = new SelectionTable(table.getTableName(), names);
         File tableXML = table.getXML();
         try {

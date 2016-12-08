@@ -5,7 +5,7 @@ import java.sql.Time;
 
 public class ClassFactory {
 
-    public Class<?> getClass(String dataType) {
+    public static Class<?> getClass(String dataType) {
         switch (dataType.toLowerCase()) {
         case "int":
         case "integer":
