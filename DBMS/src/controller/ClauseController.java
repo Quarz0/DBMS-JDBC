@@ -1,5 +1,22 @@
 package controller;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.script.ScriptException;
+
+import org.apache.commons.lang3.builder.CompareToBuilder;
+
+import model.Record;
+import model.SelectionTable;
+import util.App;
+import util.BooleanEvaluator;
+
 public class ClauseController implements DBMSClause {
 
     private DBMSController dbmsController;
@@ -8,10 +25,112 @@ public class ClauseController implements DBMSClause {
         this.dbmsController = dbmsController;
     }
 
-    @Override
-    public void whereCondition(String condition) throws RuntimeException {
-        // TODO Auto-generated method stub
+    public boolean evaluate(String expression, Record record) {
+        String exp = getFilledExpression(expression, record);
+        exp = exp.toLowerCase();
+        exp = App.replace(exp, "and", " && ");
+        exp = App.replace(exp, "or", " || ");
+        exp = App.replace(exp, "not", " ! ");
+        try {
+            return BooleanEvaluator.evaluate(exp);
+        } catch (ScriptException e) {
+            throw new RuntimeException("Invalid condition.");
+        }
+    }
 
+    private String getFilledExpression(String expression, Record record) {
+        String exp = expression.toLowerCase();
+        int i = 0;
+        for (String column : record.getColumns().keySet()) {
+            if (record.getColumns().get(column).equals(String.class)) {
+                exp = App.replace(exp, column.toLowerCase(),
+                        "\"" + record.getValues().get(i).toString() + "\"");
+            } else {
+                exp = App.replace(exp, column.toLowerCase(), record.getValues().get(i).toString());
+            }
+            i++;
+        }
+        return exp;
+    }
+
+    @Override
+    public void whereForDelete(String condition) throws RuntimeException {
+        SelectionTable originalTable = this.dbmsController.getDatabaseController().getHelper()
+                .getTempTable();
+        for (int i = 0; i < originalTable.getRecordList().size(); i++) {
+            if (!this.evaluate(condition, originalTable.getRecordList().get(i))) {
+                this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
+                        .getRecordList().add(originalTable.getRecordList().get(i));
+                ;
+            }
+        }
+    }
+
+    @Override
+    public void whereForSelect(String condition) throws RuntimeException {
+        SelectionTable originalTable = this.dbmsController.getDatabaseController().getHelper()
+                .getTempTable();
+        for (int i = originalTable.getRecordList().size(); i >= 0; i--) {
+            if (!this.evaluate(condition, originalTable.getRecordList().get(i))) {
+                this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
+                        .getRecordList().remove(i);
+            }
+        }
+    }
+
+    @Override
+    public void whereForUpdate(String condition) throws RuntimeException {
+        SelectionTable originalTable = this.dbmsController.getDatabaseController().getHelper()
+                .getTempTable();
+        for (int i = 0; i < originalTable.getRecordList().size(); i++) {
+            if (!this.evaluate(condition, originalTable.getRecordList().get(i))) {
+                this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
+                        .getRecordList().set(i, originalTable.getRecordList().get(i));
+            }
+        }
+    }
+
+    @Override
+    public void order(Map<String, String> columns) throws RuntimeException {
+        Map<String, Integer> columnIndex = new HashMap<>();
+        SelectionTable table = this.dbmsController.getDatabaseController().getHelper()
+                .getSelectedTable();
+        int i = 0;
+        for (String column : table.getHeader().keySet()) {
+            columnIndex.put(column, i++);
+        }
+        Collections.sort(this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
+                .getRecordList(), new Comparator<Record>() {
+
+                    @Override
+                    public int compare(Record r1, Record r2) {
+                        CompareToBuilder compare = new CompareToBuilder();
+                        for (String column : columns.keySet()) {
+                            int index = columnIndex.get(column);
+                            if (columns.get(column).equals("ASC"))
+                                compare.append(r1.getValues().get(index),
+                                        r2.getValues().get(index));
+                            else
+                                compare.append(r2.getValues().get(index),
+                                        r1.getValues().get(index));
+                        }
+                        return compare.toComparison();
+                    }
+                });
+    }
+
+    @Override
+    public void distinct(List<String> columns) throws RuntimeException {
+        SelectionTable table = this.dbmsController.getDatabaseController().getHelper()
+                .getSelectedTable();
+        Set<Record> distinctRecords = new LinkedHashSet<>();
+        for (int i = table.getRecordList().size(); i >= 0; i--) {
+            if (distinctRecords.contains(table.getRecordList().get(i))) {
+                table.getRecordList().remove(i);
+            } else {
+                distinctRecords.add(table.getRecordList().get(i));
+            }
+        }
     }
 
 }

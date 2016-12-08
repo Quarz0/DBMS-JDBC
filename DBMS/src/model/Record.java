@@ -32,6 +32,21 @@ public class Record implements Cloneable {
     }
 
     @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (columns == null ? 0 : columns.hashCode());
+        result = prime * result + (values == null ? 0 : values.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return columns.equals(((Record) obj).getColumns())
+                && values.equals(((Record) obj).getValues());
+    }
+
+    @Override
     protected Object clone() throws CloneNotSupportedException {
         return new Record(copyHeader(), copyValues());
     }
