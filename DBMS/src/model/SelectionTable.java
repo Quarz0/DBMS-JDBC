@@ -16,7 +16,7 @@ public class SelectionTable implements Cloneable {
     private Map<String, Class<?>> header;
     private List<Record> recordList;
     private String tableName;
-    // private Table w
+    private Table tableSchema;
 
     public SelectionTable(String tableName, Map<String, Class<?>> colNames) {
         this(tableName);
@@ -26,6 +26,7 @@ public class SelectionTable implements Cloneable {
     public SelectionTable(String tableName) {
         this.recordList = new ArrayList<>();
         this.tableName = tableName;
+        this.tableSchema = null;
     }
 
     public void addRecord(Record record) {
@@ -82,6 +83,14 @@ public class SelectionTable implements Cloneable {
             result.put(record, header.get(record));
         }
         return result;
+    }
+
+    public Table getTableSchema() {
+        return tableSchema;
+    }
+
+    public void setTableSchema(Table tableSchema) {
+        this.tableSchema = tableSchema;
     }
 
 }

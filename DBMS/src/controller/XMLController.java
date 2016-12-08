@@ -113,7 +113,7 @@ public class XMLController implements BackEndWriter {
     }
 
     public Map<String, Class<?>> getColumns(Table table) {
-        File tableXML = table.getXML();
+        File tableXML = table.getData();
         Map<String, Class<?>> ret = new LinkedHashMap<>();
         try {
             eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
@@ -133,7 +133,7 @@ public class XMLController implements BackEndWriter {
     }
 
     public List<String> getTypes(Table table) {
-        File tableXML = table.getXML();
+        File tableXML = table.getData();
         List<String> types = new ArrayList<>();
         try {
             eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
@@ -215,7 +215,7 @@ public class XMLController implements BackEndWriter {
         List<Object> values = new ArrayList<>();
         Map<String, Class<?>> names = getColumnsNames(table);
         SelectionTable selectionTable = new SelectionTable(table.getTableName(), names);
-        File tableXML = table.getXML();
+        File tableXML = table.getData();
         try {
             eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
         } catch (XMLStreamException e) {

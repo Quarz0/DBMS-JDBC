@@ -9,7 +9,6 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import model.ClassFactory;
 import model.Database;
 import model.DatabaseHelper;
 import model.ObjectFactory;
@@ -20,15 +19,13 @@ import model.Table;
 import util.App;
 
 public class DatabaseController implements DBMS, Observer {
-    private ClassFactory classFactory;
     private DatabaseHelper dbHelper;
     private DBMSController dbmsController;
     private ObjectFactory objectFactory;
     private DBMSClause dbmsClause;
 
     public DatabaseController(DBMSController dbmsController) {
-        classFactory = new ClassFactory();
-        objectFactory = new ObjectFactory();
+        this.objectFactory = new ObjectFactory();
         this.dbmsController = dbmsController;
         this.dbHelper = new DatabaseHelper(dbmsController);
         this.dbmsClause = new ClauseController(dbmsController);
@@ -66,8 +63,8 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     @Override
-    public void createTable(String tableName, Map<String, Class<?>> columns)
-            throws RuntimeException {
+    public void createTable(String tableName, Map<String, Class<?>> columns,
+            BackEndWriter backEndWriter) throws RuntimeException {
         if (!App.checkForExistence(dbHelper.getCurrentDatabase())
                 || this.dbHelper.tableExists(tableName)) {
             throw new RuntimeException();

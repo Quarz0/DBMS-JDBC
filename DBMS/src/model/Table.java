@@ -2,13 +2,17 @@ package model;
 
 import java.io.File;
 
-public class Table {
-    private File dtdFile;
-    private File tableDir;
-    private File xmlFile;
+import controller.BackEndWriter;
 
-    public Table(File tableDir) {
+public class Table {
+    private File validatorFile;
+    private File tableDir;
+    private File dataFile;
+    private BackEndWriter backEndWriter;
+
+    public Table(File tableDir, BackEndWriter backEndWriter) {
         this.tableDir = tableDir;
+        this.backEndWriter = backEndWriter;
         this.createDir();
     }
 
@@ -21,11 +25,11 @@ public class Table {
         }
     }
 
-    public File getDTD() {
-        if (!dtdFile.exists()) {
+    public File getValidator() {
+        if (!validatorFile.exists()) {
             return null;
         }
-        return dtdFile;
+        return validatorFile;
     }
 
     public File getTableDir() {
@@ -41,16 +45,20 @@ public class Table {
         return tableDir.getAbsolutePath();
     }
 
-    public File getXML() {
-        if (!xmlFile.exists()) {
+    public File getData() {
+        if (!dataFile.exists()) {
             return null;
         }
-        return xmlFile;
+        return dataFile;
     }
 
-    public void registerFiles(File xmlFile, File dtdFile) {
-        this.xmlFile = xmlFile;
-        this.dtdFile = dtdFile;
+    public void registerFiles(File dataFile, File validatorFile) {
+        this.dataFile = dataFile;
+        this.validatorFile = validatorFile;
+    }
+
+    public BackEndWriter getBackEndWriter() {
+        return backEndWriter;
     }
 
 }

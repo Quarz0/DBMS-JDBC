@@ -6,8 +6,8 @@ public interface DBMS {
 
     public void createDatabase(String databaseName) throws RuntimeException;
 
-    public void createTable(String tableName, Map<String, Class<?>> columns)
-            throws RuntimeException;
+    public void createTable(String tableName, Map<String, Class<?>> columns,
+            BackEndWriter backEndWriter) throws RuntimeException;
 
     public void deleteFromTable(String tableName) throws RuntimeException;
 

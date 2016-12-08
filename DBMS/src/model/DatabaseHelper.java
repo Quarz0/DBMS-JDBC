@@ -35,7 +35,7 @@ public class DatabaseHelper {
     public SelectionTable getTempTable() {
         return tempTable;
     }
-    
+
     public File getWorkspaceDir() {
         return workspaceDir;
     }
@@ -117,7 +117,7 @@ public class DatabaseHelper {
         return null;
     }
 
-    public void readTable(String tableIdentifier) throws RuntimeException {
+    public Table readTable(String tableIdentifier) throws RuntimeException {
         SelectionTable selectionTable = null;
         if (!App.checkForExistence(this.getCurrentDatabase())) {
             throw new RuntimeException();
@@ -138,6 +138,7 @@ public class DatabaseHelper {
             throw new RuntimeException();
         }
         this.selectedTable = selectionTable;
+        return table;
     }
 
 }
