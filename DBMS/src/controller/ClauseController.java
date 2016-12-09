@@ -32,16 +32,18 @@ public class ClauseController implements DBMSClause {
         SelectionTable table = this.dbmsController.getDatabaseController().getHelper()
                 .getSelectedTable();
         Set<Record> distinctRecords = new LinkedHashSet<>();
-        for (int i = table.getRecordList().size(); i >= 0; i--) {
+        int i = 0;
+        while (i < table.getRecordList().size()) {
             if (distinctRecords.contains(table.getRecordList().get(i))) {
                 table.getRecordList().remove(i);
             } else {
                 distinctRecords.add(table.getRecordList().get(i));
+                i++;
             }
         }
     }
 
-    public boolean evaluate(String expression, Record record) {
+    private boolean evaluate(String expression, Record record) {
         String exp = getFilledExpression(expression, record);
         exp = exp.toLowerCase();
         exp = App.replace(exp, "and", " && ");
@@ -121,7 +123,7 @@ public class ClauseController implements DBMSClause {
             return;
         SelectionTable originalTable = this.dbmsController.getDatabaseController().getHelper()
                 .getTempTable();
-        for (int i = originalTable.getRecordList().size(); i >= 0; i--) {
+        for (int i = originalTable.getRecordList().size() - 1; i >= 0; i--) {
             if (!this.evaluate(condition, originalTable.getRecordList().get(i))) {
                 this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
                         .getRecordList().remove(i);

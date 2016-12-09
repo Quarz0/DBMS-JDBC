@@ -8,6 +8,7 @@ import model.statements.Order;
 import model.statements.Query;
 import model.statements.Where;
 import util.App;
+import util.ErrorCode;
 import util.Regex;
 import util.RegexEvaluator;
 
@@ -51,33 +52,31 @@ public class SQLParserController {
     public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s))
             throw new ParseException("Invalid", 0);
-        s = App.replace(App.replace(s, "(", " ("), ")", ") ").toLowerCase();
+        s = App.replace(App.replace(s, "(", " ("), ")", ") ").toLowerCase().trim();
         Query query = this.locateQuery(s.trim().split(" ")[0]);
         if (!App.checkForExistence(query))
             throw new ParseException("Invalid", 0);
 
         String[] groups;
-        String queryParse = s.substring(s.trim().indexOf(" "));
         if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_DISTINCT))) {
             Distinct d = new Distinct();
             d.parse(groups[1]);
             query.addClause(d);
-            queryParse = groups[1];
         }
         if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_ORDER_BY))) {
             Order o = new Order();
             o.parse(groups[2]);
             query.addClause(o);
-            queryParse = groups[1];
         }
         if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_WHERE))) {
             Where w = new Where();
             w.parse(groups[2]);
             query.addClause(w);
-            queryParse = groups[1];
         }
 
-        query.parse(queryParse.trim());
+        query.parse(s.substring(s.indexOf(" "),
+                Math.min(RegexEvaluator.startIndex(s, Regex.PARSE_WITH_ORDER_BY),
+                        RegexEvaluator.startIndex(s, Regex.PARSE_WITH_WHERE))));
         this.sqlParserHelper.setCurrentQuery(query);
     }
 

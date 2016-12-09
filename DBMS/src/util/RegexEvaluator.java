@@ -8,7 +8,7 @@ public final class RegexEvaluator {
     public static String[] evaluate(String text, String pattern) {
         Pattern r = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
         Matcher m = r.matcher(text);
-
+        
         if (m.find()) {
             String[] groups = new String[m.groupCount() + 1];
             for (int i = 0; i <= m.groupCount(); i++) {
@@ -20,6 +20,13 @@ public final class RegexEvaluator {
         }
     }
 
+    public static int startIndex(String text, String pattern) {
+        Pattern r = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+        Matcher m = r.matcher(text);
+        
+        return m.find() ? m.start() : text.length();
+    }
+    
     private RegexEvaluator() {
     }
 
