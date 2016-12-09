@@ -1,6 +1,7 @@
 package model.statements;
 
 import java.text.ParseException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import controller.DBMS;
@@ -10,14 +11,15 @@ import util.RegexEvaluator;
 
 public class Insert extends Query {
 
-    String[] values;
     private Map<String, String> columns;
     private boolean isDefaultSelection;
     private String tableIdentifier;
+    String[] values;
 
     public Insert() {
         super();
         this.isDefaultSelection = false;
+        this.columns = new LinkedHashMap<>();
     }
 
     private boolean checkRegex(String s) {
@@ -38,6 +40,15 @@ public class Insert extends Query {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        if (this.isDefaultSelection()) {
+            dbms.insertIntoTable(this.getTableIdentifier(), values);
+        } else {
+            dbms.insertIntoTable(this.getTableIdentifier(), columns);
+        }
     }
 
     private String[] extractIdentifiers(String s) {
@@ -87,15 +98,6 @@ public class Insert extends Query {
     public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
             throw new ParseException("Invalid", 0);
-    }
-
-    @Override
-    public void execute(DBMS dbms) throws RuntimeException {
-        if (this.isDefaultSelection()) {
-            dbms.insertIntoTable(this.getTableIdentifier(), values);
-        } else {
-            dbms.insertIntoTable(this.getTableIdentifier(), columns);
-        }
     }
 
 }

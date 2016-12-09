@@ -76,7 +76,7 @@ public class SQLParserController {
             query.addClause(w);
             queryParse = groups[1];
         }
-        
+
         query.parse(queryParse.trim());
         this.sqlParserHelper.setCurrentQuery(query);
     }

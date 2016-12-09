@@ -51,6 +51,111 @@ public class XMLWriter implements BackEndWriter {
         inputFactory = XMLInputFactory.newInstance();
     }
 
+    private String classToString(Map<String, Class<?>> map) {
+        StringBuilder strBuilder = new StringBuilder();
+        int counter = 0;
+        for (String name : map.keySet()) {
+            strBuilder.append(map.get(name).getName());
+            if (counter != map.size() - 1)
+                strBuilder.append(", ");
+            counter++;
+        }
+        return strBuilder.toString();
+    }
+
+    private Map<String, Class<?>> getColumnsNames(Table table) {
+        File tableXML = table.getData();
+        Map<String, Class<?>> ret = new LinkedHashMap<>();
+        try {
+            eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
+            document = saxBuilder.build(tableXML);
+            Element root = document.getRootElement();
+            String names = root.getAttributeValue("colNames");
+            String[] namesArr = names.split(",\\s");
+            String types = root.getAttributeValue("types");
+            String[] typesArr = types.split(",\\s");
+            for (int i = 0; i < namesArr.length; i++) {
+                ret.put(namesArr[i], ClassFactory.getClass(typesArr[i]));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    @Override
+    public String getDataFileExtension() {
+        return XMLWriter.DATA_FILE_EXTENSION;
+    }
+
+    @Override
+    public String getValidatorFileExtension() {
+        return XMLWriter.VALIDATOR_FILE_EXTENSION;
+    }
+
+    @Override
+    public File makeDataFile(String tablePath, String tableName, Map<String, Class<?>> header) {
+        File xmlFile = new File(tablePath + File.separator + tableName + ".xml");
+        try {
+            writer = new FileOutputStream(xmlFile);
+            xmlStreamWriter = fileWriter.createXMLStreamWriter(writer, "UTF-8");
+            xmlStreamWriter.writeStartDocument("UTF-8", "1.0");
+            xmlStreamWriter.writeCharacters("\n");
+            xmlStreamWriter.writeEndDocument();
+            xmlStreamWriter.flush();
+            xmlStreamWriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return xmlFile;
+    }
+
+    @Override
+    public File makeValidatorFile(String tablePath, String tableName,
+            Map<String, Class<?>> header) {
+        File dtdFile = new File(tablePath + File.separator + tableName + ".dtd");
+        try {
+            writer = new FileOutputStream(dtdFile);
+            StringBuilder strBuilder = new StringBuilder();
+            strBuilder.append("<!ELEMENT " + tableName + " (Record*)>\n");
+            strBuilder.append("<!ELEMENT Record (");
+            int counter = 0;
+            for (String name : header.keySet()) {
+                strBuilder.append(name);
+                if (counter != header.size() - 1) {
+                    strBuilder.append(", ");
+                }
+                counter++;
+            }
+            strBuilder.append(")>\n");
+            for (String name : header.keySet()) {
+                strBuilder.append("<!ELEMENT " + name + " (#PCDATA)>\n");
+            }
+            strBuilder.append("<!ATTLIST " + tableName + " colNames CDATA #REQUIRED>\n");
+            strBuilder.append("<!ATTLIST " + tableName + " types CDATA #REQUIRED>\n");
+            System.out.println("here");
+            writer.write(strBuilder.toString().getBytes());
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot generate dtd file.");
+        }
+        return dtdFile;
+    }
+
+    private String mapToString(Map<String, Class<?>> map) {
+
+        StringBuilder strBuilder = new StringBuilder();
+        int counter = 0;
+        for (String name : map.keySet()) {
+            strBuilder.append(name);
+            if (counter != map.size() - 1)
+                strBuilder.append(", ");
+            counter++;
+        }
+        return strBuilder.toString();
+    }
+
     @Override
     public SelectionTable readTable(Table table) throws FileNotFoundException {
         List<Object> values = new ArrayList<>();
@@ -131,110 +236,5 @@ public class XMLWriter implements BackEndWriter {
             e.printStackTrace();
             throw new RuntimeException("Cannot insert into table");
         }
-    }
-
-    @Override
-    public File makeValidatorFile(String tablePath, String tableName,
-            Map<String, Class<?>> header) {
-        File dtdFile = new File(tablePath + File.separator + tableName + ".dtd");
-        try {
-            writer = new FileOutputStream(dtdFile);
-            StringBuilder strBuilder = new StringBuilder();
-            strBuilder.append("<!ELEMENT " + tableName + " (Record*)>\n");
-            strBuilder.append("<!ELEMENT Record (");
-            int counter = 0;
-            for (String name : header.keySet()) {
-                strBuilder.append(name);
-                if (counter != header.size() - 1) {
-                    strBuilder.append(", ");
-                }
-                counter++;
-            }
-            strBuilder.append(")>\n");
-            for (String name : header.keySet()) {
-                strBuilder.append("<!ELEMENT " + name + " (#PCDATA)>\n");
-            }
-            strBuilder.append("<!ATTLIST " + tableName + " colNames CDATA #REQUIRED>\n");
-            strBuilder.append("<!ATTLIST " + tableName + " types CDATA #REQUIRED>\n");
-            System.out.println("here");
-            writer.write(strBuilder.toString().getBytes());
-            writer.flush();
-            writer.close();
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot generate dtd file.");
-        }
-        return dtdFile;
-    }
-
-    @Override
-    public File makeDataFile(String tablePath, String tableName, Map<String, Class<?>> header) {
-        File xmlFile = new File(tablePath + File.separator + tableName + ".xml");
-        try {
-            writer = new FileOutputStream(xmlFile);
-            xmlStreamWriter = fileWriter.createXMLStreamWriter(writer, "UTF-8");
-            xmlStreamWriter.writeStartDocument("UTF-8", "1.0");
-            xmlStreamWriter.writeCharacters("\n");
-            xmlStreamWriter.writeEndDocument();
-            xmlStreamWriter.flush();
-            xmlStreamWriter.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return xmlFile;
-    }
-
-    private Map<String, Class<?>> getColumnsNames(Table table) {
-        File tableXML = table.getData();
-        Map<String, Class<?>> ret = new LinkedHashMap<>();
-        try {
-            eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
-            document = saxBuilder.build(tableXML);
-            Element root = document.getRootElement();
-            String names = root.getAttributeValue("colNames");
-            String[] namesArr = names.split(",\\s");
-            String types = root.getAttributeValue("types");
-            String[] typesArr = types.split(",\\s");
-            for (int i = 0; i < namesArr.length; i++) {
-                ret.put(namesArr[i], ClassFactory.getClass(typesArr[i]));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ret;
-    }
-
-    private String mapToString(Map<String, Class<?>> map) {
-
-        StringBuilder strBuilder = new StringBuilder();
-        int counter = 0;
-        for (String name : map.keySet()) {
-            strBuilder.append(name);
-            if (counter != map.size() - 1)
-                strBuilder.append(", ");
-            counter++;
-        }
-        return strBuilder.toString();
-    }
-
-    private String classToString(Map<String, Class<?>> map) {
-        StringBuilder strBuilder = new StringBuilder();
-        int counter = 0;
-        for (String name : map.keySet()) {
-            strBuilder.append(map.get(name).getName());
-            if (counter != map.size() - 1)
-                strBuilder.append(", ");
-            counter++;
-        }
-        return strBuilder.toString();
-    }
-
-    @Override
-    public String getDataFileExtension() {
-        return this.DATA_FILE_EXTENSION;
-    }
-
-    @Override
-    public String getValidatorFileExtension() {
-        return this.VALIDATOR_FILE_EXTENSION;
     }
 }

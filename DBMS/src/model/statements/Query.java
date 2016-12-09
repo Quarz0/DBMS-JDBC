@@ -18,5 +18,5 @@ public abstract class Query implements ExecutableQuery, Parsable {
     public List<Clause> getClauses() {
         return clauses;
     }
-    
+
 }

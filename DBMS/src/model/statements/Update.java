@@ -28,6 +28,11 @@ public class Update extends Query {
         return false;
     }
 
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        dbms.updateTable(this.getTableIdentifier(), this.getColumns());
+    }
+
     private String[] extractColumns(String s) {
         if (!s.matches(Regex.PARSE_WITH_UPDATE_TRIM_MATCH))
             return null;
@@ -91,10 +96,5 @@ public class Update extends Query {
     public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
             throw new ParseException("Invalid", 0);
-    }
-
-    @Override
-    public void execute(DBMS dbms) throws RuntimeException {
-        dbms.updateTable(this.getTableIdentifier(), this.getColumns());
     }
 }

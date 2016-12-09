@@ -18,19 +18,38 @@ public class SelectionTable implements Cloneable {
     private String tableName;
     private Table tableSchema;
 
-    public SelectionTable(String tableName, Map<String, Class<?>> colNames) {
-        this(tableName);
-        this.header = colNames;
-    }
-
     public SelectionTable(String tableName) {
         this.recordList = new ArrayList<>();
         this.tableName = tableName;
         this.tableSchema = null;
     }
 
+    public SelectionTable(String tableName, Map<String, Class<?>> colNames) {
+        this(tableName);
+        this.header = colNames;
+    }
+
     public void addRecord(Record record) {
         recordList.add(record);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        SelectionTable selectionTable = new SelectionTable(tableName, copyHeader());
+        for (Iterator<Record> iterator = recordList.iterator(); iterator.hasNext();) {
+            Record object = iterator.next();
+            selectionTable.addRecord((Record) object.clone());
+        }
+        return selectionTable;
+    }
+
+    private Map<String, Class<?>> copyHeader() {
+        Map<String, Class<?>> result = new LinkedHashMap<>();
+        for (Iterator<String> iterator = header.keySet().iterator(); iterator.hasNext();) {
+            String record = iterator.next();
+            result.put(record, header.get(record));
+        }
+        return result;
     }
 
     public Map<String, Class<?>> getHeader() {
@@ -43,6 +62,14 @@ public class SelectionTable implements Cloneable {
 
     public String getTableName() {
         return tableName;
+    }
+
+    public Table getTableSchema() {
+        return tableSchema;
+    }
+
+    public void setTableSchema(Table tableSchema) {
+        this.tableSchema = tableSchema;
     }
 
     @Override
@@ -64,33 +91,6 @@ public class SelectionTable implements Cloneable {
         RenderedTable renderedTable = asciiTableRenderer.render(asciiTable);
         return "  Table: " + this.tableName + "\n" + renderedTable.toString() + "  Records: "
                 + this.recordList.size() + "\n\n";
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        SelectionTable selectionTable = new SelectionTable(tableName, copyHeader());
-        for (Iterator<Record> iterator = recordList.iterator(); iterator.hasNext();) {
-            Record object = (Record) iterator.next();
-            selectionTable.addRecord((Record) object.clone());
-        }
-        return selectionTable;
-    }
-
-    private Map<String, Class<?>> copyHeader() {
-        Map<String, Class<?>> result = new LinkedHashMap<>();
-        for (Iterator<String> iterator = header.keySet().iterator(); iterator.hasNext();) {
-            String record = (String) iterator.next();
-            result.put(record, header.get(record));
-        }
-        return result;
-    }
-
-    public Table getTableSchema() {
-        return tableSchema;
-    }
-
-    public void setTableSchema(Table tableSchema) {
-        this.tableSchema = tableSchema;
     }
 
 }

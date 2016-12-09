@@ -12,10 +12,12 @@ public class CLI {
 
     private BufferedReader bufferedReader;
     private DBMSController dbmsController;
+    private String input;
 
     public CLI(DBMSController dbmsController) {
         this.dbmsController = dbmsController;
         this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        this.input = null;
     }
 
     public void close() {
@@ -27,9 +29,15 @@ public class CLI {
         }
     }
 
+    public String getInput() {
+        return input;
+    }
+
     public void newPrompt(String s) {
         try {
-            this.print(s);
+            while (true) {
+                this.print(s);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println(ErrorCode.CLI_READLINE + " " + e.getMessage());
@@ -48,7 +56,8 @@ public class CLI {
     }
 
     private void scan() throws IOException {
-        this.dbmsController.getCLIController().newInput(this.bufferedReader.readLine());
+        this.input = this.bufferedReader.readLine();
+        this.dbmsController.getCLIController().update();
     }
 
 }

@@ -27,6 +27,20 @@ public class ClauseController implements DBMSClause {
         this.dbmsController = dbmsController;
     }
 
+    @Override
+    public void distinct() throws RuntimeException {
+        SelectionTable table = this.dbmsController.getDatabaseController().getHelper()
+                .getSelectedTable();
+        Set<Record> distinctRecords = new LinkedHashSet<>();
+        for (int i = table.getRecordList().size(); i >= 0; i--) {
+            if (distinctRecords.contains(table.getRecordList().get(i))) {
+                table.getRecordList().remove(i);
+            } else {
+                distinctRecords.add(table.getRecordList().get(i));
+            }
+        }
+    }
+
     public boolean evaluate(String expression, Record record) {
         String exp = getFilledExpression(expression, record);
         exp = exp.toLowerCase();
@@ -53,6 +67,35 @@ public class ClauseController implements DBMSClause {
             i++;
         }
         return exp;
+    }
+
+    @Override
+    public void order(Map<String, String> columns) throws RuntimeException {
+        Map<String, Integer> columnIndex = new HashMap<>();
+        SelectionTable table = this.dbmsController.getDatabaseController().getHelper()
+                .getSelectedTable();
+        int i = 0;
+        for (String column : table.getHeader().keySet()) {
+            columnIndex.put(column, i++);
+        }
+        Collections.sort(this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
+                .getRecordList(), new Comparator<Record>() {
+
+                    @Override
+                    public int compare(Record r1, Record r2) {
+                        CompareToBuilder compare = new CompareToBuilder();
+                        for (String column : columns.keySet()) {
+                            int index = columnIndex.get(column);
+                            if (columns.get(column).equals("ASC"))
+                                compare.append(r1.getValues().get(index),
+                                        r2.getValues().get(index));
+                            else
+                                compare.append(r2.getValues().get(index),
+                                        r1.getValues().get(index));
+                        }
+                        return compare.toComparison();
+                    }
+                });
     }
 
     @Override
@@ -97,49 +140,6 @@ public class ClauseController implements DBMSClause {
             if (!this.evaluate(condition, originalTable.getRecordList().get(i))) {
                 this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
                         .getRecordList().set(i, originalTable.getRecordList().get(i));
-            }
-        }
-    }
-
-    @Override
-    public void order(Map<String, String> columns) throws RuntimeException {
-        Map<String, Integer> columnIndex = new HashMap<>();
-        SelectionTable table = this.dbmsController.getDatabaseController().getHelper()
-                .getSelectedTable();
-        int i = 0;
-        for (String column : table.getHeader().keySet()) {
-            columnIndex.put(column, i++);
-        }
-        Collections.sort(this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
-                .getRecordList(), new Comparator<Record>() {
-
-                    @Override
-                    public int compare(Record r1, Record r2) {
-                        CompareToBuilder compare = new CompareToBuilder();
-                        for (String column : columns.keySet()) {
-                            int index = columnIndex.get(column);
-                            if (columns.get(column).equals("ASC"))
-                                compare.append(r1.getValues().get(index),
-                                        r2.getValues().get(index));
-                            else
-                                compare.append(r2.getValues().get(index),
-                                        r1.getValues().get(index));
-                        }
-                        return compare.toComparison();
-                    }
-                });
-    }
-
-    @Override
-    public void distinct() throws RuntimeException {
-        SelectionTable table = this.dbmsController.getDatabaseController().getHelper()
-                .getSelectedTable();
-        Set<Record> distinctRecords = new LinkedHashSet<>();
-        for (int i = table.getRecordList().size(); i >= 0; i--) {
-            if (distinctRecords.contains(table.getRecordList().get(i))) {
-                table.getRecordList().remove(i);
-            } else {
-                distinctRecords.add(table.getRecordList().get(i));
             }
         }
     }

@@ -17,6 +17,14 @@ public class Delete extends Query {
         this.isAll = false;
     }
 
+    @Override
+    public void addClause(Clause clause) {
+        super.addClause(clause);
+        if (clause instanceof Where && this.isAll) {
+            throw new RuntimeException("Syntax Error");
+        }
+    }
+
     private boolean checkRegex(String s) {
         String[] groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_DELETE_ALL);
         if (App.checkForExistence(groups)) {
@@ -24,6 +32,11 @@ public class Delete extends Query {
             this.extractTable(groups[2].trim());
         }
         return false;
+    }
+
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        dbms.deleteFromTable(this.getTableIdentifier());
     }
 
     private void extractTable(String s) {
@@ -37,14 +50,6 @@ public class Delete extends Query {
     public boolean isAll() {
         return this.isAll;
     }
-    
-    @Override
-    public void addClause(Clause clause) {
-        super.addClause(clause);
-        if (clause instanceof Where && this.isAll) {
-            throw new RuntimeException("Syntax Error");
-        }
-    }
 
     @Override
     public void parse(String s) throws ParseException {
@@ -52,9 +57,4 @@ public class Delete extends Query {
             throw new ParseException("Invalid", 0);
     }
 
-    @Override
-    public void execute(DBMS dbms) throws RuntimeException {
-        dbms.deleteFromTable(this.getTableIdentifier());
-    }
-    
 }

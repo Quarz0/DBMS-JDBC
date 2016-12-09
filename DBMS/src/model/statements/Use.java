@@ -24,6 +24,11 @@ public class Use extends Query {
         return false;
     }
 
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        dbms.useDatabase(this.getDatabaseIdentifier());
+    }
+
     private void extractDatabase(String s) {
         this.databaseIdentifier = s.trim();
     }
@@ -36,10 +41,5 @@ public class Use extends Query {
     public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
             throw new ParseException("Invalid", 0);
-    }
-    
-    @Override
-    public void execute(DBMS dbms) throws RuntimeException {
-        dbms.useDatabase(this.getDatabaseIdentifier());
     }
 }

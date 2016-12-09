@@ -22,10 +22,15 @@ public class Order extends Clause {
         String[] groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_ORDER_BY_PATTERN);
         if (App.checkForExistence(groups)) {
             return this.extractColIdentifiers(groups[1]);
-        } 
+        }
         return false;
     }
-    
+
+    @Override
+    public void execute(DBMSClause dbms) throws RuntimeException {
+        dbms.order(this.getColumns());
+    }
+
     private boolean extractColIdentifiers(String s) {
         String[] cols = s.split(",");
         for (int i = 0; i < cols.length; i++) {
@@ -35,10 +40,9 @@ public class Order extends Clause {
             }
             if (column.length == 0) {
                 this.columns.put(column[0].trim(), "ASC");
-            }
-            else {
+            } else {
                 this.columns.put(column[0].trim(), column[1].trim());
-            }            
+            }
         }
         return true;
     }
@@ -46,17 +50,12 @@ public class Order extends Clause {
     public Map<String, String> getColumns() {
         return this.columns;
     }
-    
+
     @Override
     public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s)) {
             throw new ParseException("Invalid", 0);
         }
-    }
-
-    @Override
-    public void execute(DBMSClause dbms) throws RuntimeException {
-        dbms.order(this.getColumns());
     }
 
 }

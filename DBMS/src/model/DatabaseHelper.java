@@ -10,50 +10,16 @@ import util.RegexEvaluator;
 
 public class DatabaseHelper {
     private Database currentDatabase;
+    private DatabaseFilterGenerator databaseFilter;
     private DBMSController dbmsController;
     private SelectionTable selectedTable;
     private SelectionTable tempTable;
     private File workspaceDir;
-    private DatabaseFilterGenerator databaseFilter;
 
     public DatabaseHelper(DBMSController dbmsController) {
         databaseFilter = new DatabaseFilterGenerator();
         currentDatabase = null;
         this.dbmsController = dbmsController;
-    }
-
-    public Database getCurrentDatabase() {
-        return currentDatabase;
-    }
-
-    public File getDatabaseDir() {
-        return workspaceDir;
-    }
-
-    public SelectionTable getSelectedTable() {
-        return selectedTable;
-    }
-
-    public SelectionTable getTempTable() {
-        return tempTable;
-    }
-
-    public File getWorkspaceDir() {
-        return workspaceDir;
-    }
-
-    public void setDatabase(File usedDatabaseDir) {
-
-        currentDatabase = new Database();
-        currentDatabase.useDatabase(usedDatabaseDir);
-    }
-
-    public void setSelectedTable(SelectionTable selectedTable) {
-        this.selectedTable = selectedTable;
-    }
-
-    public void setWorkspaceDir(File workspaceDir) {
-        this.workspaceDir = workspaceDir;
     }
 
     public boolean databaseExists(String databaseName) {
@@ -62,6 +28,34 @@ public class DatabaseHelper {
             return false;
         }
         return true;
+    }
+
+    public void deleteDir(File file) {
+        File[] contents = file.listFiles();
+        if (App.checkForExistence(contents)) {
+            for (File f : contents) {
+                deleteDir(f);
+            }
+        }
+        file.delete();
+    }
+
+    private BackEndWriter fetchWriter(File tableDir) {
+        File[] dataFiles = tableDir.listFiles();
+        for (File file : dataFiles) {
+            if (file.getName().matches("[a-zA-Z_]\\w*\\.\\w+")) {
+                String[] extension = RegexEvaluator.evaluate(file.getName(),
+                        "[a-zA-Z_]\\w*\\.(\\w+)");
+                if (App.checkForExistence(extension)) {
+                    return BackEndWriterFactory.getBackEndWriter(extension[1]);
+                }
+            }
+        }
+        return null;
+    }
+
+    public Database getCurrentDatabase() {
+        return currentDatabase;
     }
 
     public File getDatabase(String databaseName) {
@@ -74,14 +68,29 @@ public class DatabaseHelper {
         return null;
     }
 
-    public void deleteDir(File file) {
-        File[] contents = file.listFiles();
-        if (App.checkForExistence(contents)) {
-            for (File f : contents) {
-                deleteDir(f);
+    public File getDatabaseDir() {
+        return workspaceDir;
+    }
+
+    public SelectionTable getSelectedTable() {
+        return selectedTable;
+    }
+
+    public Table getTable(String tableName) {
+        for (Table table : this.getCurrentDatabase().getTables()) {
+            if (App.equalStrings(table.getTableName(), tableName)) {
+                return table;
             }
         }
-        file.delete();
+        return null;
+    }
+
+    public SelectionTable getTempTable() {
+        return tempTable;
+    }
+
+    public File getWorkspaceDir() {
+        return workspaceDir;
     }
 
     public void loadTables(Database database) {
@@ -102,24 +111,6 @@ public class DatabaseHelper {
                 database.getTables().add(table);
             }
         }
-    }
-
-    public boolean tableExists(String tableName) {
-        for (Table table : this.getCurrentDatabase().getTables()) {
-            if (App.equalStrings(table.getTableName(), tableName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public Table getTable(String tableName) {
-        for (Table table : this.getCurrentDatabase().getTables()) {
-            if (App.equalStrings(table.getTableName(), tableName)) {
-                return table;
-            }
-        }
-        return null;
     }
 
     public Table readTable(String tableIdentifier) throws RuntimeException {
@@ -146,18 +137,27 @@ public class DatabaseHelper {
         return table;
     }
 
-    private BackEndWriter fetchWriter(File tableDir) {
-        File[] dataFiles = tableDir.listFiles();
-        for (File file : dataFiles) {
-            if (file.getName().matches("[a-zA-Z_]\\w*\\.\\w+")) {
-                String[] extension = RegexEvaluator.evaluate(file.getName(),
-                        "[a-zA-Z_]\\w*\\.(\\w+)");
-                if (App.checkForExistence(extension)) {
-                    return BackEndWriterFactory.getBackEndWriter(extension[1]);
-                }
+    public void setDatabase(File usedDatabaseDir) {
+
+        currentDatabase = new Database();
+        currentDatabase.useDatabase(usedDatabaseDir);
+    }
+
+    public void setSelectedTable(SelectionTable selectedTable) {
+        this.selectedTable = selectedTable;
+    }
+
+    public void setWorkspaceDir(File workspaceDir) {
+        this.workspaceDir = workspaceDir;
+    }
+
+    public boolean tableExists(String tableName) {
+        for (Table table : this.getCurrentDatabase().getTables()) {
+            if (App.equalStrings(table.getTableName(), tableName)) {
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
 }

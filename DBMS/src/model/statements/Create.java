@@ -38,6 +38,15 @@ public class Create extends Query {
         return false;
     }
 
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        if (this.isDatabase()) {
+            dbms.createDatabase(this.getDatabaseIdentifier());
+        } else {
+            dbms.createTable(this.getTableIdentifier(), this.getColumns(), new XMLWriter());
+        }
+    }
+
     private boolean extractColIdentifiers(String s) {
         String[] colmuns = s.split(",");
         String[] column;
@@ -83,15 +92,6 @@ public class Create extends Query {
     public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
             throw new ParseException("Invalid", 0);
-    }
-
-    @Override
-    public void execute(DBMS dbms) throws RuntimeException {
-        if (this.isDatabase()) {
-            dbms.createDatabase(this.getDatabaseIdentifier());
-        } else {
-            dbms.createTable(this.getTableIdentifier(), this.getColumns(), new XMLWriter());
-        }
     }
 
 }

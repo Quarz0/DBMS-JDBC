@@ -2,10 +2,11 @@ package controller;
 
 import java.text.ParseException;
 
+import model.Observer;
 import util.ErrorCode;
 import view.CLI;
 
-public class CLIController {
+public class CLIController implements Observer {
 
     private CLI cli;
     private DBMSController dbmsController;
@@ -31,7 +32,7 @@ public class CLIController {
 
     }
 
-    public void newInput(String s) {
+    private void newInput(String s) {
         try {
             this.dbmsController.getSQLParserController().parse(s);
         } catch (ParseException e) {
@@ -45,6 +46,11 @@ public class CLIController {
             this.cli.newPrompt(ErrorCode.QUERY_IS_OK);
         else
             this.cli.newPrompt(ErrorCode.QUERY_IS_NOT_OK);
+    }
+
+    @Override
+    public void update() {
+        this.newInput(this.cli.getInput().trim());
     }
 
 }

@@ -32,6 +32,15 @@ public class Drop extends Query {
         return false;
     }
 
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        if (this.isDatabase()) {
+            dbms.dropDatabase(this.getDatabaseIdentifier());
+        } else {
+            dbms.dropTable(this.getTableIdentifier());
+        }
+    }
+
     private void extractDatabase(String s) {
         this.databaseIdentifier = s.trim();
         this.isDatabase = true;
@@ -58,16 +67,6 @@ public class Drop extends Query {
     public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
             throw new ParseException("Invalid", 0);
-    }
-    
-    @Override
-    public void execute(DBMS dbms) throws RuntimeException {
-        if (this.isDatabase()) {
-            dbms.dropDatabase(this.getDatabaseIdentifier());
-        }
-        else {
-            dbms.dropTable(this.getTableIdentifier());
-        }
     }
 
 }

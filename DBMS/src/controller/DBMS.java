@@ -15,14 +15,14 @@ public interface DBMS {
 
     public void dropTable(String tableName) throws RuntimeException;
 
-    public void insertIntoTable(String tableName, String... values) throws RuntimeException;
-
     public void insertIntoTable(String tableName, Map<String, String> columns)
             throws RuntimeException;
 
-    public void selectFromTable(String tableName, String... colNames) throws RuntimeException;
+    public void insertIntoTable(String tableName, String... values) throws RuntimeException;
 
     public void selectAllFromTable(String tableName) throws RuntimeException;
+
+    public void selectFromTable(String tableName, String... colNames) throws RuntimeException;
 
     public void updateTable(String tableName, Map<String, String> columns) throws RuntimeException;
 

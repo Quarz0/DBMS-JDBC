@@ -10,17 +10,46 @@ public class Record implements Cloneable {
     private Map<String, Class<?>> columns;
     private List<Object> values;
 
+    public Record() {
+        values = new ArrayList<>();
+    }
+
     public Record(Map<String, Class<?>> columns, List<Object> values) {
         this.columns = columns;
         this.values = values;
     }
 
-    public Record() {
-        values = new ArrayList<>();
-    }
-
     public void addToRecord(Object obj) {
         values.add(obj);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new Record(copyHeader(), copyValues());
+    }
+
+    private Map<String, Class<?>> copyHeader() {
+        Map<String, Class<?>> result = new LinkedHashMap<>();
+        for (Iterator<String> iterator = columns.keySet().iterator(); iterator.hasNext();) {
+            String record = iterator.next();
+            result.put(record, columns.get(record));
+        }
+        return result;
+    }
+
+    private List<Object> copyValues() {
+        List<Object> newValues = new ArrayList<>();
+        for (Iterator<Object> iterator = values.iterator(); iterator.hasNext();) {
+            Object object = iterator.next();
+            newValues.add(object);
+        }
+        return newValues;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return columns.equals(((Record) obj).getColumns())
+                && values.equals(((Record) obj).getValues());
     }
 
     public Map<String, Class<?>> getColumns() {
@@ -37,35 +66,6 @@ public class Record implements Cloneable {
         int result = 1;
         result = prime * result + (columns == null ? 0 : columns.hashCode());
         result = prime * result + (values == null ? 0 : values.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return columns.equals(((Record) obj).getColumns())
-                && values.equals(((Record) obj).getValues());
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return new Record(copyHeader(), copyValues());
-    }
-
-    private List<Object> copyValues() {
-        List<Object> newValues = new ArrayList<>();
-        for (Iterator<Object> iterator = values.iterator(); iterator.hasNext();) {
-            Object object = (Object) iterator.next();
-            newValues.add(object);
-        }
-        return newValues;
-    }
-
-    private Map<String, Class<?>> copyHeader() {
-        Map<String, Class<?>> result = new LinkedHashMap<>();
-        for (Iterator<String> iterator = columns.keySet().iterator(); iterator.hasNext();) {
-            String record = (String) iterator.next();
-            result.put(record, columns.get(record));
-        }
         return result;
     }
 

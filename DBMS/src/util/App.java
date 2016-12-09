@@ -30,6 +30,10 @@ public final class App {
         return true;
     }
 
+    public static boolean equalStrings(String str1, String str2) {
+        return str1.toLowerCase().equals(str2.toLowerCase());
+    }
+
     public static boolean isLegalIdentifier(String s) {
         return s.matches(Regex.LEGAL_IDENTIFIER);
     }
@@ -52,10 +56,6 @@ public final class App {
         result.add(objects[1]);
         result.add(objects[0]);
         return result.toArray();
-    }
-
-    public static boolean equalStrings(String str1, String str2) {
-        return str1.toLowerCase().equals(str2.toLowerCase());
     }
 
     private App() {

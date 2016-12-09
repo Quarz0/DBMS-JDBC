@@ -13,12 +13,15 @@ public class Where extends Clause {
         super();
     }
 
-    public String getExpression() {
-        return this.expression;
+    @Override
+    public void execute(DBMSClause dbms) throws RuntimeException {
+        dbms.whereForDelete(this.getExpression());
+        dbms.whereForSelect(this.getExpression());
+        dbms.whereForUpdate(this.getExpression());
     }
 
-    public void setExpression(String exp) {
-        this.expression = exp;
+    public String getExpression() {
+        return this.expression;
     }
 
     @Override
@@ -29,11 +32,8 @@ public class Where extends Clause {
         this.setExpression(s);
     }
 
-    @Override
-    public void execute(DBMSClause dbms) throws RuntimeException {
-        dbms.whereForDelete(this.getExpression());
-        dbms.whereForSelect(this.getExpression());
-        dbms.whereForUpdate(this.getExpression());
+    public void setExpression(String exp) {
+        this.expression = exp;
     }
 
 }

@@ -9,15 +9,15 @@ import util.RegexEvaluator;
 
 public class Alter extends Query {
 
-    private static final int NONE = -1;
     private static final int ADD = 0;
     private static final int DROP = 1;
     private static final int MODIFY = 2;
+    private static final int NONE = -1;
 
+    private String column;
     private int state;
     private String tableIdentifier;
     private String type;
-    private String column;
 
     public Alter() {
         super();
@@ -52,50 +52,50 @@ public class Alter extends Query {
         return false;
     }
 
-    private void extractColumn(String s) {
-        this.column = s.trim();
+    // TODO
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        switch (this.state) {
+        case ADD:
+            // dbms.addColumn(this.getTableIdentifier(), this.getColumn(), this.getType());
+            break;
+        case DROP:
+            // dbms.dropColumn(this.getTableIdentifier(), this.getColumn());
+            break;
+        case MODIFY:
+            // dbms.modifyColumn(this.getTableIdentifier(), this.getColumn(), this.getType());
+            break;
+        }
     }
 
-    private void extractType(String s) {
-        this.type = s.trim();
+    private void extractColumn(String s) {
+        this.column = s.trim();
     }
 
     private void extractTable(String s) {
         this.tableIdentifier = s.trim();
     }
 
-    public String getTableIdentifier() {
-        return this.tableIdentifier;
+    private void extractType(String s) {
+        this.type = s.trim();
     }
 
     public String getColumn() {
         return this.column;
     }
 
+    public String getTableIdentifier() {
+        return this.tableIdentifier;
+    }
+
     public String getType() {
         return this.type;
     }
-    
+
     @Override
     public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
             throw new ParseException("Invalid", 0);
-    }  
-    
-    // TODO
-    @Override
-    public void execute(DBMS dbms) throws RuntimeException {
-        switch (this.state) {
-        case ADD:
-//            dbms.addColumn(this.getTableIdentifier(), this.getColumn(), this.getType());
-            break;
-        case DROP:
-//            dbms.dropColumn(this.getTableIdentifier(), this.getColumn());
-            break;
-        case MODIFY:
-//            dbms.modifyColumn(this.getTableIdentifier(), this.getColumn(), this.getType());
-            break;
-        }
     }
 
 }

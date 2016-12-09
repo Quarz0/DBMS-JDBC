@@ -9,16 +9,16 @@ import model.Table;
 
 public interface BackEndWriter {
 
-    public SelectionTable readTable(Table table) throws FileNotFoundException;
-
-    public void writeTable(SelectionTable selectionTable) throws FileNotFoundException;
-
-    public File makeValidatorFile(String tablePath, String tableName, Map<String, Class<?>> header);
-
-    public File makeDataFile(String tablePath, String tableName, Map<String, Class<?>> header);
-
     public String getDataFileExtension();
 
     public String getValidatorFileExtension();
+
+    public File makeDataFile(String tablePath, String tableName, Map<String, Class<?>> header);
+
+    public File makeValidatorFile(String tablePath, String tableName, Map<String, Class<?>> header);
+
+    public SelectionTable readTable(Table table) throws FileNotFoundException;
+
+    public void writeTable(SelectionTable selectionTable) throws FileNotFoundException;
 
 }

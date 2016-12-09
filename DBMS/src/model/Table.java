@@ -5,10 +5,10 @@ import java.io.File;
 import controller.BackEndWriter;
 
 public class Table {
-    private File validatorFile;
-    private File tableDir;
-    private File dataFile;
     private BackEndWriter backEndWriter;
+    private File dataFile;
+    private File tableDir;
+    private File validatorFile;
 
     public Table(File tableDir, BackEndWriter backEndWriter) {
         this.tableDir = tableDir;
@@ -25,11 +25,15 @@ public class Table {
         }
     }
 
-    public File getValidator() {
-        if (!validatorFile.exists()) {
+    public BackEndWriter getBackEndWriter() {
+        return backEndWriter;
+    }
+
+    public File getData() {
+        if (!dataFile.exists()) {
             return null;
         }
-        return validatorFile;
+        return dataFile;
     }
 
     public File getTableDir() {
@@ -45,20 +49,16 @@ public class Table {
         return tableDir.getAbsolutePath();
     }
 
-    public File getData() {
-        if (!dataFile.exists()) {
+    public File getValidator() {
+        if (!validatorFile.exists()) {
             return null;
         }
-        return dataFile;
+        return validatorFile;
     }
 
     public void registerFiles(File dataFile, File validatorFile) {
         this.dataFile = dataFile;
         this.validatorFile = validatorFile;
-    }
-
-    public BackEndWriter getBackEndWriter() {
-        return backEndWriter;
     }
 
 }

@@ -34,6 +34,15 @@ public class Select extends Query {
         return false;
     }
 
+    @Override
+    public void execute(DBMS dbms) throws RuntimeException {
+        if (this.isAll()) {
+            dbms.selectAllFromTable(this.getTableIdentifier());
+        } else {
+            dbms.selectFromTable(this.getTableIdentifier(), columns);
+        }
+    }
+
     private boolean extractColIdentifiers(String s) {
         this.columns = s.split(",");
         for (int i = 0; i < this.columns.length; i++) {
@@ -65,15 +74,5 @@ public class Select extends Query {
     public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
             throw new ParseException("Invalid", 0);
-    }
-    
-    @Override
-    public void execute(DBMS dbms) throws RuntimeException {
-        if (this.isAll()) {
-            dbms.selectAllFromTable(this.getTableIdentifier());
-        }
-        else {
-            dbms.selectFromTable(this.getTableIdentifier(), columns);
-        }
     }
 }
