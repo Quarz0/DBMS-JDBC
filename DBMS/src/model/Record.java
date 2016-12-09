@@ -10,12 +10,13 @@ public class Record implements Cloneable {
     private Map<String, Class<?>> columns;
     private List<Object> values;
 
-    public Record() {
+    public Record(Map<String, Class<?>> columns) {
+        this.columns = columns;
         values = new ArrayList<>();
     }
 
     public Record(Map<String, Class<?>> columns, List<Object> values) {
-        this.columns = columns;
+        this(columns);
         this.values = values;
     }
 

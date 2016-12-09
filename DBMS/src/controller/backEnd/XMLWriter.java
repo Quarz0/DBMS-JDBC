@@ -55,7 +55,7 @@ public class XMLWriter implements BackEndWriter {
         StringBuilder strBuilder = new StringBuilder();
         int counter = 0;
         for (String name : map.keySet()) {
-            strBuilder.append(map.get(name).getName());
+            strBuilder.append(map.get(name).getSimpleName());
             if (counter != map.size() - 1)
                 strBuilder.append(", ");
             counter++;
@@ -101,6 +101,10 @@ public class XMLWriter implements BackEndWriter {
             xmlStreamWriter = fileWriter.createXMLStreamWriter(writer, "UTF-8");
             xmlStreamWriter.writeStartDocument("UTF-8", "1.0");
             xmlStreamWriter.writeCharacters("\n");
+            xmlStreamWriter.writeStartElement(tableName);
+            xmlStreamWriter.writeAttribute("colNames", mapToString(header));
+            xmlStreamWriter.writeAttribute("types", classToString(header));
+            xmlStreamWriter.writeEndElement();
             xmlStreamWriter.writeEndDocument();
             xmlStreamWriter.flush();
             xmlStreamWriter.close();
@@ -133,7 +137,6 @@ public class XMLWriter implements BackEndWriter {
             }
             strBuilder.append("<!ATTLIST " + tableName + " colNames CDATA #REQUIRED>\n");
             strBuilder.append("<!ATTLIST " + tableName + " types CDATA #REQUIRED>\n");
-            System.out.println("here");
             writer.write(strBuilder.toString().getBytes());
             writer.flush();
             writer.close();

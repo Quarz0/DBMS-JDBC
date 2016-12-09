@@ -25,7 +25,7 @@ public final class Regex {
     public static final String PARSE_WITH_INSERT_SPLIT_PATTERN2 = ",(?=(?:[^\']*\'[^\']*\')*[^\']*$)";
 
     public static final String PARSE_WITH_INSERT_TRIM_MATCH = ".+(?<!,)";
-    public static final String PARSE_WITH_ORDER_BY = "\\s+ORDER\\s+BY\\s+(.*?)\\s+(WHERE\\s+(.*))?";
+    public static final String PARSE_WITH_ORDER_BY = "\\s+ORDER\\s+BY\\s+((.*)\\s+WHERE\\s+(.*))?(.*)";
 
     public static final String PARSE_WITH_ORDER_BY_PATTERN = "\\A\\s*([a-zA-Z_]\\w*(\\s+ASC|\\s+DESC)?\\s*(,\\s*[a-zA-Z_]\\w*(\\s+ASC|\\s+DESC)?\\s*)*)\\s*\\Z";
     public static final String PARSE_WITH_SELECT_ALL_FROM = "\\A\\s*\\*\\s+FROM\\s+([a-zA-Z_]\\w*)\\s*\\Z";
@@ -44,7 +44,7 @@ public final class Regex {
             + Regex.LEGAL_IDENTIFIER + "\\Z";
     public static final String PARSE_WITH_USE = "\\A\\s*([a-zA-Z_]\\w*)\\s*\\Z";
 
-    public static final String PARSE_WITH_WHERE = "\\s+WHERE\\s+(.*?)\\s+(ORDER\\s+(.*))?";
+    public static final String PARSE_WITH_WHERE = "\\s+WHERE\\s+((.*)\\s+ORDER\\s+(.*))?(.*)";
 
     private Regex() {
     }

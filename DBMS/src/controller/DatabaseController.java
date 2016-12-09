@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -58,8 +59,9 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public void deleteFromTable(String tableName) throws RuntimeException {
-        this.dbHelper.readTable(tableName);
+        Table table = this.dbHelper.readTable(tableName);
         dbHelper.getSelectedTable().getRecordList().clear();
+        this.dbHelper.getSelectedTable().setTableSchema(table);
     }
 
     @Override
@@ -100,7 +102,7 @@ public class DatabaseController implements DBMS, Observer {
         }
         SelectionTable result = new SelectionTable(selectedTable.getTableName(), header);
         for (Record record : selectedTable.getRecordList()) {
-            Record newRecord = new Record();
+            Record newRecord = new Record(selectedTable.getHeader());
             ListIterator<Integer> it = selectedColIndices.listIterator();
             while (it.hasNext()) {
                 newRecord.addToRecord(record.getValues().get(it.next()));
@@ -117,9 +119,9 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public void insertIntoTable(String tableName, Map<String, String> columns)
             throws RuntimeException {
-        dbHelper.readTable(tableName);
+        Table table = dbHelper.readTable(tableName);
         Map<String, Class<?>> tableColumns = dbHelper.getSelectedTable().getHeader();
-        Record record = new Record();
+        Record record = new Record(tableColumns);
         int keysFound = 0;
         for (Entry<String, Class<?>> entry : tableColumns.entrySet()) {
             String colName = entry.getKey().toLowerCase();
@@ -139,17 +141,18 @@ public class DatabaseController implements DBMS, Observer {
             throw new RuntimeException("Wrong data!");
         }
         dbHelper.getSelectedTable().addRecord(record);
+        this.dbHelper.getSelectedTable().setTableSchema(table);
     }
 
     @Override
     public void insertIntoTable(String tableName, String... values) throws RuntimeException {
-        dbHelper.readTable(tableName);
+        Table table = dbHelper.readTable(tableName);
         Map<String, Class<?>> tableColumns = dbHelper.getSelectedTable().getHeader();
         if (values.length != tableColumns.size()) {
             throw new RuntimeException("Wrong data!");
         }
         int index = 0;
-        Record record = new Record();
+        Record record = new Record(tableColumns);
         for (Class<?> type : tableColumns.values()) {
             try {
                 record.addToRecord(objectFactory.parseToObject(type, values[index++]));
@@ -158,6 +161,7 @@ public class DatabaseController implements DBMS, Observer {
             }
         }
         dbHelper.getSelectedTable().addRecord(record);
+        this.dbHelper.getSelectedTable().setTableSchema(table);
     }
 
     @Override
@@ -177,6 +181,13 @@ public class DatabaseController implements DBMS, Observer {
                 .execute(this);
         this.dbmsController.getSQLParserController().getSqlParserHelper().getCurrentQuery()
                 .getClauses().forEach(clause -> clause.execute(this.dbmsClause));
+        try {
+            if (App.checkForExistence(this.dbHelper.getSelectedTable()))
+                this.dbHelper.getSelectedTable().write();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     private void updateTable(SelectionTable selectedTable, Map<Integer, Object> values) {
@@ -189,7 +200,7 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public void updateTable(String tableName, Map<String, String> columns) throws RuntimeException {
-        dbHelper.readTable(tableName);
+        Table table = dbHelper.readTable(tableName);
         Map<String, Class<?>> tableColumns = dbHelper.getSelectedTable().getHeader();
         Map<Integer, Object> newValues = new Hashtable<>();
         int index = 0;
@@ -206,6 +217,7 @@ public class DatabaseController implements DBMS, Observer {
             index++;
         }
         updateTable(dbHelper.getSelectedTable(), newValues);
+        this.dbHelper.getSelectedTable().setTableSchema(table);
     }
 
     @Override

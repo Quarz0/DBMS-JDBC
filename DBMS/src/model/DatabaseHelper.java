@@ -46,7 +46,8 @@ public class DatabaseHelper {
             if (file.getName().matches("[a-zA-Z_]\\w*\\.\\w+")) {
                 String[] extension = RegexEvaluator.evaluate(file.getName(),
                         "[a-zA-Z_]\\w*\\.(\\w+)");
-                if (App.checkForExistence(extension)) {
+                if (App.checkForExistence(extension) && App
+                        .checkForExistence(BackEndWriterFactory.getBackEndWriter(extension[1]))) {
                     return BackEndWriterFactory.getBackEndWriter(extension[1]);
                 }
             }

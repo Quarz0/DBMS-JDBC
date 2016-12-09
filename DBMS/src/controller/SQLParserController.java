@@ -8,7 +8,6 @@ import model.statements.Order;
 import model.statements.Query;
 import model.statements.Where;
 import util.App;
-import util.ErrorCode;
 import util.Regex;
 import util.RegexEvaluator;
 
@@ -65,12 +64,12 @@ public class SQLParserController {
         }
         if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_ORDER_BY))) {
             Order o = new Order();
-            o.parse(groups[2]);
+            o.parse(groups[2] != null ? groups[2] : groups[4]);
             query.addClause(o);
         }
         if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_WHERE))) {
             Where w = new Where();
-            w.parse(groups[2]);
+            w.parse(groups[2] != null ? groups[2] : groups[4]);
             query.addClause(w);
         }
 
