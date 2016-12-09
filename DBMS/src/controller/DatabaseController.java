@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -71,13 +70,12 @@ public class DatabaseController implements DBMS, Observer {
         }
         File tableFile = new File(
                 dbHelper.getCurrentDatabase().getPath() + File.separator + tableName);
-        Table table = new Table(tableFile);
+        Table table = new Table(tableFile, backEndWriter);
         dbHelper.getCurrentDatabase().registerTable(table);
-        File xmlFile = dbmsController.getXMLController().initializeXML(table.getTablePath(),
-                tableName, new ArrayList<>(columns.keySet()), new ArrayList<>(columns.values()));
-        File dtdFile = dbmsController.getXMLController().initializeDTD(table.getTablePath(),
-                tableName, new ArrayList<>(columns.keySet()), new ArrayList<>(columns.values()));
-        table.registerFiles(xmlFile, dtdFile);
+        table.registerFiles(
+                table.getBackEndWriter().makeDataFile(table.getTablePath(), tableName, columns),
+                table.getBackEndWriter().makeValidatorFile(table.getTablePath(), tableName,
+                        columns));
     }
 
     @Override

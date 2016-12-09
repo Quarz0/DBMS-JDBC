@@ -127,7 +127,7 @@ public class DatabaseHelper {
             throw new RuntimeException();
         }
         try {
-            selectionTable = dbmsController.getXMLController().readTable(table);
+            selectionTable = table.getBackEndWriter().readTable(table);
         } catch (FileNotFoundException e) {
             throw new RuntimeException();
         }

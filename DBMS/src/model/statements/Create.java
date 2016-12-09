@@ -1,12 +1,11 @@
 package model.statements;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import controller.DBMS;
+import controller.backEnd.XMLWriter;
 import model.ClassFactory;
 import util.App;
 import util.Regex;
@@ -46,7 +45,7 @@ public class Create extends Query {
         for (int i = 0; i < colmuns.length; i++) {
             column = colmuns[i].trim().split(" ");
             if (App.checkForExistence(ClassFactory.getClass(column[1].trim()))) {
-                this.columns.put(column[0].trim(),  ClassFactory.getClass(column[1].trim()));
+                this.columns.put(column[0].trim(), ClassFactory.getClass(column[1].trim()));
             } else {
                 return false;
             }
@@ -85,15 +84,14 @@ public class Create extends Query {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
             throw new ParseException("Invalid", 0);
     }
-    
+
     @Override
     public void execute(DBMS dbms) throws RuntimeException {
-       if (this.isDatabase()) {
-           dbms.createDatabase(this.getDatabaseIdentifier());
-       }
-       else {
-           dbms.createTable(this.getDatabaseIdentifier(), this.getColumns());
-       }
+        if (this.isDatabase()) {
+            dbms.createDatabase(this.getDatabaseIdentifier());
+        } else {
+            dbms.createTable(this.getTableIdentifier(), this.getColumns(), new XMLWriter());
+        }
     }
 
 }

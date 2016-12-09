@@ -11,13 +11,11 @@ public class DBMSController {
     private CLIController cliController;
     private DatabaseController databaseController;
     private SQLParserController sqlParserController;
-    private XMLController xmlController;
 
     public DBMSController() {
         this.cliController = new CLIController(this);
         this.databaseController = new DatabaseController(this);
         this.sqlParserController = new SQLParserController(this);
-        this.xmlController = new XMLController(this);
         this.registerObservers();
         this.createAppPath();
         this.cliController.begin();
@@ -48,10 +46,6 @@ public class DBMSController {
 
     public SQLParserController getSQLParserController() {
         return this.sqlParserController;
-    }
-
-    public XMLController getXMLController() {
-        return this.xmlController;
     }
 
     private void registerObservers() {
