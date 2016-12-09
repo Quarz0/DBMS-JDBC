@@ -3,8 +3,10 @@ package model;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import controller.BackEndWriter;
 import controller.DBMSController;
 import util.App;
+import util.RegexEvaluator;
 
 public class DatabaseHelper {
     private Database currentDatabase;
@@ -86,16 +88,19 @@ public class DatabaseHelper {
         database.clearTableList();
         File[] tables = database.getDatabaseDir().listFiles(databaseFilter);
         for (File tableDir : tables) {
-            Table table = new Table(tableDir);
-            File xmlFile = new File(
-                    table.getTablePath() + File.separator + table.getTableName() + ".xml");
-            File dtdFile = new File(
-                    table.getTablePath() + File.separator + table.getTableName() + ".dtd");
-            if (!(xmlFile.exists() && dtdFile.exists())) {
-                throw new RuntimeException();
+            BackEndWriter writer = this.fetchWriter(tableDir);
+            if (App.checkForExistence(writer)) {
+                Table table = new Table(tableDir, writer);
+                File dataFile = new File(table.getTablePath() + File.separator
+                        + table.getTableName() + writer + ".ءةم");
+                File validatorFile = new File(
+                        table.getTablePath() + File.separator + table.getTableName() + ".dtd");
+                if (!(dataFile.exists() && validatorFile.exists())) {
+                    throw new RuntimeException();
+                }
+                table.registerFiles(dataFile, validatorFile);
+                database.getTables().add(table);
             }
-            table.registerFiles(xmlFile, dtdFile);
-            database.getTables().add(table);
         }
     }
 
@@ -139,6 +144,20 @@ public class DatabaseHelper {
         }
         this.selectedTable = selectionTable;
         return table;
+    }
+
+    private BackEndWriter fetchWriter(File tableDir) {
+        File[] dataFiles = tableDir.listFiles();
+        for (File file : dataFiles) {
+            if (file.getName().matches("[a-zA-Z_]\\w*\\.\\w+")) {
+                String[] extension = RegexEvaluator.evaluate(file.getName(),
+                        "[a-zA-Z_]\\w*\\.(\\w+)");
+                if (App.checkForExistence(extension)) {
+                    return BackEndWriterFactory.getBackEndWriter(extension[1]);
+                }
+            }
+        }
+        return null;
     }
 
 }

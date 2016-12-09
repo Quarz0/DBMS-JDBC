@@ -8,7 +8,6 @@ import model.statements.Order;
 import model.statements.Query;
 import model.statements.Where;
 import util.App;
-import util.ErrorCode;
 import util.Regex;
 import util.RegexEvaluator;
 
