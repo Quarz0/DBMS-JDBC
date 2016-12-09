@@ -17,4 +17,8 @@ public interface BackEndWriter {
 
     public File makeDataFile(String tablePath, String tableName, Map<String, Class<?>> header);
 
+    public String getDataFileExtension();
+
+    public String getValidatorFileExtension();
+
 }
