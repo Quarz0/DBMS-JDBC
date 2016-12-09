@@ -92,9 +92,9 @@ public class DatabaseHelper {
             if (App.checkForExistence(writer)) {
                 Table table = new Table(tableDir, writer);
                 File dataFile = new File(table.getTablePath() + File.separator
-                        + table.getTableName() + writer + ".ءةم");
-                File validatorFile = new File(
-                        table.getTablePath() + File.separator + table.getTableName() + ".dtd");
+                        + table.getTableName() + writer.getDataFileExtension());
+                File validatorFile = new File(table.getTablePath() + File.separator
+                        + table.getTableName() + writer.getValidatorFileExtension());
                 if (!(dataFile.exists() && validatorFile.exists())) {
                     throw new RuntimeException();
                 }
