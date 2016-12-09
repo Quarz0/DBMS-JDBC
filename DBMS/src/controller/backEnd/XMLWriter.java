@@ -31,6 +31,9 @@ import model.Table;
 
 public class XMLWriter implements BackEndWriter {
 
+    private static final String DATA_FILE_EXTENSION = ".xml";
+    private static final String VALIDATOR_FILE_EXTENSION = ".dtd";
+
     private org.jdom2.Document document;
     private XMLEventReader eventReader;
     private XMLOutputFactory fileWriter;
@@ -223,5 +226,15 @@ public class XMLWriter implements BackEndWriter {
             counter++;
         }
         return strBuilder.toString();
+    }
+
+    @Override
+    public String getDataFileExtension() {
+        return this.DATA_FILE_EXTENSION;
+    }
+
+    @Override
+    public String getValidatorFileExtension() {
+        return this.VALIDATOR_FILE_EXTENSION;
     }
 }
