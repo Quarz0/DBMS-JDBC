@@ -1,10 +1,12 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import de.vandermeer.asciitable.v2.RenderedTable;
 import de.vandermeer.asciitable.v2.V2_AsciiTable;
@@ -13,7 +15,9 @@ import de.vandermeer.asciitable.v2.render.WidthLongestWordMaxCol;
 import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
 
 public class SelectionTable implements Cloneable {
+    private Map<String, Class<?>> defaultHeader;
     private Map<String, Class<?>> header;
+
     private List<Record> recordList;
     private String tableName;
     private Table tableSchema;
@@ -27,6 +31,10 @@ public class SelectionTable implements Cloneable {
     public SelectionTable(String tableName, Map<String, Class<?>> colNames) {
         this(tableName);
         this.header = colNames;
+        defaultHeader = new Hashtable<>();
+        for (Entry<String, Class<?>> entry : header.entrySet()) {
+            defaultHeader.put(entry.getKey().toLowerCase(), entry.getValue());
+        }
     }
 
     public void addRecord(Record record) {
@@ -50,6 +58,10 @@ public class SelectionTable implements Cloneable {
             result.put(record, header.get(record));
         }
         return result;
+    }
+
+    public Map<String, Class<?>> getDefaultHeader() {
+        return defaultHeader;
     }
 
     public Map<String, Class<?>> getHeader() {
@@ -91,6 +103,7 @@ public class SelectionTable implements Cloneable {
         RenderedTable renderedTable = asciiTableRenderer.render(asciiTable);
         return "  Table: " + this.tableName + "\n" + renderedTable.toString() + "  Records: "
                 + this.recordList.size() + "\n\n";
+
     }
 
 }

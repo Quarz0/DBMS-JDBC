@@ -21,29 +21,6 @@ import java.util.concurrent.Executor;
 public class Connection implements java.sql.Connection {
 
     @Override
-    public void close() throws SQLException {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public Statement createStatement() throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        throw new UnsupportedOperationException();
-
-    }
-
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        throw new UnsupportedOperationException();
-
-    }
-
-    @Override
     public void abort(Executor arg0) throws SQLException {
         throw new UnsupportedOperationException();
 
@@ -53,6 +30,11 @@ public class Connection implements java.sql.Connection {
     public void clearWarnings() throws SQLException {
         throw new UnsupportedOperationException();
 
+    }
+
+    @Override
+    public void close() throws SQLException {
+        // TODO Auto-generated method stub
     }
 
     @Override
@@ -89,6 +71,12 @@ public class Connection implements java.sql.Connection {
     public SQLXML createSQLXML() throws SQLException {
         throw new UnsupportedOperationException();
 
+    }
+
+    @Override
+    public Statement createStatement() throws SQLException {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
@@ -194,6 +182,12 @@ public class Connection implements java.sql.Connection {
     }
 
     @Override
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        throw new UnsupportedOperationException();
+
+    }
+
+    @Override
     public String nativeSQL(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
 
@@ -231,18 +225,6 @@ public class Connection implements java.sql.Connection {
     }
 
     @Override
-    public PreparedStatement prepareStatement(String arg0, int[] arg1) throws SQLException {
-        throw new UnsupportedOperationException();
-
-    }
-
-    @Override
-    public PreparedStatement prepareStatement(String arg0, String[] arg1) throws SQLException {
-        throw new UnsupportedOperationException();
-
-    }
-
-    @Override
     public PreparedStatement prepareStatement(String arg0, int arg1, int arg2) throws SQLException {
         throw new UnsupportedOperationException();
 
@@ -251,6 +233,18 @@ public class Connection implements java.sql.Connection {
     @Override
     public PreparedStatement prepareStatement(String arg0, int arg1, int arg2, int arg3)
             throws SQLException {
+        throw new UnsupportedOperationException();
+
+    }
+
+    @Override
+    public PreparedStatement prepareStatement(String arg0, int[] arg1) throws SQLException {
+        throw new UnsupportedOperationException();
+
+    }
+
+    @Override
+    public PreparedStatement prepareStatement(String arg0, String[] arg1) throws SQLException {
         throw new UnsupportedOperationException();
 
     }
@@ -341,6 +335,12 @@ public class Connection implements java.sql.Connection {
 
     @Override
     public void setTypeMap(Map<String, Class<?>> arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
+    }
+
+    @Override
+    public <T> T unwrap(Class<T> iface) throws SQLException {
         throw new UnsupportedOperationException();
 
     }

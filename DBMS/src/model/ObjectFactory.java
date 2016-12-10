@@ -1,5 +1,5 @@
 package model;
- 
+
 public class ObjectFactory {
     public static Object parseToObject(Class<?> cls, String str) throws ClassCastException {
         if (Integer.class.equals(cls)) {

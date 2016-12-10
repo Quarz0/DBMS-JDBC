@@ -71,7 +71,7 @@ public class ClauseController implements DBMSClause {
         }
         return exp;
     }
- 
+
     @Override
     public void order(Map<String, String> columns) throws RuntimeException {
         Map<String, Integer> columnIndex = new HashMap<>();

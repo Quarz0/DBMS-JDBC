@@ -22,10 +22,20 @@ public class Statement implements java.sql.Statement {
     }
 
     @Override
+    public void cancel() throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void clearBatch() throws SQLException {
         if (App.checkForExistence(this.commands)) {
             this.commands.clear();
         }
+    }
+
+    @Override
+    public void clearWarnings() throws SQLException {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -35,9 +45,29 @@ public class Statement implements java.sql.Statement {
     }
 
     @Override
+    public void closeOnCompletion() throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean execute(String sql) throws SQLException {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    @Override
+    public boolean execute(String arg0, int arg1) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean execute(String arg0, int[] arg1) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean execute(String arg0, String[] arg1) throws SQLException {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -59,49 +89,6 @@ public class Statement implements java.sql.Statement {
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public ResultSet getResultSet() throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public int getUpdateCount() throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public int getQueryTimeout() throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setQueryTimeout(int arg0) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-    
-    @Override
-    public boolean execute(String arg0, int arg1) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean execute(String arg0, int[] arg1) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean execute(String arg0, String[] arg1) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public int executeUpdate(String arg0, int arg1) throws SQLException {
         throw new UnsupportedOperationException();
     }
@@ -117,28 +104,9 @@ public class Statement implements java.sql.Statement {
     }
 
     @Override
-    public boolean isWrapperFor(Class<?> arg0) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public <T> T unwrap(Class<T> arg0) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void cancel() throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void clearWarnings() throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void closeOnCompletion() throws SQLException {
-        throw new UnsupportedOperationException();
+    public Connection getConnection() throws SQLException {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
@@ -177,6 +145,17 @@ public class Statement implements java.sql.Statement {
     }
 
     @Override
+    public int getQueryTimeout() throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ResultSet getResultSet() throws SQLException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
     public int getResultSetConcurrency() throws SQLException {
         throw new UnsupportedOperationException();
     }
@@ -192,12 +171,13 @@ public class Statement implements java.sql.Statement {
     }
 
     @Override
-    public SQLWarning getWarnings() throws SQLException {
-        throw new UnsupportedOperationException();
+    public int getUpdateCount() throws SQLException {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
     @Override
-    public boolean isCloseOnCompletion() throws SQLException {
+    public SQLWarning getWarnings() throws SQLException {
         throw new UnsupportedOperationException();
     }
 
@@ -207,7 +187,17 @@ public class Statement implements java.sql.Statement {
     }
 
     @Override
+    public boolean isCloseOnCompletion() throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean isPoolable() throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isWrapperFor(Class<?> arg0) throws SQLException {
         throw new UnsupportedOperationException();
     }
 
@@ -243,6 +233,16 @@ public class Statement implements java.sql.Statement {
 
     @Override
     public void setPoolable(boolean arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setQueryTimeout(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public <T> T unwrap(Class<T> arg0) throws SQLException {
         throw new UnsupportedOperationException();
     }
 
