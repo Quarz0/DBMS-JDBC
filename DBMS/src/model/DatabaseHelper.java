@@ -67,7 +67,7 @@ public class DatabaseHelper {
     public File getDatabase(String databaseName) {
         File[] databases = this.getDatabaseDir().listFiles(databaseFilter);
         for (File databaseFile : databases) {
-            if (App.equalStrings(databaseFile.getName(), databaseName)) {
+            if (databaseFile.getName().equals(databaseName)) {
                 return databaseFile;
             }
         }
@@ -106,7 +106,7 @@ public class DatabaseHelper {
 
     public boolean tableExists(String tableName) {
         for (Table table : this.getCurrentDatabase().getTables()) {
-            if (App.equalStrings(table.getTableName(), tableName)) {
+            if (table.getTableName().equals(tableName)) {
                 return true;
             }
         }

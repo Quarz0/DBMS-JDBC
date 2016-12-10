@@ -93,7 +93,7 @@ public class DatabaseController implements DBMS, Observer {
             throw new RuntimeException();
         }
         for (Table table : dbHelper.getCurrentDatabase().getTables()) {
-            if (App.equalStrings(table.getTableName(), tableName)) {
+            if (table.getTableName().equals(tableName)) {
                 this.dbHelper.deleteDir(table.getTableDir());
                 this.dbHelper.getCurrentDatabase().getTables().remove(table);
                 return;
@@ -115,11 +115,11 @@ public class DatabaseController implements DBMS, Observer {
         if (values.length != tableColumns.size()) {
             throw new RuntimeException("Wrong data!");
         }
-        int index = 0;
+        int it = 0;
         Record record = new Record();
         for (Class<?> type : tableColumns.values()) {
             try {
-                record.addToRecord(objectFactory.parseToObject(type, values[index++]));
+                record.addToRecord(objectFactory.parseToObject(type, values[it++]));
             } catch (Exception e) {
                 throw new RuntimeException("Wrong data!");
             }
@@ -219,22 +219,62 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     @Override
-    public void alterTableAdd(String tableName, String columnIdentifier, Class<?> type)
+    public void alterTableAdd(String tableName, String colName, Class<?> type)
             throws RuntimeException {
-        // TODO Auto-generated method stub
-
+        dbHelper.readTable(tableName);
+        if (dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName)) {
+            throw new RuntimeException("Column already exists!");
+        }
+        dbHelper.getSelectedTable().getHeader().put(colName, type);
+        dbHelper.getSelectedTable().getDefaultHeader().put(colName, type);
+        for (Record record : dbHelper.getSelectedTable().getRecordList()) {
+            record.addToRecord(null);
+        }
     }
 
     @Override
-    public void alterTableDrop(String tableName, String columnIdentifier) throws RuntimeException {
-        // TODO Auto-generated method stub
-
+    public void alterTableDrop(String tableName, String colName) throws RuntimeException {
+        if (!dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName)) {
+            throw new RuntimeException("Column does not exist!");
+        }
+        dbHelper.getSelectedTable().getDefaultHeader().remove(colName);
+        int index = 0;
+        String realColName = null;
+        for (String str : dbHelper.getSelectedTable().getHeader().keySet()) {
+            if (str.equalsIgnoreCase(colName)) {
+                dbHelper.getSelectedTable().getHeader().remove(str);
+                realColName = str;
+                break;
+            }
+            index++;
+        }
+        for (Record record : dbHelper.getSelectedTable().getRecordList()) {
+            record.getColumns().remove(realColName);
+            record.getValues().remove(index);
+        }
     }
 
     @Override
-    public void alterTableModify(String tableName, String columnIdentifier, Class<?> type)
+    public void alterTableModify(String tableName, String colName, Class<?> type)
             throws RuntimeException {
-        // TODO Auto-generated method stub
-
+        dbHelper.readTable(tableName);
+        if (!dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName)) {
+            throw new RuntimeException("Column deos not exist!");
+        }
+        dbHelper.getSelectedTable().getHeader().put(colName, type);
+        dbHelper.getSelectedTable().getDefaultHeader().put(colName, type);
+        int index = 0;
+        String realColName = null;
+        for (String str : dbHelper.getSelectedTable().getHeader().keySet()) {
+            if (str.equalsIgnoreCase(colName)) {
+                realColName = str;
+                break;
+            }
+            index++;
+        }
+        for (Record record : dbHelper.getSelectedTable().getRecordList()) {
+            record.getColumns().put(realColName, type);
+            record.getValues().set(index, null);
+        }
     }
 }
