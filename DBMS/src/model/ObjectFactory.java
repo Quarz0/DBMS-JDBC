@@ -1,7 +1,7 @@
 package model;
-
+ 
 public class ObjectFactory {
-    public Object parseToObject(Class<?> cls, String str) throws ClassCastException {
+    public static Object parseToObject(Class<?> cls, String str) throws ClassCastException {
         if (Integer.class.equals(cls)) {
             return Integer.valueOf(str);
         } else if (Double.class.equals(cls)) {
