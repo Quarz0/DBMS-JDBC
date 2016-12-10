@@ -7,7 +7,7 @@ import util.App;
 import util.Regex;
 import util.RegexEvaluator;
 
-public class Delete extends Query {
+public class Delete extends Query implements Writable {
 
     private boolean isAll;
     private String tableIdentifier;

@@ -12,12 +12,14 @@ public class CLI {
 
     private BufferedReader bufferedReader;
     private DBMSController dbmsController;
-    private String input;
+    private String feedback;
+    private String table;
 
     public CLI(DBMSController dbmsController) {
         this.dbmsController = dbmsController;
         this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        this.input = null;
+        this.feedback = "";
+        this.table = null;
     }
 
     public void close() {
@@ -29,14 +31,10 @@ public class CLI {
         }
     }
 
-    public String getInput() {
-        return input;
-    }
-
-    public void newPrompt(String s) {
+    public void newPrompt() {
         try {
             while (true) {
-                this.print(s);
+                this.print(this.feedback);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,17 +45,24 @@ public class CLI {
     private void print(String s) throws IOException {
         if (App.checkForExistence(s))
             System.out.println(s);
+        if (App.checkForExistence(this.table))
+            System.out.println(this.table);
+        this.table = null;
         System.out.print(App.PS1);
         this.scan();
     }
 
     public void run() {
-        this.newPrompt("");
+        this.newPrompt();
     }
 
     private void scan() throws IOException {
-        this.input = this.bufferedReader.readLine();
-        this.dbmsController.getCLIController().update();
+        this.feedback = this.dbmsController.getCLIController()
+                .newInput(this.bufferedReader.readLine());
+    }
+
+    public void setTable(String table) {
+        this.table = table;
     }
 
 }

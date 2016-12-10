@@ -2,7 +2,7 @@ package model;
 
 import java.io.File;
 
-import controller.BackEndWriter;
+import controller.backEnd.BackEndWriter;
 
 public class Table {
     private BackEndWriter backEndWriter;

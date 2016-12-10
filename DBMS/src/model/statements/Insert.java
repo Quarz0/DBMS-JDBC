@@ -9,7 +9,7 @@ import util.App;
 import util.Regex;
 import util.RegexEvaluator;
 
-public class Insert extends Query {
+public class Insert extends Query implements Writable {
 
     private Map<String, String> columns;
     private boolean isDefaultSelection;

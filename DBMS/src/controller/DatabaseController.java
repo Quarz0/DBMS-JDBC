@@ -9,6 +9,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import controller.backEnd.BackEndWriter;
 import model.Database;
 import model.DatabaseHelper;
 import model.ObjectFactory;
@@ -16,6 +17,8 @@ import model.Observer;
 import model.Record;
 import model.SelectionTable;
 import model.Table;
+import model.statements.Viewable;
+import model.statements.Writable;
 import util.App;
 
 public class DatabaseController implements DBMS, Observer {
@@ -59,9 +62,8 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public void deleteFromTable(String tableName) throws RuntimeException {
-        Table table = this.dbHelper.readTable(tableName);
+        this.dbHelper.readTable(tableName);
         dbHelper.getSelectedTable().getRecordList().clear();
-        this.dbHelper.getSelectedTable().setTableSchema(table);
     }
 
     @Override
@@ -119,7 +121,7 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public void insertIntoTable(String tableName, Map<String, String> columns)
             throws RuntimeException {
-        Table table = dbHelper.readTable(tableName);
+        dbHelper.readTable(tableName);
         Map<String, Class<?>> tableColumns = dbHelper.getSelectedTable().getHeader();
         Record record = new Record(tableColumns);
         int keysFound = 0;
@@ -140,13 +142,12 @@ public class DatabaseController implements DBMS, Observer {
         if (keysFound != columns.size()) {
             throw new RuntimeException("Wrong data!");
         }
-        dbHelper.getSelectedTable().addRecord(record);
-        this.dbHelper.getSelectedTable().setTableSchema(table);
+        this.dbHelper.getSelectedTable().addRecord(record);
     }
 
     @Override
     public void insertIntoTable(String tableName, String... values) throws RuntimeException {
-        Table table = dbHelper.readTable(tableName);
+        this.dbHelper.readTable(tableName);
         Map<String, Class<?>> tableColumns = dbHelper.getSelectedTable().getHeader();
         if (values.length != tableColumns.size()) {
             throw new RuntimeException("Wrong data!");
@@ -160,8 +161,7 @@ public class DatabaseController implements DBMS, Observer {
                 throw new RuntimeException("Wrong data!");
             }
         }
-        dbHelper.getSelectedTable().addRecord(record);
-        this.dbHelper.getSelectedTable().setTableSchema(table);
+        this.dbHelper.getSelectedTable().addRecord(record);
     }
 
     @Override
@@ -176,18 +176,29 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     @Override
-    public void update() {
+    public void update() throws RuntimeException {
         this.dbmsController.getSQLParserController().getSqlParserHelper().getCurrentQuery()
                 .execute(this);
         this.dbmsController.getSQLParserController().getSqlParserHelper().getCurrentQuery()
                 .getClauses().forEach(clause -> clause.execute(this.dbmsClause));
-        try {
-            if (App.checkForExistence(this.dbHelper.getSelectedTable()))
-                this.dbHelper.getSelectedTable().write();
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if (App.checkForExistence(this.dbHelper.getSelectedTable())) {
+            try {
+                if (this.dbmsController.getSQLParserController().getSqlParserHelper()
+                        .getCurrentQuery() instanceof Writable)
+                    this.dbHelper.getSelectedTable().getTableSchema().getBackEndWriter()
+                            .writeTable(this.getHelper().getSelectedTable());
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException();
+            }
+
+            if (this.dbmsController.getSQLParserController().getSqlParserHelper()
+                    .getCurrentQuery() instanceof Viewable) {
+                this.dbmsController.getCLIController()
+                        .feedback(this.dbHelper.getSelectedTable().toString());
+
+            }
         }
+
     }
 
     private void updateTable(SelectionTable selectedTable, Map<Integer, Object> values) {
@@ -200,7 +211,7 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public void updateTable(String tableName, Map<String, String> columns) throws RuntimeException {
-        Table table = dbHelper.readTable(tableName);
+        this.dbHelper.readTable(tableName);
         Map<String, Class<?>> tableColumns = dbHelper.getSelectedTable().getHeader();
         Map<Integer, Object> newValues = new Hashtable<>();
         int index = 0;
@@ -217,7 +228,6 @@ public class DatabaseController implements DBMS, Observer {
             index++;
         }
         updateTable(dbHelper.getSelectedTable(), newValues);
-        this.dbHelper.getSelectedTable().setTableSchema(table);
     }
 
     @Override

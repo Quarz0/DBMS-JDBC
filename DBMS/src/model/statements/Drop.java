@@ -7,7 +7,7 @@ import util.App;
 import util.Regex;
 import util.RegexEvaluator;
 
-public class Drop extends Query {
+public class Drop extends Query implements Writable {
 
     private String databaseIdentifier;
     private boolean isDatabase;

@@ -9,7 +9,7 @@ import util.App;
 import util.Regex;
 import util.RegexEvaluator;
 
-public class Update extends Query {
+public class Update extends Query implements Writable {
 
     Map<String, String> columns;
     private String tableIdentifier;

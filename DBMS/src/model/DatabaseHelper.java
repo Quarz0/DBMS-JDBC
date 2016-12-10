@@ -3,8 +3,8 @@ package model;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import controller.BackEndWriter;
 import controller.DBMSController;
+import controller.backEnd.BackEndWriter;
 import util.App;
 import util.RegexEvaluator;
 
@@ -114,7 +114,7 @@ public class DatabaseHelper {
         }
     }
 
-    public Table readTable(String tableIdentifier) throws RuntimeException {
+    public void readTable(String tableIdentifier) throws RuntimeException {
         SelectionTable selectionTable = null;
         if (!App.checkForExistence(this.getCurrentDatabase())) {
             throw new RuntimeException();
@@ -135,7 +135,7 @@ public class DatabaseHelper {
             throw new RuntimeException();
         }
         this.selectedTable = selectionTable;
-        return table;
+        this.selectedTable.setTableSchema(table);
     }
 
     public void setDatabase(File usedDatabaseDir) {

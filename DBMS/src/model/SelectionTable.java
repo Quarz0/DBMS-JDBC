@@ -1,21 +1,18 @@
 package model;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import controller.Writable;
 import de.vandermeer.asciitable.v2.RenderedTable;
 import de.vandermeer.asciitable.v2.V2_AsciiTable;
 import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
 import de.vandermeer.asciitable.v2.render.WidthLongestWordMaxCol;
 import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
-import util.App;
 
-public class SelectionTable implements Cloneable, Writable {
+public class SelectionTable implements Cloneable {
     private Map<String, Class<?>> header;
     private List<Record> recordList;
     private String tableName;
@@ -94,13 +91,6 @@ public class SelectionTable implements Cloneable, Writable {
         RenderedTable renderedTable = asciiTableRenderer.render(asciiTable);
         return "  Table: " + this.tableName + "\n" + renderedTable.toString() + "  Records: "
                 + this.recordList.size() + "\n\n";
-    }
-
-    @Override
-    public void write() throws FileNotFoundException {
-        if (!App.checkForExistence(this.tableSchema))
-            return;
-        this.tableSchema.getBackEndWriter().writeTable(this);
     }
 
 }

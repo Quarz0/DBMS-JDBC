@@ -1,6 +1,6 @@
 package model;
 
-import controller.BackEndWriter;
+import controller.backEnd.BackEndWriter;
 import controller.backEnd.XMLWriter;
 
 public class BackEndWriterFactory {

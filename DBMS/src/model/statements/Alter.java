@@ -7,7 +7,7 @@ import util.App;
 import util.Regex;
 import util.RegexEvaluator;
 
-public class Alter extends Query {
+public class Alter extends Query implements Writable {
 
     private static final int ADD = 0;
     private static final int DROP = 1;

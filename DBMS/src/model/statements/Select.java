@@ -7,7 +7,7 @@ import util.App;
 import util.Regex;
 import util.RegexEvaluator;
 
-public class Select extends Query {
+public class Select extends Query implements Viewable {
 
     private String[] columns;
     private boolean isAll;

@@ -24,10 +24,6 @@ public class SQLParserController {
         this.sqlParserHelper = new SQLParserHelper(dbmsController);
     }
 
-    public void callForFailure(String errorMessage) {
-        this.dbmsController.getCLIController().callForFailure(errorMessage);
-    }
-
     public SQLParserHelper getSqlParserHelper() {
         return sqlParserHelper;
     }
@@ -48,7 +44,7 @@ public class SQLParserController {
             return null;
     }
 
-    public void parse(String s) throws ParseException {
+    public void parse(String s) throws ParseException, RuntimeException {
         if (!App.checkForExistence(s))
             throw new ParseException("Invalid", 0);
         s = App.replace(App.replace(s, "(", " ("), ")", ") ").toLowerCase().trim();

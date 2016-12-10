@@ -21,7 +21,7 @@ public class SQLParserHelper {
         return currentQuery;
     }
 
-    public void notifyObservers() {
+    public void notifyObservers() throws RuntimeException {
         this.observers.forEach(Observer::update);
     }
 
@@ -29,7 +29,7 @@ public class SQLParserHelper {
         this.observers.add(observer);
     }
 
-    public void setCurrentQuery(Query currentQuery) {
+    public void setCurrentQuery(Query currentQuery) throws RuntimeException {
         this.currentQuery = currentQuery;
         this.notifyObservers();
     }

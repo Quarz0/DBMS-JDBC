@@ -4,7 +4,6 @@ import java.io.File;
 
 import app.Main;
 import util.App;
-import util.ErrorCode;
 
 public class DBMSController {
 
@@ -25,7 +24,7 @@ public class DBMSController {
         File workspace = new File(App.DEFAULT_DIR_PATH);
         if (!workspace.exists()) {
             if (!workspace.mkdir()) {
-                this.cliController.callForFailure(ErrorCode.FAILED_TO_CREATE_DEFAULT_DATABASE);
+                throw new RuntimeException("Failed to create DBMS Dirctory");
             }
         }
         this.databaseController.getHelper().setWorkspaceDir(workspace);

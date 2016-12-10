@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import util.App;
+
 public class Record implements Cloneable {
     private Map<String, Class<?>> columns;
     private List<Object> values;
@@ -49,6 +51,9 @@ public class Record implements Cloneable {
 
     @Override
     public boolean equals(Object obj) {
+        if (App.checkForExistence(columns) || App.checkForExistence(values)) {
+            return columns == values;
+        }
         return columns.equals(((Record) obj).getColumns())
                 && values.equals(((Record) obj).getValues());
     }

@@ -38,7 +38,7 @@ public class Order extends Clause {
             if (!App.isLegalIdentifier(column[0])) {
                 return false;
             }
-            if (column.length == 0) {
+            if (column.length == 1) {
                 this.columns.put(column[0].trim(), "ASC");
             } else {
                 this.columns.put(column[0].trim(), column[1].trim());

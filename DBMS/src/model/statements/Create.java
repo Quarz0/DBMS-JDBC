@@ -11,7 +11,7 @@ import util.App;
 import util.Regex;
 import util.RegexEvaluator;
 
-public class Create extends Query {
+public class Create extends Query implements Writable {
 
     private Map<String, Class<?>> columns;
     private String databaseIdentifier;
