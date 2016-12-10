@@ -115,7 +115,7 @@ public class DatabaseHelper {
 
     public Table getTable(String tableName) {
         for (Table table : this.getCurrentDatabase().getTables()) {
-            if (App.equalStrings(table.getTableName(), tableName)) {
+            if (table.getTableName().equalsIgnoreCase(tableName)) {
                 return table;
             }
         }
