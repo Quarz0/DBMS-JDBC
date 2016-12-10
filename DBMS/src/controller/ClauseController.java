@@ -11,6 +11,7 @@ import javax.script.ScriptException;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
 
+import model.ObjectFactory;
 import model.Record;
 import model.SelectionTable;
 import model.statements.Delete;
@@ -88,12 +89,19 @@ public class ClauseController implements DBMSClause {
                         CompareToBuilder compare = new CompareToBuilder();
                         for (String column : columns.keySet()) {
                             int index = columnIndex.get(column);
+                            Class<?> type = r1.getColumns().get(column);
                             if (columns.get(column).equals("ASC"))
-                                compare.append(r1.getValues().get(index),
-                                        r2.getValues().get(index));
+                                compare.append(
+                                        ObjectFactory.parseToObject(type,
+                                                String.valueOf(r1.getValues().get(index))),
+                                        ObjectFactory.parseToObject(type,
+                                                String.valueOf(r2.getValues().get(index))));
                             else
-                                compare.append(r2.getValues().get(index),
-                                        r1.getValues().get(index));
+                                compare.append(
+                                        ObjectFactory.parseToObject(type,
+                                                String.valueOf(r2.getValues().get(index))),
+                                        ObjectFactory.parseToObject(type,
+                                                String.valueOf(r1.getValues().get(index))));
                         }
                         return compare.toComparison();
                     }
