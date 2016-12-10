@@ -129,8 +129,8 @@ public class DatabaseController implements DBMS, Observer {
             String colName = entry.getKey().toLowerCase();
             if (columns.containsKey(colName)) {
                 try {
-                    record.addToRecord(
-                            objectFactory.parseToObject(entry.getValue(), columns.get(colName)));
+                    record.addToRecord(objectFactory.parseToObject(entry.getValue(),
+                            columns.get(colName.trim()).trim()));
                 } catch (Exception e) {
                     throw new RuntimeException("Wrong data");
                 }
@@ -156,7 +156,7 @@ public class DatabaseController implements DBMS, Observer {
         Record record = new Record(tableColumns);
         for (Class<?> type : tableColumns.values()) {
             try {
-                record.addToRecord(objectFactory.parseToObject(type, values[index++]));
+                record.addToRecord(objectFactory.parseToObject(type, values[index++].trim()));
             } catch (Exception e) {
                 throw new RuntimeException("Wrong data!");
             }
@@ -219,8 +219,8 @@ public class DatabaseController implements DBMS, Observer {
             String key = entry.getKey().toLowerCase();
             if (columns.containsKey(key)) {
                 try {
-                    newValues.put(index,
-                            objectFactory.parseToObject(entry.getValue(), columns.get(key)));
+                    newValues.put(index, objectFactory.parseToObject(entry.getValue(),
+                            columns.get(key.trim()).trim()));
                 } catch (Exception e) {
                     throw new RuntimeException("Wrong data");
                 }
