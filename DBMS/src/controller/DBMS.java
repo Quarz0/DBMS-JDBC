@@ -27,4 +27,12 @@ public interface DBMS {
     public void updateTable(String tableName, Map<String, String> columns) throws RuntimeException;
 
     public void useDatabase(String databaseName) throws RuntimeException;
+
+    public void alterTableAdd(String tableName, String columnIdentifier, Class<?> type)
+            throws RuntimeException;
+
+    public void alterTableDrop(String tableName, String columnIdentifier) throws RuntimeException;
+
+    public void alterTableModify(String tableName, String columnIdentifier, Class<?> type)
+            throws RuntimeException;
 }

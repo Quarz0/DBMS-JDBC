@@ -217,4 +217,24 @@ public class DatabaseController implements DBMS, Observer {
             }
         }
     }
+
+    @Override
+    public void alterTableAdd(String tableName, String columnIdentifier, Class<?> type)
+            throws RuntimeException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void alterTableDrop(String tableName, String columnIdentifier) throws RuntimeException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void alterTableModify(String tableName, String columnIdentifier, Class<?> type)
+            throws RuntimeException {
+        // TODO Auto-generated method stub
+
+    }
 }
