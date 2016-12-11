@@ -47,7 +47,7 @@ public class SQLParserController {
     public void parse(String s) throws ParseException, RuntimeException {
         if (!App.checkForExistence(s))
             throw new ParseException("Syntax error!", 0);
-        s = App.replace(App.replace(s, "(", " ("), ")", ") ").toLowerCase().trim();
+        s = App.replace(App.replace(s, "(", " ("), ")", ") ").trim();
         Query query = this.locateQuery(s.trim().split(" ")[0]);
         if (!App.checkForExistence(query))
             throw new ParseException("Syntax error!", 0);
