@@ -43,13 +43,36 @@ public class JSONWriter implements BackEndWriter {
 
     @Override
     public File makeDataFile(String tablePath, String tableName, Map<String, Class<?>> header) {
-        return new File(tablePath + File.separator + tableName + ".json");
+        File jsonFile = new File(tablePath + File.separator + tableName + ".json");
+        List<String> names = new ArrayList<>();
+        List<String> types = new ArrayList<>();
+        for (String name : header.keySet()) {
+            names.add(name);
+            types.add(header.get(name).getSimpleName());
+        }
+        try {
+            jsonFile.createNewFile();
+            writer = new FileWriter(jsonFile);
+            List<Map<String, String>> vals = new ArrayList<>();
+            JSONTable jsonTable = new JSONTable(tableName, names, types, vals);
+            writer.write(gson.toJson(jsonTable));
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot create data file");
+        }
+        return jsonFile;
     }
 
     @Override
     public File makeValidatorFile(String tablePath, String tableName,
             Map<String, Class<?>> header) {
-        return new File(tablePath + File.separator + tableName + ".jsonv");
+        File validatorFile = new File(tablePath + File.separator + tableName + ".jsonv");
+        try {
+            validatorFile.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot create validator file");
+        }
+        return validatorFile;
     }
 
     @Override
