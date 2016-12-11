@@ -16,7 +16,7 @@ public class TypeFactory {
         case "string":
             return String.class;
         case "float":
-            return Double.class;
+            return Float.class;
         case "boolean":
             return Boolean.class;
         case "date":
