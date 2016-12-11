@@ -32,37 +32,31 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public void afterLast() throws SQLException {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void beforeFirst() throws SQLException {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void cancelRowUpdates() throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public void clearWarnings() throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public void close() throws SQLException {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void deleteRow() throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
@@ -80,145 +74,121 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public Array getArray(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public Array getArray(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public InputStream getAsciiStream(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public InputStream getAsciiStream(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public BigDecimal getBigDecimal(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public BigDecimal getBigDecimal(int arg0, int arg1) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public BigDecimal getBigDecimal(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public BigDecimal getBigDecimal(String arg0, int arg1) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public InputStream getBinaryStream(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public InputStream getBinaryStream(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public Blob getBlob(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public Blob getBlob(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public boolean getBoolean(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public boolean getBoolean(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public byte getByte(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public byte getByte(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public byte[] getBytes(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public byte[] getBytes(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public Reader getCharacterStream(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public Reader getCharacterStream(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public Clob getClob(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public Clob getClob(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public int getConcurrency() throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public String getCursorName() throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
@@ -230,7 +200,6 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public Date getDate(int arg0, Calendar arg1) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
@@ -242,31 +211,26 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public Date getDate(String arg0, Calendar arg1) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public double getDouble(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public double getDouble(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public int getFetchDirection() throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public int getFetchSize() throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
@@ -284,7 +248,6 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public int getHoldability() throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
@@ -302,13 +265,11 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public long getLong(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public long getLong(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
@@ -320,37 +281,31 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public Reader getNCharacterStream(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public Reader getNCharacterStream(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public NClob getNClob(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public NClob getNClob(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public String getNString(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public String getNString(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
@@ -362,85 +317,71 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public <T> T getObject(int arg0, Class<T> arg1) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public Object getObject(int arg0, Map<String, Class<?>> arg1) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public Object getObject(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public <T> T getObject(String arg0, Class<T> arg1) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public Object getObject(String arg0, Map<String, Class<?>> arg1) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public Ref getRef(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public Ref getRef(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public int getRow() throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public RowId getRowId(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public RowId getRowId(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public short getShort(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public short getShort(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public SQLXML getSQLXML(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public SQLXML getSQLXML(String arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
@@ -464,13 +405,11 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public Time getTime(int arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public Time getTime(int arg0, Calendar arg1) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override

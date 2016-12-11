@@ -1,5 +1,9 @@
 package model;
 
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+
 import util.App;
 
 public class ObjectFactory {
@@ -21,6 +25,12 @@ public class ObjectFactory {
             return Character.valueOf(str.charAt(0));
         } else if (Byte.class.equals(cls)) {
             return Byte.valueOf(str);
+        } else if (Date.class.equals(cls)) {
+            return Date.valueOf(str);
+        } else if (Time.class.equals(cls)) {
+            return Time.valueOf(str);
+        } else if (Timestamp.class.equals(cls)) {
+            return Timestamp.valueOf(str);
         } else {
             throw new ClassCastException();
         }
