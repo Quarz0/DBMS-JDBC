@@ -156,7 +156,10 @@ public class DatabaseController implements DBMS, Observer {
         int index = 0;
         for (Entry<String, Class<?>> entry : selectedTable.getHeader().entrySet()) {
             tableColNamesLowerCase.put(entry.getKey().toLowerCase(), index++);
-            header.put(entry.getKey(), entry.getValue());
+        }
+        for (String colName : colNames) {
+            header.put(colName,
+                    dbHelper.getSelectedTable().getDefaultHeader().get(colName.toLowerCase()));
         }
         LinkedList<Integer> selectedColIndices = new LinkedList<Integer>();
         for (String colName : colNames) {
