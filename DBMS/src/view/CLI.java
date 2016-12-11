@@ -35,7 +35,6 @@ public class CLI {
     public void newPrompt() {
         try {
             while (true) {
-                this.start = System.nanoTime();
                 this.print();
             }
         } catch (IOException e) {
@@ -46,7 +45,8 @@ public class CLI {
 
     private void print() throws IOException {
         if (App.checkForExistence(this.feedback))
-            System.out.println(this.feedback + " (" + (System.nanoTime() - this.start) + "ns)");
+            System.out.println(
+                    this.feedback + " (" + (System.currentTimeMillis() - this.start) + "ms)");
         if (App.checkForExistence(this.table))
             System.out.println(this.table);
         this.table = null;
@@ -59,8 +59,9 @@ public class CLI {
     }
 
     private void scan() throws IOException {
-        this.feedback = this.dbmsController.getCLIController()
-                .newInput(this.bufferedReader.readLine());
+        String temp = this.bufferedReader.readLine();
+        this.start = System.currentTimeMillis();
+        this.feedback = this.dbmsController.getCLIController().newInput(temp);
     }
 
     public void setTable(String table) {

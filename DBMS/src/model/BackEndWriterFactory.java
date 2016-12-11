@@ -5,8 +5,8 @@ import controller.backEnd.JSONWriter;
 import controller.backEnd.XMLWriter;
 
 public class BackEndWriterFactory {
-    private final static String XML_CASE = "xml";
     private final static String JSON_CASE = "json";
+    private final static String XML_CASE = "xml";
 
     public static BackEndWriter getBackEndWriter(String writerType) {
         switch (writerType.toLowerCase()) {
