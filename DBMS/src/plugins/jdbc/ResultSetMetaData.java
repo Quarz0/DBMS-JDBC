@@ -4,7 +4,16 @@ import java.sql.SQLException;
 
 import javax.xml.transform.Result;
 
+import model.SQLTypeFactory;
+import model.SelectionTable;
+
 public class ResultSetMetaData implements java.sql.ResultSetMetaData, Result {
+
+    private SelectionTable table;
+
+    public ResultSetMetaData(SelectionTable table) {
+        this.table = table;
+    }
 
     @Override
     public String getCatalogName(int arg0) throws SQLException {
@@ -18,8 +27,7 @@ public class ResultSetMetaData implements java.sql.ResultSetMetaData, Result {
 
     @Override
     public int getColumnCount() throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+        return this.table.getHeader().size();
     }
 
     @Override
@@ -28,21 +36,25 @@ public class ResultSetMetaData implements java.sql.ResultSetMetaData, Result {
     }
 
     @Override
-    public String getColumnLabel(int arg0) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public String getColumnLabel(int column) throws SQLException {
+        return getColumnName(column);
     }
 
     @Override
-    public String getColumnName(int arg0) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public String getColumnName(int column) throws SQLException {
+        int i = 1;
+        for (String col : this.table.getHeader().keySet()) {
+            if (i == column) {
+                return col;
+            }
+            i++;
+        }
+        throw new SQLException();
     }
 
     @Override
-    public int getColumnType(int arg0) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+    public int getColumnType(int column) throws SQLException {
+        return SQLTypeFactory.getSQLType(table.getHeader().get(this.getColumnName(column)));
     }
 
     @Override
@@ -71,9 +83,8 @@ public class ResultSetMetaData implements java.sql.ResultSetMetaData, Result {
     }
 
     @Override
-    public String getTableName(int arg0) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public String getTableName(int column) throws SQLException {
+        return table.getTableName();
     }
 
     @Override
