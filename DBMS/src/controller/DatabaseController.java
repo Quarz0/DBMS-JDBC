@@ -285,7 +285,7 @@ public class DatabaseController implements DBMS, Observer {
                     newValues.put(index,
                             ObjectFactory.parseToObject(entry.getValue(), columns.get(key.trim())));
                 } catch (Exception e) {
-                    throw new RuntimeException("Invalid data");
+                    throw new RuntimeException("Invalid data!");
                 }
             }
             index++;
