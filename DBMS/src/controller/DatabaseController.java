@@ -30,7 +30,6 @@ public class DatabaseController implements DBMS, Observer {
         this.dbmsController = dbmsController;
         this.dbHelper = new DatabaseHelper(dbmsController);
         this.dbmsClause = new ClauseController(dbmsController);
-
     }
 
     @Override

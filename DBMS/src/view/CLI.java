@@ -36,7 +36,7 @@ public class CLI {
         try {
             while (true) {
                 this.start = System.nanoTime();
-                this.print(this.feedback);
+                this.print();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,9 +44,9 @@ public class CLI {
         }
     }
 
-    private void print(String s) throws IOException {
-        if (App.checkForExistence(s))
-            System.out.println(s + " (" + (System.nanoTime() - this.start) + "ns)");
+    private void print() throws IOException {
+        if (App.checkForExistence(this.feedback))
+            System.out.println(this.feedback + " (" + (System.nanoTime() - this.start) + "ns)");
         if (App.checkForExistence(this.table))
             System.out.println(this.table);
         this.table = null;
