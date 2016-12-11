@@ -14,22 +14,13 @@ public class DatabaseHelper {
     @SuppressWarnings("unused")
     private DBMSController dbmsController;
     private SelectionTable selectedTable;
+    private SelectionTable tempTable;
     private File workspaceDir;
 
     public DatabaseHelper(DBMSController dbmsController) {
         databaseFilter = new DatabaseFilterGenerator();
         currentDatabase = null;
         this.dbmsController = dbmsController;
-    }
-
-    public SelectionTable cloneOriginalTableToTempTable() throws RuntimeException {
-        if (!App.checkForExistence(this.selectedTable))
-            throw new RuntimeException("I have no idea what you're talking about");
-        try {
-            return (SelectionTable) this.selectedTable.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Run, Forest, Run!");
-        }
     }
 
     public boolean databaseExists(String databaseName) {
@@ -100,6 +91,10 @@ public class DatabaseHelper {
         return null;
     }
 
+    public SelectionTable getTempTable() {
+        return tempTable;
+    }
+
     public File getWorkspaceDir() {
         return workspaceDir;
     }
@@ -139,6 +134,11 @@ public class DatabaseHelper {
             selectionTable = table.getBackEndWriter().readTable(table);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Error while attempting to read from table");
+        }
+        try {
+            this.tempTable = (SelectionTable) selectionTable.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("Run, Forest, Run!");
         }
         this.selectedTable = selectionTable;
         this.selectedTable.setTableSchema(table);
