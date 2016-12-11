@@ -2,6 +2,7 @@ package model;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 
 public class ClassFactory {
 
@@ -21,6 +22,8 @@ public class ClassFactory {
             return Date.class;
         case "time":
             return Time.class;
+        case "timestamp":
+            return Timestamp.class;
         default:
             return null;
         }

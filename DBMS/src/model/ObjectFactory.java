@@ -1,7 +1,16 @@
 package model;
- 
+
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+
+import util.App;
+
 public class ObjectFactory {
     public static Object parseToObject(Class<?> cls, String str) throws ClassCastException {
+        if (!App.checkForExistence(str) || !App.checkForExistence(cls))
+            throw new ClassCastException("Soon!");
+        str = str.trim();
         if (Integer.class.equals(cls)) {
             return Integer.valueOf(str);
         } else if (Double.class.equals(cls)) {
@@ -16,8 +25,14 @@ public class ObjectFactory {
             return Character.valueOf(str.charAt(0));
         } else if (Byte.class.equals(cls)) {
             return Byte.valueOf(str);
+        } else if (Date.class.equals(cls)) {
+            return Date.valueOf(str);
+        } else if (Time.class.equals(cls)) {
+            return Time.valueOf(str);
+        } else if (Timestamp.class.equals(cls)) {
+            return Timestamp.valueOf(str);
         } else {
-            return str;
+            throw new ClassCastException("Soon!");
         }
     }
 }

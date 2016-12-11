@@ -46,11 +46,11 @@ public class SQLParserController {
 
     public void parse(String s) throws ParseException, RuntimeException {
         if (!App.checkForExistence(s))
-            throw new ParseException("Invalid", 0);
+            throw new ParseException("Syntax error!", 0);
         s = App.replace(App.replace(s, "(", " ("), ")", ") ").toLowerCase().trim();
         Query query = this.locateQuery(s.trim().split(" ")[0]);
         if (!App.checkForExistence(query))
-            throw new ParseException("Invalid", 0);
+            throw new ParseException("Syntax error!", 0);
 
         String[] groups;
         if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_DISTINCT))) {

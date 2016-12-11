@@ -22,12 +22,6 @@ public class Driver implements java.sql.Driver {
     }
 
     @Override
-    public DriverPropertyInfo[] getPropertyInfo(String arg0, Properties arg1) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public int getMajorVersion() {
         throw new UnsupportedOperationException();
     }
@@ -40,6 +34,12 @@ public class Driver implements java.sql.Driver {
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public DriverPropertyInfo[] getPropertyInfo(String arg0, Properties arg1) throws SQLException {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override

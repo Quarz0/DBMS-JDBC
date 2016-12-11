@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import controller.DBMS;
-import controller.backEnd.XMLWriter;
+import controller.backEnd.JSONWriter;
 import model.ClassFactory;
 import util.App;
 import util.Regex;
@@ -43,7 +43,7 @@ public class Create extends Query implements Writable {
         if (this.isDatabase()) {
             dbms.createDatabase(this.getDatabaseIdentifier());
         } else {
-            dbms.createTable(this.getTableIdentifier(), this.getColumns(), new XMLWriter());
+            dbms.createTable(this.getTableIdentifier(), this.getColumns(), new JSONWriter());
         }
     }
 
@@ -91,7 +91,7 @@ public class Create extends Query implements Writable {
     @Override
     public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
-            throw new ParseException("Invalid", 0);
+            throw new ParseException("Syntax error!(not a valid create statement)", 0);
     }
 
 }

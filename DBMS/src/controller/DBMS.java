@@ -6,6 +6,14 @@ import controller.backEnd.BackEndWriter;
 
 public interface DBMS {
 
+    public void alterTableAdd(String tableName, String columnIdentifier, Class<?> type)
+            throws RuntimeException;
+
+    public void alterTableDrop(String tableName, String columnIdentifier) throws RuntimeException;
+
+    public void alterTableModify(String tableName, String columnIdentifier, Class<?> type)
+            throws RuntimeException;
+
     public void createDatabase(String databaseName) throws RuntimeException;
 
     public void createTable(String tableName, Map<String, Class<?>> columns,

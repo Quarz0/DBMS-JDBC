@@ -13,6 +13,7 @@ public class CLI {
     private BufferedReader bufferedReader;
     private DBMSController dbmsController;
     private String feedback;
+    private long start;
     private String table;
 
     public CLI(DBMSController dbmsController) {
@@ -34,7 +35,8 @@ public class CLI {
     public void newPrompt() {
         try {
             while (true) {
-                this.print(this.feedback);
+                this.start = System.nanoTime();
+                this.print();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -42,9 +44,9 @@ public class CLI {
         }
     }
 
-    private void print(String s) throws IOException {
-        if (App.checkForExistence(s))
-            System.out.println(s);
+    private void print() throws IOException {
+        if (App.checkForExistence(this.feedback))
+            System.out.println(this.feedback + " (" + (System.nanoTime() - this.start) + "ns)");
         if (App.checkForExistence(this.table))
             System.out.println(this.table);
         this.table = null;

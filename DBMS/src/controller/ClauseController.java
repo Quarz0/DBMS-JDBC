@@ -53,7 +53,7 @@ public class ClauseController implements DBMSClause {
         try {
             return BooleanEvaluator.evaluate(exp);
         } catch (ScriptException e) {
-            throw new RuntimeException("Invalid condition.");
+            throw new RuntimeException("Invalid condition!");
         }
     }
 
@@ -71,7 +71,7 @@ public class ClauseController implements DBMSClause {
         }
         return exp;
     }
- 
+
     @Override
     public void order(Map<String, String> columns) throws RuntimeException {
         Map<String, Integer> columnIndex = new HashMap<>();

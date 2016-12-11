@@ -62,7 +62,7 @@ public class DatabaseHelper {
     public File getDatabase(String databaseName) {
         File[] databases = this.getDatabaseDir().listFiles(databaseFilter);
         for (File databaseFile : databases) {
-            if (App.equalStrings(databaseFile.getName(), databaseName)) {
+            if (databaseFile.getName().equals(databaseName)) {
                 return databaseFile;
             }
         }
@@ -79,7 +79,7 @@ public class DatabaseHelper {
 
     public Table getTable(String tableName) {
         for (Table table : this.getCurrentDatabase().getTables()) {
-            if (App.equalStrings(table.getTableName(), tableName)) {
+            if (table.getTableName().equalsIgnoreCase(tableName)) {
                 return table;
             }
         }
@@ -106,7 +106,7 @@ public class DatabaseHelper {
                 File validatorFile = new File(table.getTablePath() + File.separator
                         + table.getTableName() + writer.getValidatorFileExtension());
                 if (!(dataFile.exists() && validatorFile.exists())) {
-                    throw new RuntimeException();
+                    throw new RuntimeException("Table was hacked!");
                 }
                 table.registerFiles(dataFile, validatorFile);
                 database.getTables().add(table);
@@ -117,22 +117,21 @@ public class DatabaseHelper {
     public void readTable(String tableIdentifier) throws RuntimeException {
         SelectionTable selectionTable = null;
         if (!App.checkForExistence(this.getCurrentDatabase())) {
-            throw new RuntimeException();
+            throw new RuntimeException("Try using the \"USE\" statement first :)");
         }
         Table table = this.getTable(tableIdentifier);
         if (!App.checkForExistence(table)) {
-            throw new RuntimeException();
+            throw new RuntimeException("Unfortunately i do not have your table :(");
         }
         try {
             selectionTable = table.getBackEndWriter().readTable(table);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException();
+            throw new RuntimeException("Error while attempting to read from table");
         }
         try {
             this.tempTable = (SelectionTable) selectionTable.clone();
         } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-            throw new RuntimeException();
+            throw new RuntimeException("Run, Forest, Run!");
         }
         this.selectedTable = selectionTable;
         this.selectedTable.setTableSchema(table);
@@ -154,7 +153,7 @@ public class DatabaseHelper {
 
     public boolean tableExists(String tableName) {
         for (Table table : this.getCurrentDatabase().getTables()) {
-            if (App.equalStrings(table.getTableName(), tableName)) {
+            if (table.getTableName().equals(tableName)) {
                 return true;
             }
         }
