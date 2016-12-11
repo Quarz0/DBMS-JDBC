@@ -1,4 +1,4 @@
-package controller.backEnd;
+package controller.backEnd.xml;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,10 +23,11 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-import model.ClassFactory;
+import controller.backEnd.BackEndWriter;
 import model.Record;
 import model.SelectionTable;
 import model.Table;
+import model.TypeFactory;
 
 public class XMLWriter implements BackEndWriter {
 
@@ -74,7 +75,7 @@ public class XMLWriter implements BackEndWriter {
             String types = root.getAttributeValue("types");
             String[] typesArr = types.split(",\\s");
             for (int i = 0; i < namesArr.length; i++) {
-                ret.put(namesArr[i], ClassFactory.getClass(typesArr[i]));
+                ret.put(namesArr[i], TypeFactory.getClass(typesArr[i]));
             }
         } catch (Exception e) {
             e.printStackTrace();

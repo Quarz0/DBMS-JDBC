@@ -1,4 +1,4 @@
-package controller.backEnd;
+package controller.backEnd.json;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,10 +14,11 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import model.ClassFactory;
+import controller.backEnd.BackEndWriter;
 import model.Record;
 import model.SelectionTable;
 import model.Table;
+import model.TypeFactory;
 
 public class JSONWriter implements BackEndWriter {
 
@@ -84,7 +85,7 @@ public class JSONWriter implements BackEndWriter {
         List<Map<String, String>> records = jsonTable.getValues();
         Map<String, Class<?>> header = new LinkedHashMap<>();
         for (int i = 0; i < colNames.size(); i++) {
-            header.put(colNames.get(i), ClassFactory.getClass(types.get(i)));
+            header.put(colNames.get(i), TypeFactory.getClass(types.get(i)));
         }
         SelectionTable selectionTable = new SelectionTable(jsonTable.getTableName(), header);
         for (int i = 0; i < records.size(); i++) {

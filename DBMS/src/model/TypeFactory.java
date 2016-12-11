@@ -6,7 +6,30 @@ import java.sql.Timestamp;
 
 import util.App;
 
-public class ObjectFactory {
+public class TypeFactory {
+    public static Class<?> getClass(String dataType) {
+        switch (dataType.toLowerCase()) {
+        case "int":
+        case "integer":
+            return Integer.class;
+        case "varchar":
+        case "string":
+            return String.class;
+        case "float":
+            return Double.class;
+        case "boolean":
+            return Boolean.class;
+        case "date":
+            return Date.class;
+        case "time":
+            return Time.class;
+        case "timestamp":
+            return Timestamp.class;
+        default:
+            return null;
+        }
+    }
+
     public static Object parseToObject(Class<?> cls, String str) throws ClassCastException {
         if (!App.checkForExistence(str) || !App.checkForExistence(cls))
             throw new ClassCastException("Soon!");

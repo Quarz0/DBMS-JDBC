@@ -12,11 +12,11 @@ import java.util.Map.Entry;
 import controller.backEnd.BackEndWriter;
 import model.Database;
 import model.DatabaseHelper;
-import model.ObjectFactory;
 import model.Observer;
 import model.Record;
 import model.SelectionTable;
 import model.Table;
+import model.TypeFactory;
 import model.statements.Viewable;
 import model.statements.Writable;
 import util.App;
@@ -192,7 +192,7 @@ public class DatabaseController implements DBMS, Observer {
             String colName = entry.getKey().toLowerCase();
             if (columns.containsKey(colName)) {
                 try {
-                    record.addToRecord(ObjectFactory.parseToObject(entry.getValue(),
+                    record.addToRecord(TypeFactory.parseToObject(entry.getValue(),
                             columns.get(colName.trim())));
                 } catch (Exception e) {
                     throw new RuntimeException("Invalid data!");
@@ -219,7 +219,7 @@ public class DatabaseController implements DBMS, Observer {
         Record record = new Record(tableColumns);
         for (Class<?> type : tableColumns.values()) {
             try {
-                record.addToRecord(ObjectFactory.parseToObject(type, values[index++].trim()));
+                record.addToRecord(TypeFactory.parseToObject(type, values[index++].trim()));
             } catch (Exception e) {
                 throw new RuntimeException("Invalid data!");
             }
@@ -283,7 +283,7 @@ public class DatabaseController implements DBMS, Observer {
             if (columns.containsKey(key)) {
                 try {
                     newValues.put(index,
-                            ObjectFactory.parseToObject(entry.getValue(), columns.get(key.trim())));
+                            TypeFactory.parseToObject(entry.getValue(), columns.get(key.trim())));
                 } catch (Exception e) {
                     throw new RuntimeException("Invalid data!");
                 }

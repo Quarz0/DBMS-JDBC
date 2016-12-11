@@ -1,8 +1,8 @@
 package model;
 
 import controller.backEnd.BackEndWriter;
-import controller.backEnd.JSONWriter;
-import controller.backEnd.XMLWriter;
+import controller.backEnd.json.JSONWriter;
+import controller.backEnd.xml.XMLWriter;
 
 public class BackEndWriterFactory {
     private final static String JSON_CASE = "json";

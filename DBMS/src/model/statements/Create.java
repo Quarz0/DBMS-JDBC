@@ -5,8 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import controller.DBMS;
-import controller.backEnd.JSONWriter;
-import model.ClassFactory;
+import controller.backEnd.json.JSONWriter;
+import model.TypeFactory;
 import util.App;
 import util.Regex;
 import util.RegexEvaluator;
@@ -53,8 +53,8 @@ public class Create extends Query implements Writable {
 
         for (int i = 0; i < colmuns.length; i++) {
             column = colmuns[i].trim().split(" ");
-            if (App.checkForExistence(ClassFactory.getClass(column[1].trim()))) {
-                this.columns.put(column[0].trim(), ClassFactory.getClass(column[1].trim()));
+            if (App.checkForExistence(TypeFactory.getClass(column[1].trim()))) {
+                this.columns.put(column[0].trim(), TypeFactory.getClass(column[1].trim()));
             } else {
                 return false;
             }
