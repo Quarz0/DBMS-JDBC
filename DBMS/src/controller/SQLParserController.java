@@ -13,6 +13,7 @@ import util.RegexEvaluator;
 
 public class SQLParserController {
 
+    @SuppressWarnings("unused")
     private DBMSController dbmsController;
     private SQLParserHelper sqlParserHelper;
 

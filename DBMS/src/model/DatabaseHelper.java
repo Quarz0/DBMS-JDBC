@@ -11,6 +11,7 @@ import util.RegexEvaluator;
 public class DatabaseHelper {
     private Database currentDatabase;
     private DatabaseFilterGenerator databaseFilter;
+    @SuppressWarnings("unused")
     private DBMSController dbmsController;
     private SelectionTable selectedTable;
     private SelectionTable tempTable;
@@ -42,6 +43,8 @@ public class DatabaseHelper {
 
     private BackEndWriter fetchWriter(File tableDir) {
         File[] dataFiles = tableDir.listFiles();
+        if (!App.checkForExistence(dataFiles))
+            return null;
         for (File file : dataFiles) {
             if (file.getName().matches("[a-zA-Z_]\\w*\\.\\w+")) {
                 String[] extension = RegexEvaluator.evaluate(file.getName(),
@@ -61,6 +64,8 @@ public class DatabaseHelper {
 
     public File getDatabase(String databaseName) {
         File[] databases = this.getDatabaseDir().listFiles(databaseFilter);
+        if (!App.checkForExistence(databases))
+            return null;
         for (File databaseFile : databases) {
             if (databaseFile.getName().equals(databaseName)) {
                 return databaseFile;
@@ -97,6 +102,8 @@ public class DatabaseHelper {
     public void loadTables(Database database) {
         database.clearTableList();
         File[] tables = database.getDatabaseDir().listFiles(databaseFilter);
+        if (!App.checkForExistence(tables))
+            throw new RuntimeException("No tables were found in " + database.getDatabaseName());
         for (File tableDir : tables) {
             BackEndWriter writer = this.fetchWriter(tableDir);
             if (App.checkForExistence(writer)) {
