@@ -32,7 +32,7 @@ public class ObjectFactory {
         } else if (Timestamp.class.equals(cls)) {
             return Timestamp.valueOf(str);
         } else {
-            throw new ClassCastException();
+            throw new ClassCastException("Soon!");
         }
     }
 }
