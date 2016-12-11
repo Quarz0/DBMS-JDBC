@@ -3,13 +3,13 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="src/libs/commons-lang3-3.5.jar"/>
-	<classpathentry kind="lib" path="src/libs/asciitable-0.2.2.jar"/>
-	<classpathentry kind="lib" path="src/libs/stax-1.2.0.jar"/>
-	<classpathentry kind="lib" path="src/libs/jdom-2.0.0.jar"/>
-	<classpathentry kind="lib" path="src/libs/jline-2.13.jar"/>
-	<classpathentry kind="lib" path="src/libs/gson-2.8.0-javadoc.jar"/>
-	<classpathentry kind="lib" path="src/libs/gson-2.8.0-sources.jar"/>
-	<classpathentry kind="lib" path="src/libs/gson-2.8.0.jar"/>
+	<classpathentry kind="lib" path="src/lib/asciitable-0.2.2.jar"/>
+	<classpathentry kind="lib" path="src/lib/commons-lang3-3.5.jar"/>
+	<classpathentry kind="lib" path="src/lib/gson-2.8.0-javadoc.jar"/>
+	<classpathentry kind="lib" path="src/lib/gson-2.8.0-sources.jar"/>
+	<classpathentry kind="lib" path="src/lib/gson-2.8.0.jar"/>
+	<classpathentry kind="lib" path="src/lib/jdom-2.0.0.jar"/>
+	<classpathentry kind="lib" path="src/lib/jline-2.13.jar"/>
+	<classpathentry kind="lib" path="src/lib/stax-1.2.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

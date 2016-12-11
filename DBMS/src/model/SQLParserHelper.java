@@ -9,6 +9,7 @@ import model.statements.Query;
 public class SQLParserHelper {
 
     private Query currentQuery;
+    @SuppressWarnings("unused")
     private DBMSController dbmsController;
     private List<Observer> observers;
 

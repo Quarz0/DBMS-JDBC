@@ -194,8 +194,8 @@ public class DatabaseController implements DBMS, Observer {
                 try {
                     record.addToRecord(TypeFactory.parseToObject(entry.getValue(),
                             columns.get(colName.trim())));
-                } catch (Exception e) {
-                    throw new RuntimeException("Invalid data!");
+                } catch (ClassCastException e) {
+                    throw new RuntimeException(e.getMessage());
                 }
                 keysFound++;
             } else {
@@ -220,8 +220,8 @@ public class DatabaseController implements DBMS, Observer {
         for (Class<?> type : tableColumns.values()) {
             try {
                 record.addToRecord(TypeFactory.parseToObject(type, values[index++].trim()));
-            } catch (Exception e) {
-                throw new RuntimeException("Invalid data!");
+            } catch (ClassCastException e) {
+                throw new RuntimeException(e.getMessage());
             }
         }
         this.dbHelper.getSelectedTable().addRecord(record);
@@ -284,8 +284,8 @@ public class DatabaseController implements DBMS, Observer {
                 try {
                     newValues.put(index,
                             TypeFactory.parseToObject(entry.getValue(), columns.get(key.trim())));
-                } catch (Exception e) {
-                    throw new RuntimeException("Invalid data!");
+                } catch (ClassCastException e) {
+                    throw new RuntimeException(e.getMessage());
                 }
             }
             index++;
