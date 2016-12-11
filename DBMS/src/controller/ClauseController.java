@@ -114,7 +114,7 @@ public class ClauseController implements DBMSClause {
                 .getCurrentQuery() instanceof Delete))
             return;
         SelectionTable originalTable = this.dbmsController.getDatabaseController().getHelper()
-                .getTempTable();
+                .cloneOriginalTableToTempTable();
         for (int i = 0; i < originalTable.getRecordList().size(); i++) {
             if (!this.evaluate(condition, originalTable.getRecordList().get(i))) {
                 this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
@@ -130,7 +130,7 @@ public class ClauseController implements DBMSClause {
                 .getCurrentQuery() instanceof Select))
             return;
         SelectionTable originalTable = this.dbmsController.getDatabaseController().getHelper()
-                .getTempTable();
+                .cloneOriginalTableToTempTable();
         for (int i = originalTable.getRecordList().size() - 1; i >= 0; i--) {
             if (!this.evaluate(condition, originalTable.getRecordList().get(i))) {
                 this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
@@ -145,7 +145,7 @@ public class ClauseController implements DBMSClause {
                 .getCurrentQuery() instanceof Update))
             return;
         SelectionTable originalTable = this.dbmsController.getDatabaseController().getHelper()
-                .getTempTable();
+                .cloneOriginalTableToTempTable();
         for (int i = 0; i < originalTable.getRecordList().size(); i++) {
             if (!this.evaluate(condition, originalTable.getRecordList().get(i))) {
                 this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
