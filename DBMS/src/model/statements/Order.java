@@ -34,7 +34,7 @@ public class Order extends Clause {
     private boolean extractColIdentifiers(String s) {
         String[] cols = s.split(",");
         for (int i = 0; i < cols.length; i++) {
-            String[] column = cols[i].split(" +");
+            String[] column = cols[i].trim().split(" +");
             if (!App.isLegalIdentifier(column[0])) {
                 return false;
             }

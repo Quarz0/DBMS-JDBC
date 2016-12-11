@@ -6,7 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import util.App;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Record implements Cloneable {
     private Map<String, Class<?>> columns;
@@ -51,11 +52,15 @@ public class Record implements Cloneable {
 
     @Override
     public boolean equals(Object obj) {
-        if (App.checkForExistence(columns) || App.checkForExistence(values)) {
-            return columns == values;
+        if (obj == this)
+            return true;
+        if (!(obj instanceof Record)) {
+            return false;
         }
-        return columns.equals(((Record) obj).getColumns())
-                && values.equals(((Record) obj).getValues());
+
+        Record record = (Record) obj;
+        return new EqualsBuilder().append(this.getColumns(), record.getColumns())
+                .append(this.getValues(), record.getValues()).isEquals();
     }
 
     public Map<String, Class<?>> getColumns() {
@@ -68,11 +73,7 @@ public class Record implements Cloneable {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (columns == null ? 0 : columns.hashCode());
-        result = prime * result + (values == null ? 0 : values.hashCode());
-        return result;
+        return new HashCodeBuilder(17, 37).append(this.columns).append(this.values).toHashCode();
     }
 
 }

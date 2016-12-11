@@ -54,10 +54,12 @@ public class SQLParserController {
             throw new ParseException("Syntax error!", 0);
 
         String[] groups;
+        int queryStartIndex = s.indexOf(" ");
         if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_DISTINCT))) {
             Distinct d = new Distinct();
             d.parse(groups[1]);
             query.addClause(d);
+            queryStartIndex = s.toLowerCase().indexOf("distinct") + "distinct".length();
         }
         if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_ORDER_BY))) {
             Order o = new Order();
@@ -70,7 +72,7 @@ public class SQLParserController {
             query.addClause(w);
         }
 
-        query.parse(s.substring(s.indexOf(" "),
+        query.parse(s.substring(queryStartIndex,
                 Math.min(RegexEvaluator.startIndex(s, Regex.PARSE_WITH_ORDER_BY),
                         RegexEvaluator.startIndex(s, Regex.PARSE_WITH_WHERE))));
         this.sqlParserHelper.setCurrentQuery(query);
