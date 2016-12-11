@@ -4,12 +4,20 @@ import java.sql.SQLException;
 
 import javax.xml.transform.Result;
 
+import model.SQLTypeFactory;
+import model.SelectionTable;
+
 public class ResultSetMetaData implements java.sql.ResultSetMetaData, Result {
 
+    private SelectionTable table;
+    
+    public ResultSetMetaData(SelectionTable table) {
+        this.table = table;
+    }
+    
     @Override
     public int getColumnCount() throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+        return this.table.getHeader().size();
     }
 
     @Override
@@ -19,20 +27,24 @@ public class ResultSetMetaData implements java.sql.ResultSetMetaData, Result {
 
     @Override
     public String getColumnName(int column) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        int i = 1;
+        for (String col : this.table.getHeader().keySet()) {
+            if (i == column) {
+                return col;
+            }
+            i++;
+        }
+        throw new SQLException();
     }
 
     @Override
     public int getColumnType(int column) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+        return SQLTypeFactory.getSQLType(table.getHeader().get(this.getColumnName(column)));
     }
 
     @Override
     public String getTableName(int column) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        return table.getTableName();
     }
 
     @Override

@@ -22,26 +22,32 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-import controller.DBMSController;
 import model.Record;
 import model.SelectionTable;
 import util.App;
 
 public class ResultSet implements java.sql.ResultSet {
 
-    private DBMSController dbmsController;
-    private SelectionTable table = dbmsController.getDatabaseController().getHelper()
-            .getSelectedTable();
-    List<Record> recordList = table.getRecordList();
-    private int cursor = 0;
-    private boolean isClosed = false;
-    
+    private SelectionTable table;
+    private List<Record> recordList;
+    private int cursor;
+    private boolean isClosed;
+    private plugins.jdbc.ResultSetMetaData metaData;
+
+    public ResultSet(SelectionTable table) {
+        this.table = table;
+        this.recordList = table.getRecordList();
+        this.cursor = 0;
+        this.isClosed = false;
+        this.metaData = new plugins.jdbc.ResultSetMetaData(table);
+    }
+
     private void checkClosed() throws SQLException {
         if (isClosed()) {
             throw new SQLException();
         }
     }
-    
+
     @Override
     public boolean absolute(int row) throws SQLException {
         checkClosed();
@@ -100,7 +106,7 @@ public class ResultSet implements java.sql.ResultSet {
         Object val = recordList.get(cursor - 1).getValues().get(columnIndex - 1);
         return val;
     }
-    
+
     @Override
     public int getInt(int columnIndex) throws SQLException {
         if (!App.checkForExistence(getValue(columnIndex))) {
@@ -108,8 +114,7 @@ public class ResultSet implements java.sql.ResultSet {
         }
         try {
             return (int) getValue(columnIndex);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new SQLException();
         }
     }
@@ -126,8 +131,7 @@ public class ResultSet implements java.sql.ResultSet {
         }
         try {
             return (Date) getValue(columnIndex);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new SQLException();
         }
     }
@@ -144,8 +148,7 @@ public class ResultSet implements java.sql.ResultSet {
         }
         try {
             return (String) getValue(columnIndex);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new SQLException();
         }
     }
@@ -162,8 +165,7 @@ public class ResultSet implements java.sql.ResultSet {
         }
         try {
             return (Float) getValue(columnIndex);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new SQLException();
         }
     }
@@ -176,8 +178,7 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
         checkClosed();
-        // TODO Auto-generated method stub
-        return null;
+        return metaData;
     }
 
     @Override
