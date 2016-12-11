@@ -47,13 +47,13 @@ public class Statement implements java.sql.Statement {
     }
 
     @Override
-    public ResultSet executeQuery(String arg0) throws SQLException {
+    public ResultSet executeQuery(String sql) throws SQLException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public int executeUpdate(String arg0) throws SQLException {
+    public int executeUpdate(String sql) throws SQLException {
         // TODO Auto-generated method stub
         return 0;
     }

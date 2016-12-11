@@ -10,13 +10,13 @@ import java.util.logging.Logger;
 public class Driver implements java.sql.Driver {
 
     @Override
-    public boolean acceptsURL(String arg0) throws SQLException {
+    public boolean acceptsURL(String url) throws SQLException {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public Connection connect(String arg0, Properties arg1) throws SQLException {
+    public Connection connect(String url, Properties info) throws SQLException {
         // TODO Auto-generated method stub
         return null;
     }

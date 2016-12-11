@@ -19,158 +19,227 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
+
+import controller.DBMSController;
+import model.Record;
+import model.SelectionTable;
+import util.App;
 
 public class ResultSet implements java.sql.ResultSet {
 
+    private DBMSController dbmsController;
+    private SelectionTable table = dbmsController.getDatabaseController().getHelper()
+            .getSelectedTable();
+    List<Record> recordList = table.getRecordList();
+    private int cursor = 0;
+    private boolean isClosed = false;
+    
+    private void checkClosed() throws SQLException {
+        if (isClosed()) {
+            throw new SQLException();
+        }
+    }
+    
     @Override
-    public boolean absolute(int arg0) throws SQLException {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean absolute(int row) throws SQLException {
+        checkClosed();
+        if (row >= 0) {
+            cursor = Math.min(row, recordList.size() + 1);
+        } else {
+            cursor = Math.max(0, recordList.size() + 1 - row);
+        }
+        return cursor >= 1 && cursor <= recordList.size();
     }
 
     @Override
     public void afterLast() throws SQLException {
-        // TODO Auto-generated method stub
-        
+        checkClosed();
+        if (recordList.size() != 0)
+            cursor = recordList.size() + 1;
     }
 
     @Override
     public void beforeFirst() throws SQLException {
-        // TODO Auto-generated method stub
-        
+        checkClosed();
+        if (recordList.size() != 0)
+            cursor = 0;
     }
 
     @Override
     public void close() throws SQLException {
-        // TODO Auto-generated method stub
-        
+        isClosed = true;
     }
 
     @Override
-    public int findColumn(String arg0) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+    public int findColumn(String columnLabel) throws SQLException {
+        checkClosed();
+        int i = 1;
+        for (String column : table.getHeader().keySet()) {
+            if (column.equals(columnLabel)) {
+                return i;
+            }
+            i++;
+        }
+        throw new SQLException();
     }
 
     @Override
     public boolean first() throws SQLException {
-        // TODO Auto-generated method stub
-        return false;
+        checkClosed();
+        return absolute(1);
+    }
+
+    private Object getValue(int columnIndex) throws SQLException {
+        checkClosed();
+        if (columnIndex < 1 || columnIndex > table.getHeader().size() || cursor < 1
+                || cursor > recordList.size()) {
+            throw new SQLException();
+        }
+        Object val = recordList.get(cursor - 1).getValues().get(columnIndex - 1);
+        return val;
+    }
+    
+    @Override
+    public int getInt(int columnIndex) throws SQLException {
+        if (!App.checkForExistence(getValue(columnIndex))) {
+            return 0;
+        }
+        try {
+            return (int) getValue(columnIndex);
+        }
+        catch (Exception e) {
+            throw new SQLException();
+        }
     }
 
     @Override
-    public int getInt(int arg0) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+    public int getInt(String columnLabel) throws SQLException {
+        return getInt(findColumn(columnLabel));
     }
 
     @Override
-    public int getInt(String arg0) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+    public Date getDate(int columnIndex) throws SQLException {
+        if (!App.checkForExistence(getValue(columnIndex))) {
+            return null;
+        }
+        try {
+            return (Date) getValue(columnIndex);
+        }
+        catch (Exception e) {
+            throw new SQLException();
+        }
     }
 
     @Override
-    public Date getDate(int arg0) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Date getDate(String columnLabel) throws SQLException {
+        return getDate(findColumn(columnLabel));
     }
 
     @Override
-    public Date getDate(String arg0) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public String getString(int columnIndex) throws SQLException {
+        if (!App.checkForExistence(getValue(columnIndex))) {
+            return null;
+        }
+        try {
+            return (String) getValue(columnIndex);
+        }
+        catch (Exception e) {
+            throw new SQLException();
+        }
     }
 
     @Override
-    public String getString(int arg0) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public String getString(String columnLabel) throws SQLException {
+        return getString(findColumn(columnLabel));
     }
 
     @Override
-    public String getString(String arg0) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public float getFloat(int columnIndex) throws SQLException {
+        if (!App.checkForExistence(getValue(columnIndex))) {
+            return 0;
+        }
+        try {
+            return (Float) getValue(columnIndex);
+        }
+        catch (Exception e) {
+            throw new SQLException();
+        }
     }
 
     @Override
-    public float getFloat(int arg0) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public float getFloat(String arg0) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+    public float getFloat(String columnLabel) throws SQLException {
+        return getFloat(findColumn(columnLabel));
     }
 
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
+        checkClosed();
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Object getObject(int arg0) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Object getObject(int columnIndex) throws SQLException {
+        if (!App.checkForExistence(getValue(columnIndex))) {
+            return null;
+        }
+        return getValue(columnIndex);
     }
 
     @Override
     public Statement getStatement() throws SQLException {
+        checkClosed();
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public boolean isAfterLast() throws SQLException {
-        // TODO Auto-generated method stub
-        return false;
+        checkClosed();
+        return cursor == recordList.size() + 1;
     }
 
     @Override
     public boolean isBeforeFirst() throws SQLException {
-        // TODO Auto-generated method stub
-        return false;
+        checkClosed();
+        return cursor == 0;
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        // TODO Auto-generated method stub
-        return false;
+        return isClosed;
     }
 
     @Override
     public boolean isFirst() throws SQLException {
-        // TODO Auto-generated method stub
-        return false;
+        checkClosed();
+        return cursor == 1;
     }
 
     @Override
     public boolean isLast() throws SQLException {
-        // TODO Auto-generated method stub
-        return false;
+        checkClosed();
+        return cursor == recordList.size();
     }
 
     @Override
     public boolean last() throws SQLException {
-        // TODO Auto-generated method stub
-        return false;
+        checkClosed();
+        return absolute(-1);
     }
 
     @Override
     public boolean next() throws SQLException {
-        // TODO Auto-generated method stub
-        return false;
+        checkClosed();
+        return absolute(cursor + 1);
     }
 
     @Override
     public boolean previous() throws SQLException {
-        // TODO Auto-generated method stub
-        return false;
+        checkClosed();
+        return absolute(cursor - 1);
     }
 
     @Override
