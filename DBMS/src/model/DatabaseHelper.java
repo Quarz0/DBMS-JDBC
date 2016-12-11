@@ -144,6 +144,14 @@ public class DatabaseHelper {
         this.selectedTable.setTableSchema(table);
     }
 
+    public void requestClone() throws RuntimeException {
+        try {
+            this.tempTable = (SelectionTable) this.selectedTable.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("Permission denied, Table cloning failed");
+        }
+    }
+
     public void setDatabase(File usedDatabaseDir) {
 
         currentDatabase = new Database();

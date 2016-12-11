@@ -42,6 +42,7 @@ public class ClauseController implements DBMSClause {
                 i++;
             }
         }
+        this.dbmsController.getDatabaseController().getHelper().requestClone();
     }
 
     private boolean evaluate(String expression, Record record) {
@@ -106,6 +107,7 @@ public class ClauseController implements DBMSClause {
                         return compare.toComparison();
                     }
                 });
+        this.dbmsController.getDatabaseController().getHelper().requestClone();
     }
 
     @Override
@@ -122,6 +124,7 @@ public class ClauseController implements DBMSClause {
                 ;
             }
         }
+        this.dbmsController.getDatabaseController().getHelper().requestClone();
     }
 
     @Override
@@ -137,6 +140,7 @@ public class ClauseController implements DBMSClause {
                         .getRecordList().remove(i);
             }
         }
+        this.dbmsController.getDatabaseController().getHelper().requestClone();
     }
 
     @Override
@@ -152,6 +156,7 @@ public class ClauseController implements DBMSClause {
                         .getRecordList().set(i, originalTable.getRecordList().get(i));
             }
         }
+        this.dbmsController.getDatabaseController().getHelper().requestClone();
     }
 
 }
