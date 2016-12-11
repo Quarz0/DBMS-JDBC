@@ -54,7 +54,7 @@ public class Order extends Clause {
     @Override
     public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s)) {
-            throw new ParseException("Syntax error!(not a valid order statement)", 0);
+            throw new ParseException("Syntax error!(not a valid order clause)", 0);
         }
     }
 
