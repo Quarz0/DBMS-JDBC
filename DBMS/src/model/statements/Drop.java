@@ -66,7 +66,7 @@ public class Drop extends Query implements Writable {
     @Override
     public void parse(String s) throws ParseException {
         if (!App.checkForExistence(s) || !this.checkRegex(s))
-            throw new ParseException("Invalid", 0);
+            throw new ParseException("Syntax error!(not a valid drop statement)", 0);
     }
 
 }

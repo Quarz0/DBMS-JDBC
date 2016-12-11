@@ -106,7 +106,7 @@ public class DatabaseHelper {
                 File validatorFile = new File(table.getTablePath() + File.separator
                         + table.getTableName() + writer.getValidatorFileExtension());
                 if (!(dataFile.exists() && validatorFile.exists())) {
-                    throw new RuntimeException();
+                    throw new RuntimeException("Table was hacked!");
                 }
                 table.registerFiles(dataFile, validatorFile);
                 database.getTables().add(table);
@@ -117,22 +117,21 @@ public class DatabaseHelper {
     public void readTable(String tableIdentifier) throws RuntimeException {
         SelectionTable selectionTable = null;
         if (!App.checkForExistence(this.getCurrentDatabase())) {
-            throw new RuntimeException();
+            throw new RuntimeException("Try using the \"USE\" statement first :)");
         }
         Table table = this.getTable(tableIdentifier);
         if (!App.checkForExistence(table)) {
-            throw new RuntimeException();
+            throw new RuntimeException("Unfortunately i do not have your table :(");
         }
         try {
             selectionTable = table.getBackEndWriter().readTable(table);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException();
+            throw new RuntimeException("Error while attempting to read from table");
         }
         try {
             this.tempTable = (SelectionTable) selectionTable.clone();
         } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-            throw new RuntimeException();
+            throw new RuntimeException("Run, Forest, Run!");
         }
         this.selectedTable = selectionTable;
         this.selectedTable.setTableSchema(table);

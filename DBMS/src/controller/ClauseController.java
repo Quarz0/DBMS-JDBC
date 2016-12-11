@@ -53,7 +53,7 @@ public class ClauseController implements DBMSClause {
         try {
             return BooleanEvaluator.evaluate(exp);
         } catch (ScriptException e) {
-            throw new RuntimeException("Invalid condition.");
+            throw new RuntimeException("Invalid condition!");
         }
     }
 

@@ -96,7 +96,7 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public void createDatabase(String databaseName) throws RuntimeException {
         if (this.dbHelper.databaseExists(databaseName)) {
-            throw new RuntimeException();
+            throw new RuntimeException("Database already exists!");
         }
         new Database(this.dbHelper.getWorkspaceDir().getAbsolutePath(), databaseName);
     }
@@ -104,9 +104,12 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public void createTable(String tableName, Map<String, Class<?>> columns,
             BackEndWriter backEndWriter) throws RuntimeException {
-        if (!App.checkForExistence(dbHelper.getCurrentDatabase())
-                || this.dbHelper.tableExists(tableName)) {
-            throw new RuntimeException();
+        if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
+            throw new RuntimeException(
+                    "Do you really expect me to figure out the database on my own?!");
+        }
+        if (this.dbHelper.tableExists(tableName)) {
+            throw new RuntimeException("Table already exists!");
         }
         File tableFile = new File(
                 dbHelper.getCurrentDatabase().getPath() + File.separator + tableName);
@@ -128,7 +131,7 @@ public class DatabaseController implements DBMS, Observer {
     public void dropDatabase(String databaseName) throws RuntimeException {
         File database = this.dbHelper.getDatabase(databaseName);
         if (!App.checkForExistence(database)) {
-            throw new RuntimeException();
+            throw new RuntimeException("Database does not exist!");
         }
         this.dbHelper.deleteDir(database);
     }
@@ -136,7 +139,7 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public void dropTable(String tableName) throws RuntimeException {
         if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
-            throw new RuntimeException();
+            throw new RuntimeException("Database does not exist!");
         }
         for (Table table : dbHelper.getCurrentDatabase().getTables()) {
             if (table.getTableName().equals(tableName)) {
@@ -145,7 +148,7 @@ public class DatabaseController implements DBMS, Observer {
                 return;
             }
         }
-        throw new RuntimeException("Table not found!");
+        throw new RuntimeException("Table does not exist!");
     }
 
     private SelectionTable formSelectionTable(SelectionTable selectedTable, String... colNames) {
@@ -188,9 +191,9 @@ public class DatabaseController implements DBMS, Observer {
             if (columns.containsKey(colName)) {
                 try {
                     record.addToRecord(ObjectFactory.parseToObject(entry.getValue(),
-                            columns.get(colName.trim()).trim()));
+                            columns.get(colName.trim())));
                 } catch (Exception e) {
-                    throw new RuntimeException("Wrong data");
+                    throw new RuntimeException("Invalid data!");
                 }
                 keysFound++;
             } else {
@@ -198,7 +201,7 @@ public class DatabaseController implements DBMS, Observer {
             }
         }
         if (keysFound != columns.size()) {
-            throw new RuntimeException("Wrong data!");
+            throw new RuntimeException("Invalid data!");
         }
         this.dbHelper.getSelectedTable().addRecord(record);
     }
@@ -208,7 +211,7 @@ public class DatabaseController implements DBMS, Observer {
         this.dbHelper.readTable(tableName);
         Map<String, Class<?>> tableColumns = dbHelper.getSelectedTable().getHeader();
         if (values.length != tableColumns.size()) {
-            throw new RuntimeException("Wrong data!");
+            throw new RuntimeException("Invalid data!");
         }
         int index = 0;
         Record record = new Record(tableColumns);
@@ -216,7 +219,7 @@ public class DatabaseController implements DBMS, Observer {
             try {
                 record.addToRecord(ObjectFactory.parseToObject(type, values[index++].trim()));
             } catch (Exception e) {
-                throw new RuntimeException("Wrong data!");
+                throw new RuntimeException("Invalid data!");
             }
         }
         this.dbHelper.getSelectedTable().addRecord(record);
@@ -246,7 +249,7 @@ public class DatabaseController implements DBMS, Observer {
                     this.dbHelper.getSelectedTable().getTableSchema().getBackEndWriter()
                             .writeTable(this.getHelper().getSelectedTable());
             } catch (FileNotFoundException e) {
-                throw new RuntimeException();
+                throw new RuntimeException("Error while attempting to write table");
             }
 
             if (this.dbmsController.getSQLParserController().getSqlParserHelper()
@@ -277,10 +280,10 @@ public class DatabaseController implements DBMS, Observer {
             String key = entry.getKey().toLowerCase();
             if (columns.containsKey(key)) {
                 try {
-                    newValues.put(index, ObjectFactory.parseToObject(entry.getValue(),
-                            columns.get(key.trim()).trim()));
+                    newValues.put(index,
+                            ObjectFactory.parseToObject(entry.getValue(), columns.get(key.trim())));
                 } catch (Exception e) {
-                    throw new RuntimeException("Wrong data");
+                    throw new RuntimeException("Invalid data");
                 }
             }
             index++;
@@ -292,7 +295,7 @@ public class DatabaseController implements DBMS, Observer {
     public void useDatabase(String databaseName) throws RuntimeException {
         File usedDatabaseDir = this.dbHelper.getDatabase(databaseName);
         if (!App.checkForExistence(usedDatabaseDir)) {
-            throw new RuntimeException();
+            throw new RuntimeException("Database does not exist!");
         }
         this.dbHelper.setDatabase(usedDatabaseDir);
         this.dbHelper.loadTables(dbHelper.getCurrentDatabase());

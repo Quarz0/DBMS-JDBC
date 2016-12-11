@@ -1,7 +1,12 @@
 package model;
 
+import util.App;
+
 public class ObjectFactory {
     public static Object parseToObject(Class<?> cls, String str) throws ClassCastException {
+        if (!App.checkForExistence(str) || !App.checkForExistence(cls))
+            throw new ClassCastException("Soon!");
+        str = str.trim();
         if (Integer.class.equals(cls)) {
             return Integer.valueOf(str);
         } else if (Double.class.equals(cls)) {
@@ -17,7 +22,7 @@ public class ObjectFactory {
         } else if (Byte.class.equals(cls)) {
             return Byte.valueOf(str);
         } else {
-            return str;
+            throw new ClassCastException();
         }
     }
 }
