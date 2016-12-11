@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import controller.DBMS;
-import controller.backEnd.json.JSONWriter;
+import controller.backEnd.xml.XMLWriter;
 import model.TypeFactory;
 import util.App;
 import util.Regex;
@@ -43,7 +43,7 @@ public class Create extends Query implements Writable {
         if (this.isDatabase()) {
             dbms.createDatabase(this.getDatabaseIdentifier());
         } else {
-            dbms.createTable(this.getTableIdentifier(), this.getColumns(), new JSONWriter());
+            dbms.createTable(this.getTableIdentifier(), this.getColumns(), new XMLWriter());
         }
     }
 

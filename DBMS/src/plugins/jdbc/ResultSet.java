@@ -55,7 +55,6 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public void afterLast() throws SQLException {
-
         checkClosed();
         if (recordList.size() != 0)
             cursor = recordList.size() + 1;
@@ -70,7 +69,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public void cancelRowUpdates() throws SQLException {
-        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException();
 
     }
 
@@ -82,7 +81,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public void clearWarnings() throws SQLException {
-        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException();
 
     }
 
@@ -93,7 +92,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public void deleteRow() throws SQLException {
-        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException();
 
     }
 
@@ -117,147 +116,147 @@ public class ResultSet implements java.sql.ResultSet {
     }
 
     @Override
-    public Array getArray(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Array getArray(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Array getArray(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Array getArray(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public InputStream getAsciiStream(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public InputStream getAsciiStream(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public InputStream getAsciiStream(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public InputStream getAsciiStream(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public BigDecimal getBigDecimal(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public BigDecimal getBigDecimal(int arg0, int arg1) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public BigDecimal getBigDecimal(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public BigDecimal getBigDecimal(String arg0, int arg1) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public InputStream getBinaryStream(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public InputStream getBinaryStream(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public InputStream getBinaryStream(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public InputStream getBinaryStream(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Blob getBlob(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Blob getBlob(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Blob getBlob(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Blob getBlob(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public boolean getBoolean(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean getBoolean(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public boolean getBoolean(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean getBoolean(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public byte getByte(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+    public byte getByte(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public byte getByte(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+    public byte getByte(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public byte[] getBytes(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public byte[] getBytes(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public byte[] getBytes(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public byte[] getBytes(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Reader getCharacterStream(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Reader getCharacterStream(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Reader getCharacterStream(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Reader getCharacterStream(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Clob getClob(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Clob getClob(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Clob getClob(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Clob getClob(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
     public int getConcurrency() throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
     public String getCursorName() throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
@@ -273,9 +272,9 @@ public class ResultSet implements java.sql.ResultSet {
     }
 
     @Override
-    public Date getDate(int columnIndex, Calendar cal) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Date getDate(int arg0, Calendar arg1) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
@@ -284,33 +283,33 @@ public class ResultSet implements java.sql.ResultSet {
     }
 
     @Override
-    public Date getDate(String columnLabel, Calendar cal) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Date getDate(String arg0, Calendar arg1) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public double getDouble(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+    public double getDouble(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public double getDouble(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+    public double getDouble(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
     public int getFetchDirection() throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
     public int getFetchSize() throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
@@ -332,8 +331,8 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public int getHoldability() throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
@@ -354,15 +353,15 @@ public class ResultSet implements java.sql.ResultSet {
     }
 
     @Override
-    public long getLong(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+    public long getLong(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public long getLong(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+    public long getLong(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
@@ -372,39 +371,39 @@ public class ResultSet implements java.sql.ResultSet {
     }
 
     @Override
-    public Reader getNCharacterStream(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Reader getNCharacterStream(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Reader getNCharacterStream(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Reader getNCharacterStream(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public NClob getNClob(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public NClob getNClob(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public NClob getNClob(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public NClob getNClob(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public String getNString(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public String getNString(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public String getNString(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public String getNString(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
@@ -416,87 +415,87 @@ public class ResultSet implements java.sql.ResultSet {
     }
 
     @Override
-    public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public <T> T getObject(int arg0, Class<T> arg1) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Object getObject(int columnIndex, Map<String, Class<?>> map) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Object getObject(int arg0, Map<String, Class<?>> arg1) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Object getObject(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Object getObject(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public <T> T getObject(String arg0, Class<T> arg1) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Object getObject(String columnLabel, Map<String, Class<?>> map) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Object getObject(String arg0, Map<String, Class<?>> arg1) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Ref getRef(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Ref getRef(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Ref getRef(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Ref getRef(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
     public int getRow() throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public RowId getRowId(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public RowId getRowId(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public RowId getRowId(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public RowId getRowId(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public short getShort(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+    public short getShort(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public short getShort(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+    public short getShort(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public SQLXML getSQLXML(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public SQLXML getSQLXML(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public SQLXML getSQLXML(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public SQLXML getSQLXML(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
@@ -524,81 +523,81 @@ public class ResultSet implements java.sql.ResultSet {
     }
 
     @Override
-    public Time getTime(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Time getTime(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Time getTime(int columnIndex, Calendar cal) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Time getTime(int arg0, Calendar arg1) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Time getTime(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Time getTime(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Time getTime(String columnLabel, Calendar cal) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Time getTime(String arg0, Calendar arg1) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Timestamp getTimestamp(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Timestamp getTimestamp(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Timestamp getTimestamp(int arg0, Calendar arg1) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Timestamp getTimestamp(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Timestamp getTimestamp(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public Timestamp getTimestamp(String columnLabel, Calendar cal) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Timestamp getTimestamp(String arg0, Calendar arg1) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
     public int getType() throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public InputStream getUnicodeStream(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public InputStream getUnicodeStream(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public InputStream getUnicodeStream(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public InputStream getUnicodeStream(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public URL getURL(int columnIndex) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public URL getURL(int arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
-    public URL getURL(String columnLabel) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public URL getURL(String arg0) throws SQLException {
+        throw new UnsupportedOperationException();
+
     }
 
     private Object getValue(int columnIndex) throws SQLException {
@@ -613,13 +612,13 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public SQLWarning getWarnings() throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        throw new UnsupportedOperationException();
+
     }
 
     @Override
     public void insertRow() throws SQLException {
-        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException();
 
     }
 

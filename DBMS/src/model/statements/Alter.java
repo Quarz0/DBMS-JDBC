@@ -3,6 +3,7 @@ package model.statements;
 import java.text.ParseException;
 
 import controller.DBMS;
+import model.TypeFactory;
 import util.App;
 import util.Regex;
 import util.RegexEvaluator;
@@ -17,11 +18,11 @@ public class Alter extends Query implements Writable {
     private String column;
     private int state;
     private String tableIdentifier;
-    private String type;
+    private Class<?> type;
 
     public Alter() {
         super();
-        this.tableIdentifier = column = type = null;
+        this.tableIdentifier = column = null;
         this.state = NONE;
     }
 
@@ -52,19 +53,17 @@ public class Alter extends Query implements Writable {
         return false;
     }
 
-    // TODO
     @Override
     public void execute(DBMS dbms) throws RuntimeException {
         switch (this.state) {
         case ADD:
-            // dbms.alterTableAdd(tableIdentifier, column, type);
-            // dbms.addColumn(this.getTableIdentifier(), this.getColumn(), this.getType());
+            dbms.alterTableAdd(this.getTableIdentifier(), this.getColumn(), this.getType());
             break;
         case DROP:
-            // dbms.dropColumn(this.getTableIdentifier(), this.getColumn());
+            dbms.alterTableDrop(this.getTableIdentifier(), this.getColumn());
             break;
         case MODIFY:
-            // dbms.modifyColumn(this.getTableIdentifier(), this.getColumn(), this.getType());
+            dbms.alterTableModify(this.getTableIdentifier(), this.getColumn(), this.getType());
             break;
         }
     }
@@ -78,7 +77,7 @@ public class Alter extends Query implements Writable {
     }
 
     private void extractType(String s) {
-        this.type = s.trim();
+        this.type = TypeFactory.getClass(s.trim().toLowerCase());
     }
 
     public String getColumn() {
@@ -89,7 +88,7 @@ public class Alter extends Query implements Writable {
         return this.tableIdentifier;
     }
 
-    public String getType() {
+    public Class<?> getType() {
         return this.type;
     }
 
