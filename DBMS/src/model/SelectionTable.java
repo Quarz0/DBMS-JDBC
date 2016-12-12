@@ -17,15 +17,19 @@ import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
 public class SelectionTable implements Cloneable {
     private Map<String, Class<?>> defaultHeader;
     private Map<String, Class<?>> header;
+    private int noOfAffectedRecords;
 
     private List<Record> recordList;
+
     private String tableName;
+
     private Table tableSchema;
 
     public SelectionTable(String tableName) {
         this.recordList = new ArrayList<>();
         this.tableName = tableName;
         this.tableSchema = null;
+        this.noOfAffectedRecords = 0;
     }
 
     public SelectionTable(String tableName, Map<String, Class<?>> colNames) {
@@ -60,12 +64,21 @@ public class SelectionTable implements Cloneable {
         return result;
     }
 
+    public void decrementAffectedRecords() {
+        if (this.noOfAffectedRecords > 0)
+            this.noOfAffectedRecords--;
+    }
+
     public Map<String, Class<?>> getDefaultHeader() {
         return defaultHeader;
     }
 
     public Map<String, Class<?>> getHeader() {
         return header;
+    }
+
+    public int getNoOfAffectedRecords() {
+        return noOfAffectedRecords;
     }
 
     public List<Record> getRecordList() {
@@ -78,6 +91,18 @@ public class SelectionTable implements Cloneable {
 
     public Table getTableSchema() {
         return tableSchema;
+    }
+
+    public void incrementAffectedRecords() {
+        this.noOfAffectedRecords++;
+    }
+
+    public void resetAffectedRecords() {
+        this.noOfAffectedRecords = 0;
+    }
+
+    public void setAffectedRecordsToSize() {
+        this.noOfAffectedRecords = this.recordList.size();
     }
 
     public void setTableSchema(Table tableSchema) {
@@ -101,7 +126,7 @@ public class SelectionTable implements Cloneable {
         asciiTableRenderer.setTheme(V2_E_TableThemes.PLAIN_7BIT.get());
         asciiTableRenderer.setWidth(new WidthLongestWordMaxCol(40));
         RenderedTable renderedTable = asciiTableRenderer.render(asciiTable);
-        return "  Table: " + this.tableName + "\n" + renderedTable.toString() + "  Records: "
+        return "\n  Table: " + this.tableName + "\n" + renderedTable.toString() + "  Records: "
                 + this.recordList.size() + "\n\n";
 
     }

@@ -152,6 +152,10 @@ public class DatabaseHelper {
         }
     }
 
+    public void resetSelectedTable() {
+        this.selectedTable = null;
+    }
+
     public void setDatabase(File usedDatabaseDir) {
 
         currentDatabase = new Database();

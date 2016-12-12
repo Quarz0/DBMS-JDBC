@@ -43,6 +43,7 @@ public class DatabaseController implements DBMS, Observer {
         dbHelper.getSelectedTable().getDefaultHeader().put(colName, type);
         for (Record record : dbHelper.getSelectedTable().getRecordList()) {
             record.addToRecord(null);
+            this.getHelper().getSelectedTable().incrementAffectedRecords();
         }
     }
 
@@ -65,6 +66,7 @@ public class DatabaseController implements DBMS, Observer {
         for (Record record : dbHelper.getSelectedTable().getRecordList()) {
             record.getColumns().remove(realColName);
             record.getValues().remove(index);
+            this.getHelper().getSelectedTable().incrementAffectedRecords();
         }
     }
 
@@ -89,6 +91,7 @@ public class DatabaseController implements DBMS, Observer {
         for (Record record : dbHelper.getSelectedTable().getRecordList()) {
             record.getColumns().put(realColName, type);
             record.getValues().set(index, null);
+            this.getHelper().getSelectedTable().incrementAffectedRecords();
         }
     }
 
@@ -123,7 +126,8 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public void deleteFromTable(String tableName) throws RuntimeException {
         this.dbHelper.readTable(tableName);
-        dbHelper.getSelectedTable().getRecordList().clear();
+        this.getHelper().getSelectedTable().setAffectedRecordsToSize();
+        this.dbHelper.getSelectedTable().getRecordList().clear();
     }
 
     @Override
@@ -194,6 +198,7 @@ public class DatabaseController implements DBMS, Observer {
                 try {
                     record.addToRecord(TypeFactory.parseToObject(entry.getValue(),
                             columns.get(colName.trim())));
+                    this.getHelper().getSelectedTable().incrementAffectedRecords();
                 } catch (ClassCastException e) {
                     throw new RuntimeException(e.getMessage());
                 }
@@ -220,6 +225,7 @@ public class DatabaseController implements DBMS, Observer {
         for (Class<?> type : tableColumns.values()) {
             try {
                 record.addToRecord(TypeFactory.parseToObject(type, values[index++].trim()));
+                this.getHelper().getSelectedTable().incrementAffectedRecords();
             } catch (ClassCastException e) {
                 throw new RuntimeException(e.getMessage());
             }
@@ -240,6 +246,7 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public void update() throws RuntimeException {
+        this.getHelper().resetSelectedTable();
         this.dbmsController.getSQLParserController().getSqlParserHelper().getCurrentQuery()
                 .execute(this);
         this.dbmsController.getSQLParserController().getSqlParserHelper().getCurrentQuery()
@@ -258,10 +265,8 @@ public class DatabaseController implements DBMS, Observer {
                     .getCurrentQuery() instanceof Viewable) {
                 this.dbmsController.getCLIController()
                         .feedback(this.dbHelper.getSelectedTable().toString());
-
             }
         }
-
     }
 
     private void updateTable(SelectionTable selectedTable, Map<Integer, Object> values) {
@@ -284,6 +289,7 @@ public class DatabaseController implements DBMS, Observer {
                 try {
                     newValues.put(index,
                             TypeFactory.parseToObject(entry.getValue(), columns.get(key.trim())));
+                    this.getHelper().getSelectedTable().incrementAffectedRecords();
                 } catch (ClassCastException e) {
                     throw new RuntimeException(e.getMessage());
                 }

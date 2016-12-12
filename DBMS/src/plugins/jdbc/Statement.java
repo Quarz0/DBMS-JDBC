@@ -4,20 +4,33 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import controller.DBMSController;
+import model.statements.Viewable;
 import util.App;
 
 public class Statement implements java.sql.Statement {
 
+    private boolean closed;
     private List<String> commands;
+    private Connection connection;
+    private DBMSController dbmsController;
+    private ResultSet resultSet;
+
+    public Statement(Connection connection, DBMSController dbmsController) {
+        this.commands = new ArrayList<>();
+        this.dbmsController = dbmsController;
+        this.connection = connection;
+        this.closed = false;
+    }
 
     @Override
     public void addBatch(String sql) throws SQLException {
-        if (!App.checkForExistence(this.commands)) {
-            this.commands = new ArrayList<>();
-        }
+        if (this.isClosed())
+            throw new SQLException("Connection is closed");
         this.commands.add(sql);
     }
 
@@ -28,9 +41,9 @@ public class Statement implements java.sql.Statement {
 
     @Override
     public void clearBatch() throws SQLException {
-        if (App.checkForExistence(this.commands)) {
-            this.commands.clear();
-        }
+        if (this.isClosed())
+            throw new SQLException("Connection is closed");
+        this.commands.clear();
     }
 
     @Override
@@ -40,8 +53,16 @@ public class Statement implements java.sql.Statement {
 
     @Override
     public void close() throws SQLException {
-        // TODO Auto-generated method stub
-
+        if (App.checkForExistence(this.commands)) {
+            this.commands.clear();
+            this.commands = null;
+        }
+        this.restResultSet();
+        if (App.checkForExistence(this.dbmsController)) {
+            this.dbmsController.close();
+            this.dbmsController = null;
+        }
+        this.closed = true;
     }
 
     @Override
@@ -51,7 +72,20 @@ public class Statement implements java.sql.Statement {
 
     @Override
     public boolean execute(String sql) throws SQLException {
-        // TODO Auto-generated method stub
+        this.handleExecute();
+        try {
+            this.dbmsController.getSQLParserController().parse(sql);
+        } catch (ParseException | RuntimeException e) {
+            throw new SQLException();
+        }
+        if (this.dbmsController.getSQLParserController().getSqlParserHelper()
+                .getCurrentQuery() instanceof Viewable) {
+            this.restResultSet();
+            resultSet = new plugins.jdbc.ResultSet(
+                    this.dbmsController.getDatabaseController().getHelper().getSelectedTable());
+            if (this.resultSet.first())
+                return true;
+        }
         return false;
     }
 
@@ -72,20 +106,52 @@ public class Statement implements java.sql.Statement {
 
     @Override
     public int[] executeBatch() throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        this.handleExecute();
+        int[] result = new int[this.commands.size()];
+        for (int i = 0; i < result.length; i++) {
+            try {
+                this.execute(this.commands.get(i));
+                if (App.checkForExistence(this.dbmsController.getDatabaseController().getHelper()
+                        .getSelectedTable())) {
+                    result[i] = this.dbmsController.getDatabaseController().getHelper()
+                            .getSelectedTable().getNoOfAffectedRecords();
+                } else
+                    result[i] = java.sql.Statement.SUCCESS_NO_INFO;
+            } catch (SQLException e) {
+                result[i] = java.sql.Statement.EXECUTE_FAILED;
+            }
+        }
+        return result;
     }
 
     @Override
     public ResultSet executeQuery(String sql) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        this.handleExecute();
+        if (!(this.dbmsController.getSQLParserController().getSqlParserHelper()
+                .getCurrentQuery() instanceof Viewable))
+            throw new SQLException();
+        this.execute(sql);
+        this.resultSet = new plugins.jdbc.ResultSet(
+                this.dbmsController.getDatabaseController().getHelper().getSelectedTable());
+        return this.resultSet;
     }
 
     @Override
     public int executeUpdate(String sql) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+        this.handleExecute();
+        if (this.dbmsController.getSQLParserController().getSqlParserHelper()
+                .getCurrentQuery() instanceof Viewable)
+            throw new SQLException();
+        try {
+            this.execute(sql);
+        } catch (SQLException e) {
+            return java.sql.Statement.EXECUTE_FAILED;
+        }
+        if (App.checkForExistence(
+                this.dbmsController.getDatabaseController().getHelper().getSelectedTable()))
+            return this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
+                    .getNoOfAffectedRecords();
+        return java.sql.Statement.SUCCESS_NO_INFO;
     }
 
     @Override
@@ -105,8 +171,7 @@ public class Statement implements java.sql.Statement {
 
     @Override
     public Connection getConnection() throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        return this.connection;
     }
 
     @Override
@@ -151,8 +216,9 @@ public class Statement implements java.sql.Statement {
 
     @Override
     public ResultSet getResultSet() throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        if (this.isClosed())
+            throw new SQLException("Connection is closed");
+        return this.resultSet;
     }
 
     @Override
@@ -181,9 +247,15 @@ public class Statement implements java.sql.Statement {
         throw new UnsupportedOperationException();
     }
 
+    private void handleExecute() throws SQLException {
+        if (this.isClosed())
+            throw new SQLException("Connection is closed");
+        this.restResultSet();
+    }
+
     @Override
     public boolean isClosed() throws SQLException {
-        throw new UnsupportedOperationException();
+        return this.closed;
     }
 
     @Override
@@ -199,6 +271,13 @@ public class Statement implements java.sql.Statement {
     @Override
     public boolean isWrapperFor(Class<?> arg0) throws SQLException {
         throw new UnsupportedOperationException();
+    }
+
+    private void restResultSet() throws SQLException {
+        if (App.checkForExistence(this.resultSet)) {
+            this.resultSet.close();
+            this.resultSet = null;
+        }
     }
 
     @Override

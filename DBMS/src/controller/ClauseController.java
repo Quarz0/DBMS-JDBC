@@ -121,7 +121,8 @@ public class ClauseController implements DBMSClause {
             if (!this.evaluate(condition, originalTable.getRecordList().get(i))) {
                 this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
                         .getRecordList().add(originalTable.getRecordList().get(i));
-                ;
+                this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
+                        .decrementAffectedRecords();
             }
         }
         this.dbmsController.getDatabaseController().getHelper().requestClone();
@@ -154,6 +155,8 @@ public class ClauseController implements DBMSClause {
             if (!this.evaluate(condition, originalTable.getRecordList().get(i))) {
                 this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
                         .getRecordList().set(i, originalTable.getRecordList().get(i));
+                this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
+                        .decrementAffectedRecords();
             }
         }
         this.dbmsController.getDatabaseController().getHelper().requestClone();
