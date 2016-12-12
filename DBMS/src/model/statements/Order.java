@@ -1,8 +1,8 @@
 package model.statements;
 
 import java.text.ParseException;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import controller.DBMSClause;
 import util.App;
@@ -15,7 +15,7 @@ public class Order extends Clause {
 
     public Order() {
         super();
-        this.columns = new LinkedHashMap<>();
+        this.columns = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     }
 
     public boolean checkRegex(String s) {

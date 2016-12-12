@@ -1,8 +1,8 @@
 package model.statements;
 
 import java.text.ParseException;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import controller.DBMS;
 import util.App;
@@ -16,7 +16,7 @@ public class Update extends Query implements Writable {
 
     public Update() {
         super();
-        this.columns = new LinkedHashMap<>();
+        this.columns = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     }
 
     private boolean checkRegex(String s) {
