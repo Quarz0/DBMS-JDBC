@@ -80,8 +80,7 @@ public class Statement implements java.sql.Statement {
         }
         if (this.dbmsController.getSQLParserController().getSqlParserHelper()
                 .getCurrentQuery() instanceof Viewable) {
-            this.restResultSet();
-            resultSet = new plugins.jdbc.ResultSet(
+            resultSet = new plugins.jdbc.ResultSet(this,
                     this.dbmsController.getDatabaseController().getHelper().getSelectedTable());
             if (this.resultSet.first())
                 return true;
@@ -113,10 +112,13 @@ public class Statement implements java.sql.Statement {
                 this.execute(this.commands.get(i));
                 if (App.checkForExistence(this.dbmsController.getDatabaseController().getHelper()
                         .getSelectedTable())) {
+                    result[i] = 0;
+                } else if (this.dbmsController.getSQLParserController().getSqlParserHelper()
+                        .getCurrentQuery() instanceof Viewable)
+                    result[i] = java.sql.Statement.SUCCESS_NO_INFO;
+                else
                     result[i] = this.dbmsController.getDatabaseController().getHelper()
                             .getSelectedTable().getNoOfAffectedRecords();
-                } else
-                    result[i] = java.sql.Statement.SUCCESS_NO_INFO;
             } catch (SQLException e) {
                 result[i] = java.sql.Statement.EXECUTE_FAILED;
             }
@@ -131,7 +133,7 @@ public class Statement implements java.sql.Statement {
                 .getCurrentQuery() instanceof Viewable))
             throw new SQLException();
         this.execute(sql);
-        this.resultSet = new plugins.jdbc.ResultSet(
+        this.resultSet = new plugins.jdbc.ResultSet(this,
                 this.dbmsController.getDatabaseController().getHelper().getSelectedTable());
         return this.resultSet;
     }
@@ -149,9 +151,9 @@ public class Statement implements java.sql.Statement {
         }
         if (App.checkForExistence(
                 this.dbmsController.getDatabaseController().getHelper().getSelectedTable()))
-            return this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
-                    .getNoOfAffectedRecords();
-        return java.sql.Statement.SUCCESS_NO_INFO;
+            return 0;
+        return this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
+                .getNoOfAffectedRecords();
     }
 
     @Override
@@ -171,6 +173,8 @@ public class Statement implements java.sql.Statement {
 
     @Override
     public Connection getConnection() throws SQLException {
+        if (this.isClosed())
+            throw new SQLException("Connection is closed");
         return this.connection;
     }
 
@@ -238,7 +242,15 @@ public class Statement implements java.sql.Statement {
 
     @Override
     public int getUpdateCount() throws SQLException {
-        // TODO Auto-generated method stub
+        if (this.isClosed())
+            throw new SQLException("Connection is closed");
+        if (this.dbmsController.getSQLParserController().getSqlParserHelper()
+                .getCurrentQuery() instanceof Viewable)
+            return -1;
+        if (App.checkForExistence(
+                this.dbmsController.getDatabaseController().getHelper().getSelectedTable()))
+            return this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
+                    .getNoOfAffectedRecords();
         return 0;
     }
 

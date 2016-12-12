@@ -32,9 +32,10 @@ public class ResultSet implements java.sql.ResultSet {
     private boolean isClosed;
     private plugins.jdbc.ResultSetMetaData metaData;
     private List<Record> recordList;
+    private Statement statement;
     private SelectionTable table;
 
-    public ResultSet(SelectionTable table) {
+    public ResultSet(Statement statement, SelectionTable table) {
         this.table = table;
         this.recordList = table.getRecordList();
         this.cursor = 0;

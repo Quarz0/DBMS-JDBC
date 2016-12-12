@@ -43,7 +43,6 @@ public class DatabaseController implements DBMS, Observer {
         dbHelper.getSelectedTable().getDefaultHeader().put(colName, type);
         for (Record record : dbHelper.getSelectedTable().getRecordList()) {
             record.addToRecord(null);
-            this.getHelper().getSelectedTable().incrementAffectedRecords();
         }
     }
 
@@ -66,7 +65,6 @@ public class DatabaseController implements DBMS, Observer {
         for (Record record : dbHelper.getSelectedTable().getRecordList()) {
             record.getColumns().remove(realColName);
             record.getValues().remove(index);
-            this.getHelper().getSelectedTable().incrementAffectedRecords();
         }
     }
 
@@ -91,7 +89,6 @@ public class DatabaseController implements DBMS, Observer {
         for (Record record : dbHelper.getSelectedTable().getRecordList()) {
             record.getColumns().put(realColName, type);
             record.getValues().set(index, null);
-            this.getHelper().getSelectedTable().incrementAffectedRecords();
         }
     }
 
