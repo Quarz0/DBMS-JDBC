@@ -5,7 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import controller.DBMS;
-import controller.backEnd.xml.XMLWriter;
 import model.TypeFactory;
 import util.App;
 import util.Regex;
@@ -41,9 +40,9 @@ public class Create extends Query implements Writable {
     @Override
     public void execute(DBMS dbms) throws RuntimeException {
         if (this.isDatabase()) {
-            dbms.createDatabase(this.getDatabaseIdentifier());
+            dbms.createDatabase(this.getDatabaseIdentifier(), null);
         } else {
-            dbms.createTable(this.getTableIdentifier(), this.getColumns(), new XMLWriter());
+            dbms.createTable(this.getTableIdentifier(), this.getColumns());
         }
     }
 

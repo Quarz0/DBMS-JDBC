@@ -9,6 +9,7 @@ import util.App;
 import util.RegexEvaluator;
 
 public class DatabaseHelper {
+    private BackEndWriter backEndWriter;
     private Database currentDatabase;
     private DatabaseFilterGenerator databaseFilter;
     @SuppressWarnings("unused")
@@ -56,6 +57,10 @@ public class DatabaseHelper {
             }
         }
         return null;
+    }
+
+    public BackEndWriter getBackEndWriter() {
+        return backEndWriter;
     }
 
     public Database getCurrentDatabase() {
@@ -154,6 +159,10 @@ public class DatabaseHelper {
 
     public void resetSelectedTable() {
         this.selectedTable = null;
+    }
+
+    public void setBackEndWriter(BackEndWriter backEndWriter) {
+        this.backEndWriter = backEndWriter;
     }
 
     public void setDatabase(File usedDatabaseDir) {

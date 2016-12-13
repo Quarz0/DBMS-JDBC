@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import controller.backEnd.BackEndWriter;
+import controller.backEnd.json.JSONWriter;
+import controller.backEnd.xml.XMLWriter;
 import model.Database;
 import model.DatabaseHelper;
 import model.Observer;
@@ -93,16 +95,21 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     @Override
-    public void createDatabase(String databaseName) throws RuntimeException {
+    public void createDatabase(String databaseName, BackEndWriter backEndWriter)
+            throws RuntimeException {
         if (this.dbHelper.databaseExists(databaseName)) {
             throw new RuntimeException("Database already exists!");
         }
+        if (!App.checkForExistence(backEndWriter))
+            this.dbHelper.setBackEndWriter(new XMLWriter());
+        else
+            this.dbHelper.setBackEndWriter(new JSONWriter());
         new Database(this.dbHelper.getWorkspaceDir().getAbsolutePath(), databaseName);
     }
 
     @Override
-    public void createTable(String tableName, Map<String, Class<?>> columns,
-            BackEndWriter backEndWriter) throws RuntimeException {
+    public void createTable(String tableName, Map<String, Class<?>> columns)
+            throws RuntimeException {
         if (!App.checkForExistence(dbHelper.getCurrentDatabase())) {
             throw new RuntimeException(
                     "Do you really expect me to figure out the database on my own?!");
@@ -112,7 +119,7 @@ public class DatabaseController implements DBMS, Observer {
         }
         File tableFile = new File(
                 dbHelper.getCurrentDatabase().getPath() + File.separator + tableName);
-        Table table = new Table(tableFile, backEndWriter);
+        Table table = new Table(tableFile, this.dbHelper.getBackEndWriter());
         dbHelper.getCurrentDatabase().registerTable(table);
         table.registerFiles(
                 table.getBackEndWriter().makeDataFile(table.getTablePath(), tableName, columns),
