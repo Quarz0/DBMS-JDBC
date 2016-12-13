@@ -36,7 +36,12 @@ public class ResultSet implements java.sql.ResultSet {
     private SelectionTable table;
 
     public ResultSet(Statement statement, SelectionTable table) {
-        this.table = table;
+        if (App.checkForExistence(table)) {
+            this.table = table;
+        }
+        else {
+            this.table = new SelectionTable("");
+        }
         this.recordList = table.getRecordList();
         this.cursor = 0;
         this.isClosed = false;
