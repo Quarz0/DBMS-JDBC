@@ -348,7 +348,7 @@ public class ResultSet implements java.sql.ResultSet {
             return 0;
         }
         try {
-            return (int) getValue(columnIndex);
+            return Integer.parseInt((String) getValue(columnIndex));
         } catch (Exception e) {
             throw new SQLException();
         }
