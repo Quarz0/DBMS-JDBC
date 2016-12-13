@@ -13,7 +13,7 @@ import model.BackEndWriterFactory;
 import util.App;
 
 public class Driver implements java.sql.Driver {
-    Properties info;
+    private Properties info;
 
     @Override
     public boolean acceptsURL(String url) throws SQLException {
