@@ -18,12 +18,25 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-public class Connection implements java.sql.Connection {
+import controller.DBMSController;
+import controller.backEnd.BackEndWriter;
+
+public class ConnectionImp implements java.sql.Connection {
+    private String appDir;
+    private BackEndWriter BEWriter;
+    private DBMSController dbmsController;
+    private boolean isClosed;
+    private Statement statement;
+
+    public ConnectionImp(String appDir, BackEndWriter BEWriter) {
+        isClosed = false;
+        this.appDir = appDir;
+        this.BEWriter = BEWriter;
+    }
 
     @Override
     public void abort(Executor arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
@@ -34,7 +47,13 @@ public class Connection implements java.sql.Connection {
 
     @Override
     public void close() throws SQLException {
-        // TODO Auto-generated method stub
+        if (!isClosed) {
+            statement.close();
+            dbmsController.close();
+            statement = null;
+            dbmsController = null;
+            isClosed = true;
+        }
     }
 
     @Override
@@ -75,8 +94,11 @@ public class Connection implements java.sql.Connection {
 
     @Override
     public Statement createStatement() throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        if (isClosed()) {
+            throw new SQLException();
+        }
+        dbmsController = new DBMSController(appDir, BEWriter);
+        return new plugins.jdbc.Statement(this, dbmsController);
     }
 
     @Override
@@ -165,8 +187,7 @@ public class Connection implements java.sql.Connection {
 
     @Override
     public boolean isClosed() throws SQLException {
-        throw new UnsupportedOperationException();
-
+        return isClosed;
     }
 
     @Override

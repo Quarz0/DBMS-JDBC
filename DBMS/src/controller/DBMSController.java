@@ -3,7 +3,7 @@ package controller;
 import java.io.File;
 
 import app.Main;
-import util.App;
+import controller.backEnd.BackEndWriter;
 
 public class DBMSController {
 
@@ -11,12 +11,12 @@ public class DBMSController {
     private DatabaseController databaseController;
     private SQLParserController sqlParserController;
 
-    public DBMSController() {
+    public DBMSController(String appDir, BackEndWriter BEWriter) {
         this.cliController = new CLIController(this);
         this.databaseController = new DatabaseController(this);
         this.sqlParserController = new SQLParserController(this);
         this.registerObservers();
-        this.createAppPath();
+        this.createAppPath(appDir);
         this.cliController.begin();
     }
 
@@ -25,8 +25,8 @@ public class DBMSController {
         Main.exit();
     }
 
-    private void createAppPath() {
-        File workspace = new File(App.DEFAULT_DIR_PATH);
+    private void createAppPath(String appDir) {
+        File workspace = new File(appDir);
         if (!workspace.exists()) {
             if (!workspace.mkdir()) {
                 throw new RuntimeException("Failed to create DBMS Dirctory");
