@@ -78,8 +78,10 @@ public class Statement implements java.sql.Statement {
                 .getCurrentQuery() instanceof Viewable) {
             resultSet = new plugins.jdbc.ResultSet(this,
                     this.dbmsController.getDatabaseController().getHelper().getSelectedTable());
-            if (this.resultSet.first())
+            if (this.resultSet.first()) { // checks whether the set is empty or not.
+                this.resultSet.previous();
                 return true;
+            }
         }
         return false;
     }
