@@ -81,13 +81,14 @@ public class ClauseController implements DBMSClause {
     @Override
     public void order(Map<String, String> columns) throws RuntimeException {
         Map<String, Integer> columnIndex = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        SelectionTable table = this.dbmsController.getDatabaseController().getHelper()
-                .getSelectedTable();
+        SelectionTable tempTable = this.dbmsController.getDatabaseController().getHelper()
+                .getTempTable();
+
         int i = 0;
-        for (String column : table.getHeader().keySet()) {
+        for (String column : tempTable.getHeader().keySet()) {
             columnIndex.put(column, i++);
         }
-        Collections.sort(this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
+        Collections.sort(this.dbmsController.getDatabaseController().getHelper().getTempTable()
                 .getRecordList(), new Comparator<Record>() {
 
                     @Override
@@ -95,7 +96,7 @@ public class ClauseController implements DBMSClause {
                         CompareToBuilder compare = new CompareToBuilder();
                         for (String column : columns.keySet()) {
                             int index = columnIndex.get(column);
-                            Class<?> type = table.getDefaultHeader().get(column.toLowerCase());
+                            Class<?> type = tempTable.getDefaultHeader().get(column.toLowerCase());
                             if (columns.get(column).equals("ASC"))
                                 compare.append(
                                         TypeFactory.parseToObject(type,
@@ -112,6 +113,16 @@ public class ClauseController implements DBMSClause {
                         return compare.toComparison();
                     }
                 });
+        SelectionTable table = this.dbmsController.getDatabaseController().getHelper()
+                .getSelectedTable();
+        for (i = 0; i < table.getRecordList().size(); i++) {
+            int j = 0;
+            for (String column : table.getRecordList().get(i).getColumns().keySet()) {
+                table.getRecordList().get(i).getValues().set(j,
+                        tempTable.getRecordList().get(i).getValues().get(columnIndex.get(column)));
+                j++;
+            }
+        }
         this.dbmsController.getDatabaseController().getHelper().requestClone();
     }
 

@@ -171,11 +171,11 @@ public class DatabaseController implements DBMS, Observer {
         }
         LinkedList<Integer> selectedColIndices = new LinkedList<Integer>();
         for (String colName : colNames) {
-            selectedColIndices.add(tableColNamesLowerCase.get(colName));
+            selectedColIndices.add(tableColNamesLowerCase.get(colName.toLowerCase()));
         }
         SelectionTable result = new SelectionTable(selectedTable.getTableName(), header);
         for (Record record : selectedTable.getRecordList()) {
-            Record newRecord = new Record(selectedTable.getHeader());
+            Record newRecord = new Record(header);
             ListIterator<Integer> it = selectedColIndices.listIterator();
             while (it.hasNext()) {
                 newRecord.addToRecord(record.getValues().get(it.next()));
