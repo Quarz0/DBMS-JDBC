@@ -11,9 +11,10 @@ public class DBMSController {
     private DatabaseController databaseController;
     private SQLParserController sqlParserController;
 
-    public DBMSController(String appDir, BackEndWriter BEWriter) {
+    public DBMSController(String appDir, BackEndWriter backEndWriter) {
         this.cliController = new CLIController(this);
         this.databaseController = new DatabaseController(this);
+        this.databaseController.getHelper().setBackEndWriter(backEndWriter);
         this.sqlParserController = new SQLParserController(this);
         this.registerObservers();
         this.createAppPath(appDir);

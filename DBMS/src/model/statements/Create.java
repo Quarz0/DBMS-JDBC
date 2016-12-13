@@ -40,7 +40,7 @@ public class Create extends Query implements Writable {
     @Override
     public void execute(DBMS dbms) throws RuntimeException {
         if (this.isDatabase()) {
-            dbms.createDatabase(this.getDatabaseIdentifier(), null);
+            dbms.createDatabase(this.getDatabaseIdentifier());
         } else {
             dbms.createTable(this.getTableIdentifier(), this.getColumns());
         }

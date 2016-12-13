@@ -2,8 +2,6 @@ package controller;
 
 import java.util.Map;
 
-import controller.backEnd.BackEndWriter;
-
 public interface DBMS {
 
     public void alterTableAdd(String tableName, String columnIdentifier, Class<?> type)
@@ -14,8 +12,7 @@ public interface DBMS {
     public void alterTableModify(String tableName, String columnIdentifier, Class<?> type)
             throws RuntimeException;
 
-    public void createDatabase(String databaseName, BackEndWriter backEndWriter)
-            throws RuntimeException;
+    public void createDatabase(String databaseName) throws RuntimeException;
 
     public void createTable(String tableName, Map<String, Class<?>> columns)
             throws RuntimeException;

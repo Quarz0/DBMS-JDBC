@@ -9,9 +9,6 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import controller.backEnd.BackEndWriter;
-import controller.backEnd.json.JSONWriter;
-import controller.backEnd.xml.XMLWriter;
 import model.Database;
 import model.DatabaseHelper;
 import model.Observer;
@@ -95,15 +92,10 @@ public class DatabaseController implements DBMS, Observer {
     }
 
     @Override
-    public void createDatabase(String databaseName, BackEndWriter backEndWriter)
-            throws RuntimeException {
+    public void createDatabase(String databaseName) throws RuntimeException {
         if (this.dbHelper.databaseExists(databaseName)) {
             throw new RuntimeException("Database already exists!");
         }
-        if (!App.checkForExistence(backEndWriter))
-            this.dbHelper.setBackEndWriter(new XMLWriter());
-        else
-            this.dbHelper.setBackEndWriter(new JSONWriter());
         new Database(this.dbHelper.getWorkspaceDir().getAbsolutePath(), databaseName);
     }
 
