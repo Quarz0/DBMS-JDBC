@@ -68,23 +68,23 @@ public class Driver implements java.sql.Driver {
         String password = info.getProperty("password", null);
         try {
             if (!canLogIn(username, password)) {
-                return null;
+                // return null;
             }
         } catch (Exception e) {
         }
-        String appDir = info.getProperty("path", null);
+        File appDir = (File) info.get("path");
         if (!App.checkForExistence(appDir)) {
             throw new SQLException();
         }
-        appDir += File.separator;
         try {
-            File databaseDir = new File(appDir);
             String writerType = url.substring(url.indexOf(':') + 1, url.lastIndexOf(':'));
-            if (databaseDir.exists()) {
-                return new ConnectionImp(appDir, BackEndWriterFactory.getBackEndWriter(writerType));
+            if (appDir.exists()) {
+                return new ConnectionImp(appDir.getPath(),
+                        BackEndWriterFactory.getBackEndWriter(writerType));
             }
-            databaseDir.mkdirs();
-            return new ConnectionImp(appDir, BackEndWriterFactory.getBackEndWriter(writerType));
+            appDir.mkdirs();
+            return new ConnectionImp(appDir.getPath(),
+                    BackEndWriterFactory.getBackEndWriter(writerType));
         } catch (Exception e) {
             throw new SQLException();
         }
