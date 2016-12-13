@@ -53,6 +53,8 @@ public class TypeFactory {
         } else if (Byte.class.equals(cls)) {
             return Byte.valueOf(str);
         } else if (Date.class.equals(cls)) {
+            if (str.matches("\".+\"") || str.matches("'.+'"))
+                return Date.valueOf(str.trim().substring(1, str.length() - 1));
             return Date.valueOf(str);
         } else if (Time.class.equals(cls)) {
             return Time.valueOf(str);
