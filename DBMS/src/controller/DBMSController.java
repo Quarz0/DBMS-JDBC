@@ -2,7 +2,6 @@ package controller;
 
 import java.io.File;
 
-import app.Main;
 import controller.backEnd.BackEndWriter;
 
 public class DBMSController {
@@ -18,12 +17,7 @@ public class DBMSController {
         this.sqlParserController = new SQLParserController(this);
         this.registerObservers();
         this.createAppPath(appDir);
-        this.cliController.begin();
-    }
-
-    public void close() {
-        this.cliController.end();
-        Main.exit();
+        // this.cliController.begin();
     }
 
     private void createAppPath(String appDir) {

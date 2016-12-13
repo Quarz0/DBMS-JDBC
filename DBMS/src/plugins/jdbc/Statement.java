@@ -58,10 +58,6 @@ public class Statement implements java.sql.Statement {
             this.commands = null;
         }
         this.restResultSet();
-        if (App.checkForExistence(this.dbmsController)) {
-            this.dbmsController.close();
-            this.dbmsController = null;
-        }
         this.closed = true;
     }
 

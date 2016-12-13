@@ -22,16 +22,13 @@ import controller.DBMSController;
 import controller.backEnd.BackEndWriter;
 
 public class ConnectionImp implements java.sql.Connection {
-    private String appDir;
-    private BackEndWriter BEWriter;
     private DBMSController dbmsController;
     private boolean isClosed;
     private Statement statement;
 
     public ConnectionImp(String appDir, BackEndWriter BEWriter) {
-        isClosed = false;
-        this.appDir = appDir;
-        this.BEWriter = BEWriter;
+        this.dbmsController = new DBMSController(appDir, BEWriter);
+        this.isClosed = false;
     }
 
     @Override
@@ -49,7 +46,6 @@ public class ConnectionImp implements java.sql.Connection {
     public void close() throws SQLException {
         if (!isClosed) {
             statement.close();
-            dbmsController.close();
             statement = null;
             dbmsController = null;
             isClosed = true;
@@ -97,7 +93,6 @@ public class ConnectionImp implements java.sql.Connection {
         if (isClosed()) {
             throw new SQLException();
         }
-        dbmsController = new DBMSController(appDir, BEWriter);
         return new plugins.jdbc.Statement(this, dbmsController);
     }
 
