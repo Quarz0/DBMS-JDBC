@@ -34,7 +34,9 @@ public class TypeFactory {
         if (!App.checkForExistence(str) || !App.checkForExistence(cls))
             throw new ClassCastException("Soon!");
         str = str.trim();
-        if (Integer.class.equals(cls)) {
+        if (str.equals("null")) {
+            return null;
+        } else if (Integer.class.equals(cls)) {
             return Integer.valueOf(str);
         } else if (Double.class.equals(cls)) {
             return Double.valueOf(str);

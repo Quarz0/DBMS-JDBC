@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.script.ScriptException;
 
@@ -51,6 +52,11 @@ public class ClauseController implements DBMSClause {
         exp = App.replace(exp, "and", " && ");
         exp = App.replace(exp, "or", " || ");
         exp = App.replace(exp, "not", " ! ");
+        exp = App.replace(exp, "=", "==");
+        exp = App.replace(exp, ">==", ">=");
+        exp = App.replace(exp, "<==", "<=");
+        exp = App.replace(exp, "====", "==");
+
         try {
             return BooleanEvaluator.evaluate(exp);
         } catch (ScriptException e) {
@@ -63,8 +69,7 @@ public class ClauseController implements DBMSClause {
         int i = 0;
         for (String column : record.getColumns().keySet()) {
             if (record.getColumns().get(column).equals(String.class)) {
-                exp = App.replace(exp, column.toLowerCase(),
-                        "\"" + record.getValues().get(i).toString() + "\"");
+                exp = App.replace(exp, column.toLowerCase(), record.getValues().get(i).toString());
             } else {
                 exp = App.replace(exp, column.toLowerCase(), record.getValues().get(i).toString());
             }
@@ -75,14 +80,15 @@ public class ClauseController implements DBMSClause {
 
     @Override
     public void order(Map<String, String> columns) throws RuntimeException {
-        Map<String, Integer> columnIndex = new HashMap<>();
-        SelectionTable table = this.dbmsController.getDatabaseController().getHelper()
-                .getSelectedTable();
+        Map<String, Integer> columnIndex = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        SelectionTable tempTable = this.dbmsController.getDatabaseController().getHelper()
+                .getTempTable();
+
         int i = 0;
-        for (String column : table.getHeader().keySet()) {
+        for (String column : tempTable.getHeader().keySet()) {
             columnIndex.put(column, i++);
         }
-        Collections.sort(this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
+        Collections.sort(this.dbmsController.getDatabaseController().getHelper().getTempTable()
                 .getRecordList(), new Comparator<Record>() {
 
                     @Override
@@ -90,7 +96,7 @@ public class ClauseController implements DBMSClause {
                         CompareToBuilder compare = new CompareToBuilder();
                         for (String column : columns.keySet()) {
                             int index = columnIndex.get(column);
-                            Class<?> type = r1.getColumns().get(column);
+                            Class<?> type = tempTable.getDefaultHeader().get(column.toLowerCase());
                             if (columns.get(column).equals("ASC"))
                                 compare.append(
                                         TypeFactory.parseToObject(type,
@@ -107,6 +113,16 @@ public class ClauseController implements DBMSClause {
                         return compare.toComparison();
                     }
                 });
+        SelectionTable table = this.dbmsController.getDatabaseController().getHelper()
+                .getSelectedTable();
+        for (i = 0; i < table.getRecordList().size(); i++) {
+            int j = 0;
+            for (String column : table.getRecordList().get(i).getColumns().keySet()) {
+                table.getRecordList().get(i).getValues().set(j,
+                        tempTable.getRecordList().get(i).getValues().get(columnIndex.get(column)));
+                j++;
+            }
+        }
         this.dbmsController.getDatabaseController().getHelper().requestClone();
     }
 
