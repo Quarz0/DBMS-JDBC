@@ -137,14 +137,10 @@ public class Statement implements java.sql.Statement {
     @Override
     public int executeUpdate(String sql) throws SQLException {
         this.handleExecute();
+        this.execute(sql);
         if (this.dbmsController.getSQLParserController().getSqlParserHelper()
                 .getCurrentQuery() instanceof Viewable)
             throw new SQLException();
-        try {
-            this.execute(sql);
-        } catch (SQLException e) {
-            return java.sql.Statement.EXECUTE_FAILED;
-        }
         if (!App.checkForExistence(
                 this.dbmsController.getDatabaseController().getHelper().getSelectedTable()))
             return 0;

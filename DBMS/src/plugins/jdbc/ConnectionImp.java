@@ -93,7 +93,8 @@ public class ConnectionImp implements java.sql.Connection {
         if (isClosed()) {
             throw new SQLException();
         }
-        return new plugins.jdbc.Statement(this, dbmsController);
+        this.statement = new plugins.jdbc.Statement(this, dbmsController);
+        return this.statement;
     }
 
     @Override
