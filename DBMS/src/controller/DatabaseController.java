@@ -270,6 +270,7 @@ public class DatabaseController implements DBMS, Observer {
             for (Entry<Integer, Object> entry : values.entrySet()) {
                 record.getValues().set(entry.getKey(), entry.getValue());
             }
+            this.getHelper().getSelectedTable().incrementAffectedRecords();
         }
     }
 
@@ -285,7 +286,6 @@ public class DatabaseController implements DBMS, Observer {
                 try {
                     newValues.put(index,
                             TypeFactory.parseToObject(entry.getValue(), columns.get(key.trim())));
-                    this.getHelper().getSelectedTable().incrementAffectedRecords();
                 } catch (ClassCastException e) {
                     throw new RuntimeException(e.getMessage());
                 }
