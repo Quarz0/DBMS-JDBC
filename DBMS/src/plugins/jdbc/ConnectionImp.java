@@ -18,23 +18,51 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-public class Connection implements java.sql.Connection {
+import controller.DBMSController;
+import controller.backEnd.BackEndWriter;
+
+public class ConnectionImp implements java.sql.Connection {
+    private boolean isClosed;
+    private String appDir;
+    private StatementImp statement;
+    private DBMSController dbmsController;
+    private BackEndWriter BEWriter;
+
+    public ConnectionImp(String appDir, BackEndWriter BEWriter) {
+        isClosed = false;
+        this.appDir = appDir;
+        this.BEWriter = BEWriter;
+    }
+
+    @Override
+    public Statement createStatement() throws SQLException {
+        if (isClosed()) {
+            throw new SQLException();
+        }
+        dbmsController = new DBMSController(appDir, BEWriter);
+        return new StatementImp(this, dbmsController);
+    }
+
+    @Override
+    public void close() throws SQLException {
+        if (!isClosed) {
+            statement.close();
+            dbmsController.close();
+            statement = null;
+            dbmsController = null;
+            isClosed = true;
+        }
+    }
 
     @Override
     public void abort(Executor arg0) throws SQLException {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
     public void clearWarnings() throws SQLException {
         throw new UnsupportedOperationException();
 
-    }
-
-    @Override
-    public void close() throws SQLException {
-        // TODO Auto-generated method stub
     }
 
     @Override
@@ -71,12 +99,6 @@ public class Connection implements java.sql.Connection {
     public SQLXML createSQLXML() throws SQLException {
         throw new UnsupportedOperationException();
 
-    }
-
-    @Override
-    public Statement createStatement() throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override
@@ -165,8 +187,7 @@ public class Connection implements java.sql.Connection {
 
     @Override
     public boolean isClosed() throws SQLException {
-        throw new UnsupportedOperationException();
-
+        return isClosed;
     }
 
     @Override

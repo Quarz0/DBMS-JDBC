@@ -12,7 +12,7 @@ import controller.DBMSController;
 import model.statements.Viewable;
 import util.App;
 
-public class Statement implements java.sql.Statement {
+public class StatementImp implements java.sql.Statement {
 
     private boolean closed;
     private List<String> commands;
@@ -20,7 +20,7 @@ public class Statement implements java.sql.Statement {
     private DBMSController dbmsController;
     private ResultSet resultSet;
 
-    public Statement(Connection connection, DBMSController dbmsController) {
+    public StatementImp(Connection connection, DBMSController dbmsController) {
         this.commands = new ArrayList<>();
         this.dbmsController = dbmsController;
         this.connection = connection;

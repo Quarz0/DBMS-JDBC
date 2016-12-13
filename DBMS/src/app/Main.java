@@ -1,6 +1,8 @@
 package app;
 
 import controller.DBMSController;
+import controller.backEnd.xml.XMLWriter;
+import util.App;
 
 public class Main {
 
@@ -9,7 +11,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        new DBMSController();
+        new DBMSController(App.DEFAULT_DIR_PATH, new XMLWriter());
     }
 
 }
