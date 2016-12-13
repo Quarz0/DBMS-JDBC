@@ -18,7 +18,9 @@ import java.sql.SQLXML;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +38,12 @@ public class ResultSet implements java.sql.ResultSet {
     private SelectionTable table;
 
     public ResultSet(Statement statement, SelectionTable table) {
-        this.table = table;
+        if (App.checkForExistence(table)) {
+            this.table = table;
+        }
+        else {
+            this.table = new SelectionTable("", new LinkedHashMap<String, Class<?>>());
+        }
         this.recordList = table.getRecordList();
         this.cursor = 0;
         this.isClosed = false;
