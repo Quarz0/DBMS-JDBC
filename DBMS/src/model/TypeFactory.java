@@ -43,7 +43,7 @@ public class TypeFactory {
         } else if (Float.class.equals(cls)) {
             return Float.valueOf(str);
         } else if (String.class.equals(cls)) {
-            if (!String.valueOf(str).matches("\".+\""))
+            if (!String.valueOf(str).matches("\".+\"") && !String.valueOf(str).matches("'.+'"))
                 throw new ClassCastException("I am sorry but strings must be quoted");
             return String.valueOf(str);
         } else if (Boolean.class.equals(cls)) {

@@ -145,7 +145,7 @@ public class Statement implements java.sql.Statement {
         } catch (SQLException e) {
             return java.sql.Statement.EXECUTE_FAILED;
         }
-        if (App.checkForExistence(
+        if (!App.checkForExistence(
                 this.dbmsController.getDatabaseController().getHelper().getSelectedTable()))
             return 0;
         return this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
