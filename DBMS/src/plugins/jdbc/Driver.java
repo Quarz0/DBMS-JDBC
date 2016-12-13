@@ -13,7 +13,7 @@ import model.BackEndWriterFactory;
 import util.App;
 
 public class Driver implements java.sql.Driver {
-    Properties info;
+    private Properties info;
 
     @Override
     public boolean acceptsURL(String url) throws SQLException {
@@ -25,41 +25,6 @@ public class Driver implements java.sql.Driver {
             return true;
         } else {
             return false;
-        }
-    }
-
-    @Override
-    public Connection connect(String url, Properties info) throws SQLException {
-        try {
-            if (!acceptsURL(url)) {
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new SQLException();
-        }
-        String username = info.getProperty("username", null);
-        String password = info.getProperty("password", null);
-        try {
-            if (!canLogIn(username, password)) {
-                return null;
-            }
-        } catch (Exception e) {
-        }
-        String appDir = info.getProperty("path", null);
-        if (!App.checkForExistence(appDir)) {
-            throw new SQLException();
-        }
-        appDir += File.separator;
-        try {
-            File databaseDir = new File(appDir);
-            String writerType = url.substring(url.indexOf(':') + 1, url.lastIndexOf(':'));
-            if (databaseDir.exists()) {
-                return new ConnectionImp(appDir, BackEndWriterFactory.getBackEndWriter(writerType));
-            }
-            databaseDir.mkdirs();
-            return new ConnectionImp(appDir, BackEndWriterFactory.getBackEndWriter(writerType));
-        } catch (Exception e) {
-            throw new SQLException();
         }
     }
 
@@ -91,11 +56,38 @@ public class Driver implements java.sql.Driver {
     }
 
     @Override
-    public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
-        DriverPropertyInfo[] ret = new DriverPropertyInfo[2];
-        ret[0] = new DriverPropertyInfo("username", info.getProperty("username", null));
-        ret[1] = new DriverPropertyInfo("password", info.getProperty("password", null));
-        return ret;
+    public Connection connect(String url, Properties info) throws SQLException {
+        try {
+            if (!acceptsURL(url)) {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new SQLException();
+        }
+        String username = info.getProperty("username", null);
+        String password = info.getProperty("password", null);
+        try {
+            if (!canLogIn(username, password)) {
+                // return null;
+            }
+        } catch (Exception e) {
+        }
+        File appDir = (File) info.get("path");
+        if (!App.checkForExistence(appDir)) {
+            throw new SQLException();
+        }
+        try {
+            String writerType = url.substring(url.indexOf(':') + 1, url.lastIndexOf(':'));
+            if (appDir.exists()) {
+                return new ConnectionImp(appDir.getPath(),
+                        BackEndWriterFactory.getBackEndWriter(writerType));
+            }
+            appDir.mkdirs();
+            return new ConnectionImp(appDir.getPath(),
+                    BackEndWriterFactory.getBackEndWriter(writerType));
+        } catch (Exception e) {
+            throw new SQLException();
+        }
     }
 
     @Override
@@ -111,6 +103,14 @@ public class Driver implements java.sql.Driver {
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
+        DriverPropertyInfo[] ret = new DriverPropertyInfo[2];
+        ret[0] = new DriverPropertyInfo("username", info.getProperty("username", null));
+        ret[1] = new DriverPropertyInfo("password", info.getProperty("password", null));
+        return ret;
     }
 
     @Override

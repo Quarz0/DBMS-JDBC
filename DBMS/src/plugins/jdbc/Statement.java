@@ -12,7 +12,7 @@ import controller.DBMSController;
 import model.statements.Viewable;
 import util.App;
 
-public class StatementImp implements java.sql.Statement {
+public class Statement implements java.sql.Statement {
 
     private boolean closed;
     private List<String> commands;
@@ -20,7 +20,7 @@ public class StatementImp implements java.sql.Statement {
     private DBMSController dbmsController;
     private ResultSet resultSet;
 
-    public StatementImp(Connection connection, DBMSController dbmsController) {
+    public Statement(Connection connection, DBMSController dbmsController) {
         this.commands = new ArrayList<>();
         this.dbmsController = dbmsController;
         this.connection = connection;
@@ -58,10 +58,6 @@ public class StatementImp implements java.sql.Statement {
             this.commands = null;
         }
         this.restResultSet();
-        if (App.checkForExistence(this.dbmsController)) {
-            this.dbmsController.close();
-            this.dbmsController = null;
-        }
         this.closed = true;
     }
 
@@ -80,8 +76,7 @@ public class StatementImp implements java.sql.Statement {
         }
         if (this.dbmsController.getSQLParserController().getSqlParserHelper()
                 .getCurrentQuery() instanceof Viewable) {
-            this.restResultSet();
-            resultSet = new plugins.jdbc.ResultSet(
+            resultSet = new plugins.jdbc.ResultSet(this,
                     this.dbmsController.getDatabaseController().getHelper().getSelectedTable());
             if (this.resultSet.first())
                 return true;
@@ -113,10 +108,13 @@ public class StatementImp implements java.sql.Statement {
                 this.execute(this.commands.get(i));
                 if (App.checkForExistence(this.dbmsController.getDatabaseController().getHelper()
                         .getSelectedTable())) {
+                    result[i] = 0;
+                } else if (this.dbmsController.getSQLParserController().getSqlParserHelper()
+                        .getCurrentQuery() instanceof Viewable)
+                    result[i] = java.sql.Statement.SUCCESS_NO_INFO;
+                else
                     result[i] = this.dbmsController.getDatabaseController().getHelper()
                             .getSelectedTable().getNoOfAffectedRecords();
-                } else
-                    result[i] = java.sql.Statement.SUCCESS_NO_INFO;
             } catch (SQLException e) {
                 result[i] = java.sql.Statement.EXECUTE_FAILED;
             }
@@ -127,11 +125,11 @@ public class StatementImp implements java.sql.Statement {
     @Override
     public ResultSet executeQuery(String sql) throws SQLException {
         this.handleExecute();
+        this.execute(sql);
         if (!(this.dbmsController.getSQLParserController().getSqlParserHelper()
                 .getCurrentQuery() instanceof Viewable))
             throw new SQLException();
-        this.execute(sql);
-        this.resultSet = new plugins.jdbc.ResultSet(
+        this.resultSet = new plugins.jdbc.ResultSet(this,
                 this.dbmsController.getDatabaseController().getHelper().getSelectedTable());
         return this.resultSet;
     }
@@ -139,19 +137,15 @@ public class StatementImp implements java.sql.Statement {
     @Override
     public int executeUpdate(String sql) throws SQLException {
         this.handleExecute();
+        this.execute(sql);
         if (this.dbmsController.getSQLParserController().getSqlParserHelper()
                 .getCurrentQuery() instanceof Viewable)
             throw new SQLException();
-        try {
-            this.execute(sql);
-        } catch (SQLException e) {
-            return java.sql.Statement.EXECUTE_FAILED;
-        }
-        if (App.checkForExistence(
+        if (!App.checkForExistence(
                 this.dbmsController.getDatabaseController().getHelper().getSelectedTable()))
-            return this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
-                    .getNoOfAffectedRecords();
-        return java.sql.Statement.SUCCESS_NO_INFO;
+            return 0;
+        return this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
+                .getNoOfAffectedRecords();
     }
 
     @Override
@@ -171,6 +165,8 @@ public class StatementImp implements java.sql.Statement {
 
     @Override
     public Connection getConnection() throws SQLException {
+        if (this.isClosed())
+            throw new SQLException("Connection is closed");
         return this.connection;
     }
 
@@ -238,7 +234,15 @@ public class StatementImp implements java.sql.Statement {
 
     @Override
     public int getUpdateCount() throws SQLException {
-        // TODO Auto-generated method stub
+        if (this.isClosed())
+            throw new SQLException("Connection is closed");
+        if (this.dbmsController.getSQLParserController().getSqlParserHelper()
+                .getCurrentQuery() instanceof Viewable)
+            return -1;
+        if (App.checkForExistence(
+                this.dbmsController.getDatabaseController().getHelper().getSelectedTable()))
+            return this.dbmsController.getDatabaseController().getHelper().getSelectedTable()
+                    .getNoOfAffectedRecords();
         return 0;
     }
 

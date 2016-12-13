@@ -22,36 +22,13 @@ import controller.DBMSController;
 import controller.backEnd.BackEndWriter;
 
 public class ConnectionImp implements java.sql.Connection {
-    private boolean isClosed;
-    private String appDir;
-    private StatementImp statement;
     private DBMSController dbmsController;
-    private BackEndWriter BEWriter;
+    private boolean isClosed;
+    private Statement statement;
 
     public ConnectionImp(String appDir, BackEndWriter BEWriter) {
-        isClosed = false;
-        this.appDir = appDir;
-        this.BEWriter = BEWriter;
-    }
-
-    @Override
-    public Statement createStatement() throws SQLException {
-        if (isClosed()) {
-            throw new SQLException();
-        }
-        dbmsController = new DBMSController(appDir, BEWriter);
-        return new StatementImp(this, dbmsController);
-    }
-
-    @Override
-    public void close() throws SQLException {
-        if (!isClosed) {
-            statement.close();
-            dbmsController.close();
-            statement = null;
-            dbmsController = null;
-            isClosed = true;
-        }
+        this.dbmsController = new DBMSController(appDir, BEWriter);
+        this.isClosed = false;
     }
 
     @Override
@@ -63,6 +40,16 @@ public class ConnectionImp implements java.sql.Connection {
     public void clearWarnings() throws SQLException {
         throw new UnsupportedOperationException();
 
+    }
+
+    @Override
+    public void close() throws SQLException {
+        if (!isClosed) {
+            statement.close();
+            statement = null;
+            dbmsController = null;
+            isClosed = true;
+        }
     }
 
     @Override
@@ -99,6 +86,15 @@ public class ConnectionImp implements java.sql.Connection {
     public SQLXML createSQLXML() throws SQLException {
         throw new UnsupportedOperationException();
 
+    }
+
+    @Override
+    public Statement createStatement() throws SQLException {
+        if (isClosed()) {
+            throw new SQLException();
+        }
+        this.statement = new plugins.jdbc.Statement(this, dbmsController);
+        return this.statement;
     }
 
     @Override

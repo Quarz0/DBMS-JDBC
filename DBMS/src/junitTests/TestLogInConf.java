@@ -2,29 +2,24 @@ package junitTests;
 
 import static org.junit.Assert.*;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
+import java.io.IOException;
 import org.junit.Test;
 
-import plugins.jdbc.ConnectionImp;
+import controller.DBMSController;
+import controller.LoginController;
+import controller.backEnd.xml.XMLWriter;
+import util.App;
 
 public class TestLogInConf {
 
     @Test
     public void test() {
-        Method method = null;
+        LoginController logger = null;
         try {
-            method = ConnectionImp.class.getMethod("canLogIn");
-        } catch (NoSuchMethodException | SecurityException e) {
+            logger = new LoginController(new DBMSController(App.DEFAULT_DIR_PATH, new XMLWriter()));
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        Boolean bol = false;
-        try {
-            method.invoke(bol, "Ahmed", "Mahmoud");
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        assertTrue(bol);
+        assertTrue(logger.canLogIn("Mahmoud", "Hussein"));
     }
 }
