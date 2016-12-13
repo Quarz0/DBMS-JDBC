@@ -41,6 +41,7 @@ public class ResultSet implements java.sql.ResultSet {
         this.cursor = 0;
         this.isClosed = false;
         this.metaData = new plugins.jdbc.ResultSetMetaData(table);
+        this.statement = statement;
     }
 
     @Override
@@ -502,8 +503,7 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public Statement getStatement() throws SQLException {
         checkClosed();
-        // TODO Auto-generated method stub
-        return null;
+        return this.statement;
     }
 
     @Override
