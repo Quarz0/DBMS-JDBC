@@ -194,7 +194,6 @@ public class DatabaseController implements DBMS, Observer {
                 try {
                     record.addToRecord(TypeFactory.parseToObject(entry.getValue(),
                             columns.get(colName.trim())));
-                    this.getHelper().getSelectedTable().incrementAffectedRecords();
                 } catch (ClassCastException e) {
                     throw new RuntimeException(e.getMessage());
                 }
@@ -206,6 +205,7 @@ public class DatabaseController implements DBMS, Observer {
         if (keysFound != columns.size()) {
             throw new RuntimeException("Invalid data!");
         }
+        this.getHelper().getSelectedTable().incrementAffectedRecords();
         this.dbHelper.getSelectedTable().addRecord(record);
     }
 
@@ -221,11 +221,11 @@ public class DatabaseController implements DBMS, Observer {
         for (Class<?> type : tableColumns.values()) {
             try {
                 record.addToRecord(TypeFactory.parseToObject(type, values[index++].trim()));
-                this.getHelper().getSelectedTable().incrementAffectedRecords();
             } catch (ClassCastException e) {
                 throw new RuntimeException(e.getMessage());
             }
         }
+        this.getHelper().getSelectedTable().incrementAffectedRecords();
         this.dbHelper.getSelectedTable().addRecord(record);
     }
 
