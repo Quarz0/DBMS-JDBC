@@ -92,21 +92,6 @@ public class SmokeTest {
                     .execute("ALTER TABLE table_name13 drop column column_name1");
             Assert.assertFalse("Wrong return for ALTER TABLE", result2);
 
-            boolean result3 = statement
-                    .execute("SELECT column_name4 FROM table_name13 WHERE coluMN_NAME2 = 5");
-            Assert.assertTrue("Wrong return for select existing records", result3);
-            ResultSet res2 = statement.getResultSet();
-            int rows2 = 0;
-            while (res2.next())
-                rows2++;
-            Assert.assertEquals("Wrong number of rows", 1, rows2);
-
-            while (res2.previous())
-                ;
-            res2.next();
-
-            Assert.assertNull("Retrieved date is not null", res2.getDate("column_name4"));
-
             statement.close();
         } catch (Throwable e) {
             TestRunner.fail("Failed to test ALTER TABLE from table", e);

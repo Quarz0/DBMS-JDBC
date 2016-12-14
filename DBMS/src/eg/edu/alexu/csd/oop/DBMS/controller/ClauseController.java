@@ -1,5 +1,6 @@
 package eg.edu.alexu.csd.oop.DBMS.controller;
 
+import java.sql.Date;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
@@ -65,8 +66,10 @@ public class ClauseController implements DBMSClause {
     private String getFilledExpression(String expression, Record record) {
         String exp = expression.toLowerCase();
         int i = 0;
-        for (String column : record.getColumns().keySet()) {
-            if (record.getColumns().get(column).equals(String.class)) {
+        for (String column : record.getColumns().keySet()) {// any quoted type must be set in this
+                                                            // if checking[To be changed]!
+            if (record.getColumns().get(column).equals(String.class)
+                    || record.getColumns().get(column).equals(Date.class)) {
                 exp = App.replace(exp, column.toLowerCase(),
                         "'" + record.getValues().get(i).toString() + "'");
             } else {
