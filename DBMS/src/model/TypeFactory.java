@@ -43,9 +43,9 @@ public class TypeFactory {
         } else if (Float.class.equals(cls)) {
             return Float.valueOf(str);
         } else if (String.class.equals(cls)) {
-            if (!String.valueOf(str).matches("\".+\"") && !String.valueOf(str).matches("'.+'"))
-                throw new ClassCastException("I am sorry but strings must be quoted");
-            return String.valueOf(str);
+            if (str.trim().matches("\".+\"") || str.trim().matches("'.+'"))
+                return String.valueOf(str.trim().substring(1, str.trim().length() - 1));
+            throw new ClassCastException("I am sorry but strings must be quoted");
         } else if (Boolean.class.equals(cls)) {
             return Boolean.valueOf(str);
         } else if (Character.class.equals(cls)) {
@@ -53,8 +53,8 @@ public class TypeFactory {
         } else if (Byte.class.equals(cls)) {
             return Byte.valueOf(str);
         } else if (Date.class.equals(cls)) {
-            if (str.matches("\".+\"") || str.matches("'.+'"))
-                return Date.valueOf(str.trim().substring(1, str.length() - 1));
+            if (str.trim().matches("\".+\"") || str.trim().matches("'.+'"))
+                return Date.valueOf(str.trim().substring(1, str.trim().length() - 1));
             return Date.valueOf(str);
         } else if (Time.class.equals(cls)) {
             return Time.valueOf(str);

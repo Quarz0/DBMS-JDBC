@@ -72,7 +72,7 @@ public class Statement implements java.sql.Statement {
         try {
             this.dbmsController.getSQLParserController().parse(sql);
         } catch (ParseException | RuntimeException e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         }
         if (this.dbmsController.getSQLParserController().getSqlParserHelper()
                 .getCurrentQuery() instanceof Viewable) {

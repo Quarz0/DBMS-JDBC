@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +62,16 @@ public class XMLWriter implements BackEndWriter {
             counter++;
         }
         return strBuilder.toString();
+    }
+
+    private Class<?>[] extractTypes(Map<String, Class<?>> column) {
+        Class<?>[] types = new Class<?>[column.keySet().size()];
+        int i = 0;
+        for (Iterator<String> iterator = column.keySet().iterator(); iterator.hasNext();) {
+            String type = iterator.next();
+            types[i++] = column.get(type);
+        }
+        return types;
     }
 
     private Map<String, Class<?>> getColumnsNames(Table table) {
@@ -163,6 +174,7 @@ public class XMLWriter implements BackEndWriter {
     public SelectionTable readTable(Table table) throws FileNotFoundException {
         List<Object> values = new ArrayList<>();
         Map<String, Class<?>> names = getColumnsNames(table);
+        Class<?>[] types = this.extractTypes(names);
         SelectionTable selectionTable = new SelectionTable(table.getTableName(), names);
         File tableXML = table.getData();
         try {
@@ -184,8 +196,15 @@ public class XMLWriter implements BackEndWriter {
                         chars = (Characters) eventReader.nextEvent();
                         if (chars.getData() == "null")
                             values.add(null);
-                        else
-                            values.add(chars.getData());
+                        else {
+                            Class<?> tempClz = types[values.size()];
+                            if (tempClz.equals(String.class))
+                                values.add(types[values.size()].getMethod("valueOf", Object.class)
+                                        .invoke(null, chars.getData()));
+                            else
+                                values.add(types[values.size()].getMethod("valueOf", String.class)
+                                        .invoke(null, chars.getData()));
+                        }
                         eventReader.nextEvent();
                     } else {
                         values = new ArrayList<>();

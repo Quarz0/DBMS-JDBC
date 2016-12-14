@@ -13,7 +13,6 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 
 import model.Record;
 import model.SelectionTable;
-import model.TypeFactory;
 import model.statements.Delete;
 import model.statements.Select;
 import model.statements.Update;
@@ -68,7 +67,8 @@ public class ClauseController implements DBMSClause {
         int i = 0;
         for (String column : record.getColumns().keySet()) {
             if (record.getColumns().get(column).equals(String.class)) {
-                exp = App.replace(exp, column.toLowerCase(), record.getValues().get(i).toString());
+                exp = App.replace(exp, column.toLowerCase(),
+                        "'" + record.getValues().get(i).toString() + "'");
             } else {
                 exp = App.replace(exp, column.toLowerCase(), record.getValues().get(i).toString());
             }
@@ -97,17 +97,11 @@ public class ClauseController implements DBMSClause {
                             int index = columnIndex.get(column);
                             Class<?> type = tempTable.getDefaultHeader().get(column.toLowerCase());
                             if (columns.get(column).equals("ASC"))
-                                compare.append(
-                                        TypeFactory.parseToObject(type,
-                                                String.valueOf(r1.getValues().get(index))),
-                                        TypeFactory.parseToObject(type,
-                                                String.valueOf(r2.getValues().get(index))));
+                                compare.append(type.cast(r1.getValues().get(index)),
+                                        type.cast(r2.getValues().get(index)));
                             else
-                                compare.append(
-                                        TypeFactory.parseToObject(type,
-                                                String.valueOf(r2.getValues().get(index))),
-                                        TypeFactory.parseToObject(type,
-                                                String.valueOf(r1.getValues().get(index))));
+                                compare.append(type.cast(r2.getValues().get(index)),
+                                        type.cast(r1.getValues().get(index)));
                         }
                         return compare.toComparison();
                     }
