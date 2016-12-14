@@ -72,7 +72,8 @@ public class ClauseController implements DBMSClause {
             } else {
                 exp = App.replace(exp, column.toLowerCase(),
                         App.checkForExistence(record.getValues().get(i))
-                                ? record.getValues().get(i).toString() : "NULL");            }
+                                ? record.getValues().get(i).toString() : "NULL");
+            }
             i++;
         }
         return exp;

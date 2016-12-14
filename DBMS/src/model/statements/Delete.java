@@ -30,6 +30,7 @@ public class Delete extends Query implements Writable {
         if (App.checkForExistence(groups)) {
             this.isAll = App.checkForExistence(groups[1]);
             this.extractTable(groups[2].trim());
+            return true;
         }
         return false;
     }
