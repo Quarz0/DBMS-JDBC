@@ -79,11 +79,11 @@ public class Driver implements java.sql.Driver {
         try {
             String writerType = url.substring(url.indexOf(':') + 1, url.lastIndexOf(':'));
             if (appDir.exists()) {
-                return new ConnectionImp(appDir.getPath(),
+                return new plugins.jdbc.Connection(appDir.getPath(),
                         BackEndWriterFactory.getBackEndWriter(writerType));
             }
             appDir.mkdirs();
-            return new ConnectionImp(appDir.getPath(),
+            return new plugins.jdbc.Connection(appDir.getPath(),
                     BackEndWriterFactory.getBackEndWriter(writerType));
         } catch (Exception e) {
             throw new SQLException();

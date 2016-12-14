@@ -21,12 +21,12 @@ import java.util.concurrent.Executor;
 import controller.DBMSController;
 import controller.backEnd.BackEndWriter;
 
-public class ConnectionImp implements java.sql.Connection {
+public class Connection implements java.sql.Connection {
     private DBMSController dbmsController;
     private boolean isClosed;
     private Statement statement;
 
-    public ConnectionImp(String appDir, BackEndWriter BEWriter) {
+    public Connection(String appDir, BackEndWriter BEWriter) {
         this.dbmsController = new DBMSController(appDir, BEWriter);
         this.isClosed = false;
     }

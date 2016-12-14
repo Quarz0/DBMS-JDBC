@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 
 import org.junit.Test;
 
-import plugins.jdbc.ConnectionImp;
+import plugins.jdbc.Connection;
 
 public class TestLogInConf {
 
@@ -15,7 +15,7 @@ public class TestLogInConf {
     public void test() {
         Method method = null;
         try {
-            method = ConnectionImp.class.getMethod("canLogIn");
+            method = Connection.class.getMethod("canLogIn");
         } catch (NoSuchMethodException | SecurityException e) {
             e.printStackTrace();
         }
