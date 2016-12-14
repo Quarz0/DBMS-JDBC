@@ -10,7 +10,6 @@
 	<classpathentry kind="lib" path="src/lib/gson-2.8.0.jar"/>
 	<classpathentry kind="lib" path="src/lib/jdom-2.0.0.jar"/>
 	<classpathentry kind="lib" path="src/lib/jline-2.13.jar"/>
-	<classpathentry kind="lib" path="src/lib/stax-1.2.0.jar"/>
 	<classpathentry kind="lib" path="src/lib/log4j-api-2.7-javadoc.jar"/>
 	<classpathentry kind="lib" path="src/lib/log4j-api-2.7-sources.jar"/>
 	<classpathentry kind="lib" path="src/lib/log4j-api-2.7.jar"/>

@@ -29,7 +29,7 @@ public class SmokeTest {
         return Driver.class;
     }
 
-    private String protocol = "altdb";
+    private String protocol = "xmldb";
 
     private String tmp = System.getProperty("java.io.tmpdir");
 

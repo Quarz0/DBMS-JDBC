@@ -3,53 +3,36 @@ package controller.backEnd.xml;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamWriter;
-import javax.xml.stream.events.Characters;
-import javax.xml.stream.events.XMLEvent;
-
-import org.jdom2.Element;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
 
 import controller.backEnd.BackEndWriter;
 import model.Record;
 import model.SelectionTable;
 import model.Table;
-import model.TypeFactory;
 
 public class XMLWriter implements BackEndWriter {
-
     private static final String DATA_FILE_EXTENSION = ".xml";
     private static final String VALIDATOR_FILE_EXTENSION = ".dtd";
-
-    private org.jdom2.Document document;
-    private XMLEventReader eventReader;
     private XMLOutputFactory fileWriter;
-    private XMLInputFactory inputFactory;
-    private SAXBuilder saxBuilder;
+    private SAXParser parser;
+    private SAXParserFactory parserFactor;
+    private XMLReader reader;
     private FileOutputStream writer;
-    private XMLOutputter xmlOutput;
     private XMLStreamWriter xmlStreamWriter;
 
     public XMLWriter() {
+        parserFactor = SAXParserFactory.newInstance();
+        try {
+            parser = parserFactor.newSAXParser();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         fileWriter = XMLOutputFactory.newInstance();
-        saxBuilder = new SAXBuilder();
-        xmlOutput = new XMLOutputter();
-        xmlOutput.setFormat(Format.getPrettyFormat());
-        inputFactory = XMLInputFactory.newInstance();
     }
 
     private String classToString(Map<String, Class<?>> map) {
@@ -62,36 +45,6 @@ public class XMLWriter implements BackEndWriter {
             counter++;
         }
         return strBuilder.toString();
-    }
-
-    private Class<?>[] extractTypes(Map<String, Class<?>> column) {
-        Class<?>[] types = new Class<?>[column.keySet().size()];
-        int i = 0;
-        for (Iterator<String> iterator = column.keySet().iterator(); iterator.hasNext();) {
-            String type = iterator.next();
-            types[i++] = column.get(type);
-        }
-        return types;
-    }
-
-    private Map<String, Class<?>> getColumnsNames(Table table) {
-        File tableXML = table.getData();
-        Map<String, Class<?>> ret = new LinkedHashMap<>();
-        try {
-            eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
-            document = saxBuilder.build(tableXML);
-            Element root = document.getRootElement();
-            String names = root.getAttributeValue("colNames");
-            String[] namesArr = names.split(",\\s");
-            String types = root.getAttributeValue("types");
-            String[] typesArr = types.split(",\\s");
-            for (int i = 0; i < namesArr.length; i++) {
-                ret.put(namesArr[i], TypeFactory.getClass(typesArr[i]));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ret;
     }
 
     @Override
@@ -151,6 +104,7 @@ public class XMLWriter implements BackEndWriter {
             writer.write(strBuilder.toString().getBytes());
             writer.flush();
             writer.close();
+
         } catch (Exception e) {
             throw new RuntimeException("Cannot generate dtd file.");
         }
@@ -171,92 +125,57 @@ public class XMLWriter implements BackEndWriter {
     }
 
     @Override
-    public SelectionTable readTable(Table table) throws FileNotFoundException {
-        List<Object> values = new ArrayList<>();
-        Map<String, Class<?>> names = getColumnsNames(table);
-        Class<?>[] types = this.extractTypes(names);
-        SelectionTable selectionTable = new SelectionTable(table.getTableName(), names);
-        File tableXML = table.getData();
+    public SelectionTable readTable(Table table) {
+        reader = new XMLReader(table.getTableName());
         try {
-            eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
-            document = saxBuilder.build(tableXML);
+            parser.parse(table.getData(), reader);
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException("Invalid file");
         }
-        while (eventReader.hasNext()) {
-            XMLEvent event = null;
-            try {
-                event = eventReader.nextEvent();
-                switch (event.getEventType()) {
-                case XMLStreamConstants.START_ELEMENT:
-                    String startElementName = event.asStartElement().getName().getLocalPart();
-                    if (!(startElementName.equals("Record")
-                            || startElementName.equals(table.getTableName()))) {
-                        Characters chars = null;
-                        chars = (Characters) eventReader.nextEvent();
-                        if (chars.getData().equals("null"))
-                            values.add(null);
-                        else {
-                            Class<?> tempClz = types[values.size()];
-                            if (tempClz.equals(String.class))
-                                values.add(types[values.size()].getMethod("valueOf", Object.class)
-                                        .invoke(null, chars.getData()));
-                            else
-                                values.add(types[values.size()].getMethod("valueOf", String.class)
-                                        .invoke(null, chars.getData()));
-                        }
-                        eventReader.nextEvent();
-                    } else {
-                        values = new ArrayList<>();
-                    }
-                    break;
-                case XMLStreamConstants.END_ELEMENT:
-                    String endElementName = event.asEndElement().getName().getLocalPart();
-                    if (endElementName.equals("Record")) {
-                        Record tempRecord = new Record(names, values);
-                        selectionTable.addRecord(tempRecord);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return selectionTable;
+        return reader.getTable();
     }
 
     @Override
     public void writeTable(SelectionTable selectionTable) throws FileNotFoundException {
         try {
             File tableXML = selectionTable.getTableSchema().getData();
-            eventReader = inputFactory.createXMLEventReader(new FileReader(tableXML));
             writer = new FileOutputStream(tableXML);
             xmlStreamWriter = fileWriter.createXMLStreamWriter(writer, "UTF-8");
+            xmlStreamWriter.writeStartDocument("UTF-8", "1.0");
+            xmlStreamWriter.writeCharacters("\n");
             xmlStreamWriter.writeStartElement(selectionTable.getTableName());
             xmlStreamWriter.writeAttribute("colNames", mapToString(selectionTable.getHeader()));
             xmlStreamWriter.writeAttribute("types", classToString(selectionTable.getHeader()));
-            xmlStreamWriter.writeEndElement();
-            document = saxBuilder.build(tableXML);
-            document.getRootElement().removeChildren("Record");
             for (int i = 0; i < selectionTable.getRecordList().size(); i++) {
+                xmlStreamWriter.writeCharacters("\n\t");
+                xmlStreamWriter.writeStartElement("Record");
                 Record tempRecord = selectionTable.getRecordList().get(i);
-                Element newRecord = new Element("Record");
                 int counter = 0;
                 for (String name : tempRecord.getColumns().keySet()) {
-                    Element tempElement;
-                    if (tempRecord.getValues().get(counter) == null)
-                        tempElement = new Element(name).setText("null");
+                    Object value = tempRecord.getValues().get(counter);
+                    xmlStreamWriter.writeCharacters("\n\t\t");
+                    xmlStreamWriter.writeStartElement(name);
+                    if (value == null)
+                        xmlStreamWriter.writeCharacters("null");
                     else
-                        tempElement = new Element(name)
-                                .setText(tempRecord.getValues().get(counter).toString());
-                    newRecord.addContent(tempElement);
+                        xmlStreamWriter.writeCharacters(value.toString());
                     counter++;
+                    xmlStreamWriter.writeEndElement();
                 }
-                document.getRootElement().addContent(newRecord);
+                xmlStreamWriter.writeCharacters("\n\t");
+                xmlStreamWriter.writeEndElement();
             }
-            xmlOutput.output(document, new FileWriter(tableXML));
+            xmlStreamWriter.writeCharacters("\n");
+            xmlStreamWriter.writeEndElement();
+            xmlStreamWriter.writeCharacters("\n");
+            xmlStreamWriter.writeEndDocument();
+            xmlStreamWriter.flush();
+            xmlStreamWriter.close();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Cannot insert into table");
         }
     }
+
 }
