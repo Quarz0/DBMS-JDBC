@@ -194,7 +194,7 @@ public class XMLWriter implements BackEndWriter {
                             || startElementName.equals(table.getTableName()))) {
                         Characters chars = null;
                         chars = (Characters) eventReader.nextEvent();
-                        if (chars.getData() == "null")
+                        if (chars.getData().equals("null"))
                             values.add(null);
                         else {
                             Class<?> tempClz = types[values.size()];
