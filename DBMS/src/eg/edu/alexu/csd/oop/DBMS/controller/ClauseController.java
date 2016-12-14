@@ -70,8 +70,12 @@ public class ClauseController implements DBMSClause {
                                                             // if checking[To be changed]!
             if (record.getColumns().get(column).equals(String.class)
                     || record.getColumns().get(column).equals(Date.class)) {
-                exp = App.replace(exp, column.toLowerCase(),
-                        "'" + record.getValues().get(i).toString() + "'");
+                if (App.checkForExistence(record.getValues().get(i))) {
+                    exp = App.replace(exp, column.toLowerCase(),
+                            "'" + record.getValues().get(i).toString() + "'");
+                } else {
+                    exp = App.replace(exp, column.toLowerCase(), "null");
+                }
             } else {
                 exp = App.replace(exp, column.toLowerCase(),
                         App.checkForExistence(record.getValues().get(i))
