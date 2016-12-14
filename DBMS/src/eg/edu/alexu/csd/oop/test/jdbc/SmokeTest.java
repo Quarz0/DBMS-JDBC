@@ -28,6 +28,7 @@ public class SmokeTest {
     public static Class<?> getSpecifications() {
         return Driver.class;
     }
+
     private String protocol = "xmldb";
 
     private String tmp = System.getProperty("java.io.tmpdir");
@@ -165,7 +166,7 @@ public class SmokeTest {
         try {
             Statement statement = connection.createStatement();
             statement.execute(
-                    "CREATE TABLE table_name1(column_name1 varchar, column_name2 int, column_name3 date)");
+                    "CREATE TABLE table_name1(column_name1 varchar, column_name2 int, column_name3  date)");
             statement.close();
         } catch (Throwable e) {
             TestRunner.fail("Failed to create table", e);

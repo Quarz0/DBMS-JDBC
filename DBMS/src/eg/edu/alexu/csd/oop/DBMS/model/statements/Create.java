@@ -51,7 +51,7 @@ public class Create extends Query implements Writable {
         String[] column;
 
         for (int i = 0; i < colmuns.length; i++) {
-            column = colmuns[i].trim().split(" ");
+            column = colmuns[i].trim().split("\\s+");
             if (App.checkForExistence(TypeFactory.getClass(column[1].trim()))) {
                 this.columns.put(column[0].trim(), TypeFactory.getClass(column[1].trim()));
             } else {
