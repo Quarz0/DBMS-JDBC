@@ -8,12 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.vandermeer.asciitable.v2.RenderedTable;
-import de.vandermeer.asciitable.v2.V2_AsciiTable;
-import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
-import de.vandermeer.asciitable.v2.render.WidthLongestWordMaxCol;
-import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
-
 public class SelectionTable implements Cloneable {
     private Map<String, Class<?>> defaultHeader;
     private Map<String, Class<?>> header;
@@ -112,23 +106,23 @@ public class SelectionTable implements Cloneable {
     @Override
     public String toString() {
 
-        V2_AsciiTable asciiTable = new V2_AsciiTable();
-        asciiTable.addStrongRule();
-        asciiTable.addRow(this.header.keySet().toArray());
-        asciiTable.addStrongRule();
-
-        for (int i = 0; i < recordList.size(); i++) {
-            asciiTable.addRow(recordList.get(i).getValues().toArray());
-        }
-        asciiTable.addRule();
-
-        V2_AsciiTableRenderer asciiTableRenderer = new V2_AsciiTableRenderer();
-        asciiTableRenderer.setTheme(V2_E_TableThemes.PLAIN_7BIT.get());
-        asciiTableRenderer.setWidth(new WidthLongestWordMaxCol(40));
-        RenderedTable renderedTable = asciiTableRenderer.render(asciiTable);
-        return "\n  Table: " + this.tableName + "\n" + renderedTable.toString() + "  Records: "
-                + this.recordList.size() + "\n\n";
-
+//        V2_AsciiTable asciiTable = new V2_AsciiTable();
+//        asciiTable.addStrongRule();
+//        asciiTable.addRow(this.header.keySet().toArray());
+//        asciiTable.addStrongRule();
+//
+//        for (int i = 0; i < recordList.size(); i++) {
+//            asciiTable.addRow(recordList.get(i).getValues().toArray());
+//        }
+//        asciiTable.addRule();
+//
+//        V2_AsciiTableRenderer asciiTableRenderer = new V2_AsciiTableRenderer();
+//        asciiTableRenderer.setTheme(V2_E_TableThemes.PLAIN_7BIT.get());
+//        asciiTableRenderer.setWidth(new WidthLongestWordMaxCol(40));
+//        RenderedTable renderedTable = asciiTableRenderer.render(asciiTable);
+//        return "\n  Table: " + this.tableName + "\n" + renderedTable.toString() + "  Records: "
+//                + this.recordList.size() + "\n\n";
+return null;
     }
 
 }
