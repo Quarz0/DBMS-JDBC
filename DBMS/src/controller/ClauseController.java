@@ -70,8 +70,9 @@ public class ClauseController implements DBMSClause {
                 exp = App.replace(exp, column.toLowerCase(),
                         "'" + record.getValues().get(i).toString() + "'");
             } else {
-                exp = App.replace(exp, column.toLowerCase(), record.getValues().get(i).toString());
-            }
+                exp = App.replace(exp, column.toLowerCase(),
+                        App.checkForExistence(record.getValues().get(i))
+                                ? record.getValues().get(i).toString() : "NULL");            }
             i++;
         }
         return exp;
