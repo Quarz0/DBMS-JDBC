@@ -34,7 +34,7 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public void alterTableAdd(String tableName, String colName, Class<?> type)
             throws RuntimeException {
-        dbHelper.readTable(tableName);
+        this.dbHelper.readTable(tableName);
         if (dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName)) {
             throw new RuntimeException("Column already exists!");
         }
@@ -47,6 +47,7 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public void alterTableDrop(String tableName, String colName) throws RuntimeException {
+        this.dbHelper.readTable(tableName);
         if (!dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName)) {
             throw new RuntimeException("Column does not exist!");
         }
@@ -70,7 +71,7 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public void alterTableModify(String tableName, String colName, Class<?> type)
             throws RuntimeException {
-        dbHelper.readTable(tableName);
+        this.dbHelper.readTable(tableName);
         if (!dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName)) {
             throw new RuntimeException("Column deos not exist!");
         }
