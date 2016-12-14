@@ -6,7 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,16 @@ public class JSONWriter implements BackEndWriter {
 
     public JSONWriter() {
         gson = new GsonBuilder().setPrettyPrinting().create();
+    }
+
+    private Class<?>[] extractTypes(Map<String, Class<?>> column) {
+        Class<?>[] types = new Class<?>[column.keySet().size()];
+        int i = 0;
+        for (Iterator<String> iterator = column.keySet().iterator(); iterator.hasNext();) {
+            String type = iterator.next();
+            types[i++] = column.get(type);
+        }
+        return types;
     }
 
     @Override
@@ -84,18 +96,34 @@ public class JSONWriter implements BackEndWriter {
         List<String> types = jsonTable.getTypes();
         List<Map<String, String>> records = jsonTable.getValues();
         Map<String, Class<?>> header = new LinkedHashMap<>();
+        Class<?>[] classTypes;
         for (int i = 0; i < colNames.size(); i++) {
             header.put(colNames.get(i), TypeFactory.getClass(types.get(i)));
         }
+        classTypes = this.extractTypes(header);
         SelectionTable selectionTable = new SelectionTable(jsonTable.getTableName(), header);
         for (int i = 0; i < records.size(); i++) {
             List<Object> values = new ArrayList<>();
             Map<String, String> currRecord = records.get(i);
             for (String name : currRecord.keySet()) {
-                if (currRecord.get(name) == "null")
+                if (currRecord.get(name).equals("null"))
                     values.add(null);
-                else
-                    values.add(currRecord.get(name));
+                else {
+                    Class<?> tempClz = classTypes[values.size()];
+
+                    try {
+                        if (tempClz.equals(String.class))
+                            values.add(classTypes[values.size()].getMethod("valueOf", Object.class)
+                                    .invoke(null, currRecord.get(name)));
+                        else
+                            values.add(classTypes[values.size()].getMethod("valueOf", String.class)
+                                    .invoke(null, currRecord.get(name)));
+                    } catch (IllegalAccessException | IllegalArgumentException
+                            | InvocationTargetException | NoSuchMethodException
+                            | SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
             selectionTable.addRecord(new Record(header, values));
         }
