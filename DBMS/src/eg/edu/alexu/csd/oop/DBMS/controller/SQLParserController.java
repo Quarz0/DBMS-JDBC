@@ -33,7 +33,8 @@ public class SQLParserController {
         Class<?> cls;
         Query query;
         try {
-            cls = Class.forName("model.statements." + queryIdentifier.substring(0, 1).toUpperCase()
+            cls = Class.forName("eg.edu.alexu.csd.oop.DBMS.model.statements."
+                    + queryIdentifier.substring(0, 1).toUpperCase()
                     + queryIdentifier.substring(1).toLowerCase());
             query = (Query) cls.getConstructor().newInstance();
         } catch (Exception e) {
