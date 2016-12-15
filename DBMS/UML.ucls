@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.13" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
-  <class id="1" language="java" name="model.Database" project="DBMS" file="/DBMS/src/model/Database.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
+  <class id="1" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.Database" project="DBMS" 
+    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/Database.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="111" y="419"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -10,8 +10,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="model.DatabaseHelper" project="DBMS" file="/DBMS/src/model/DatabaseHelper.java" 
-    binary="false" corner="BOTTOM_RIGHT">    
+  <class id="2" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.DatabaseHelper" project="DBMS" 
+    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/DatabaseHelper.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="118" y="114"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -19,8 +19,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="3" language="java" name="model.Observer" project="DBMS" file="/DBMS/src/model/Observer.java" 
-    binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="3" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.Observer" project="DBMS" 
+    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/Observer.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="609" y="267"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -28,8 +28,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="4" language="java" name="model.Record" project="DBMS" file="/DBMS/src/model/Record.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
+  <class id="4" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.Record" project="DBMS" 
+    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/Record.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="585" y="448"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -37,8 +37,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="model.SelectionTable" project="DBMS" file="/DBMS/src/model/SelectionTable.java" 
-    binary="false" corner="BOTTOM_RIGHT">    
+  <class id="5" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.SelectionTable" project="DBMS" 
+    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/SelectionTable.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="368" y="113"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -46,8 +46,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="model.SQLParserHelper" project="DBMS" file="/DBMS/src/model/SQLParserHelper.java" 
-    binary="false" corner="BOTTOM_RIGHT">    
+  <class id="6" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.SQLParserHelper" project="DBMS" 
+    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/SQLParserHelper.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="608" y="98"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -55,8 +55,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="model.Table" project="DBMS" file="/DBMS/src/model/Table.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
+  <class id="7" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.Table" project="DBMS" 
+    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/Table.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="332" y="419"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -77,51 +77,51 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="11">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="12" name="selectedTable">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="13" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="14">    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="15" name="observers">        
+      <attribute id="12" name="observers">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="16" minimum="0" maximum="2147483647">        
+      <multiplicity id="13" minimum="0" maximum="2147483647">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="17">    
+  <association id="14">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="18" name="tables">        
+      <attribute id="15" name="tables">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="19" minimum="0" maximum="2147483647">        
+      <multiplicity id="16" minimum="0" maximum="2147483647">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <association id="17">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="18" name="currentDatabase">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="19" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <association id="20">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="21" name="currentDatabase">        
+      <attribute id="21" name="selectedTable">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="22" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
+    <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

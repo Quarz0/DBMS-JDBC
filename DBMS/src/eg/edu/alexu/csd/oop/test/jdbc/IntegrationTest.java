@@ -5,6 +5,8 @@ import java.sql.Driver;
 import org.junit.Assert;
 import org.junit.Test;
 
+import eg.edu.alexu.csd.TestRunner;
+
 public class IntegrationTest {
 
     public static Class<?> getSpecifications() {
@@ -13,9 +15,8 @@ public class IntegrationTest {
 
     @Test
     public void test() {
-        // Assert.assertNotNull("Failed to create Driver implemenation",
-        // (Driver)TestRunner.getImplementationInstance());
-        Assert.assertNotNull("Failed to create Driver implemenation", new plugins.jdbc.Driver());
+        Assert.assertNotNull("Failed to create Driver implemenation",
+                TestRunner.getImplementationInstance());
     }
 
 }

@@ -28,14 +28,12 @@ public class SmokeTest {
     public static Class<?> getSpecifications() {
         return Driver.class;
     }
-
     private String protocol = "xmldb";
 
     private String tmp = System.getProperty("java.io.tmpdir");
 
     private Connection createUseDatabase(String databaseName) throws SQLException {
-        // Driver driver = (Driver) TestRunner.getImplementationInstance();
-        Driver driver = new plugins.jdbc.Driver();
+        Driver driver = (Driver) TestRunner.getImplementationInstance();
         Properties info = new Properties();
         File dbDir = new File(tmp + "/jdbc/" + Math.round((((float) Math.random()) * 100000)));
         info.put("path", dbDir.getAbsoluteFile());
@@ -67,51 +65,6 @@ public class SmokeTest {
         // (like selects and inserts) should be applied to this database.
         statement.close();
         return connection;
-    }
-
-    @Test //
-    public void testAlterTable() throws SQLException {
-        Connection connection = createUseDatabase("TestDB_Create");
-        try {
-            Statement statement = connection.createStatement();
-            statement.execute(
-                    "CREATE TABLE table_name13(column_name1 varchar, column_name2 int, column_name3 varchar)");
-            int count1 = statement.executeUpdate(
-                    "INSERT INTO table_name13(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)");
-            Assert.assertEquals("Insert returned a number != 1", 1, count1);
-            boolean result1 = statement.execute(
-                    "INSERT INTO table_name13(column_NAME1, column_name2, COLUMN_name3) VALUES ('value1', 4, 'value5')");
-            Assert.assertFalse("Wrong return for insert record", result1);
-            int count3 = statement.executeUpdate(
-                    "INSERT INTO table_name13(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value2', 'value4', 5)");
-            Assert.assertEquals("Insert returned a number != 1", 1, count3);
-            int count4 = statement.executeUpdate(
-                    "INSERT INTO table_name13(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value5', 'value6', 6)");
-            Assert.assertEquals("Insert returned a number != 1", 1, count4);
-
-            boolean result2 = statement.execute("ALTER TABLE table_name13 ADD column_name4 date");
-            Assert.assertFalse("Wrong return for ALTER TABLE", result2);
-
-            boolean result3 = statement
-                    .execute("SELECT column_name4 FROM table_name13 WHERE coluMN_NAME2 = 5");
-            Assert.assertTrue("Wrong return for select existing records", result3);
-            ResultSet res2 = statement.getResultSet();
-            int rows2 = 0;
-            while (res2.next())
-                rows2++;
-            Assert.assertEquals("Wrong number of rows", 1, rows2);
-
-            while (res2.previous())
-                ;
-            res2.next();
-
-            Assert.assertNull("Retrieved date is not null", res2.getDate("column_name4"));
-
-            statement.close();
-        } catch (Throwable e) {
-            TestRunner.fail("Failed to test ALTER TABLE from table", e);
-        }
-        connection.close();
     }
 
     @Test //

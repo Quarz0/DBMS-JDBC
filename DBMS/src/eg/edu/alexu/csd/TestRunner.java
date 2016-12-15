@@ -14,6 +14,8 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
+import eg.edu.alexu.csd.oop.DBMS.plugins.jdbc.Driver;
+
 public class TestRunner {
 
     private static Class<?> implementation;
@@ -38,12 +40,7 @@ public class TestRunner {
 
     public static Object getImplementationInstance() {
         try {
-            for (Constructor<?> constructor : implementation.getDeclaredConstructors()) {
-                if (constructor.getParameterTypes().length == 0) {
-                    constructor.setAccessible(true);
-                    return constructor.newInstance((java.lang.Object[]) null);
-                }
-            }
+            return new Driver();
         } catch (Throwable e) {
         }
         return null;
