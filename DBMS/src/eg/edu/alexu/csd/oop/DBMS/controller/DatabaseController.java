@@ -34,12 +34,12 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public void alterTableAdd(String tableName, String colName, Class<?> type)
             throws RuntimeException {
-        this.dbHelper.readTable(tableName);
-        if (dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName)) {
+        dbHelper.readTable(tableName);
+        if (dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName.toLowerCase())) {
             throw new RuntimeException("Column already exists!");
         }
         dbHelper.getSelectedTable().getHeader().put(colName, type);
-        dbHelper.getSelectedTable().getDefaultHeader().put(colName, type);
+        dbHelper.getSelectedTable().getDefaultHeader().put(colName.toLowerCase(), type);
         for (Record record : dbHelper.getSelectedTable().getRecordList()) {
             record.addToRecord(null);
         }
@@ -47,17 +47,16 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public void alterTableDrop(String tableName, String colName) throws RuntimeException {
-        this.dbHelper.readTable(tableName);
-        if (!dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName)) {
+        if (!dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName.toLowerCase())) {
             throw new RuntimeException("Column does not exist!");
         }
-        dbHelper.getSelectedTable().getDefaultHeader().remove(colName);
+        dbHelper.getSelectedTable().getDefaultHeader().remove(colName.toLowerCase());
         int index = 0;
         String realColName = null;
         for (String str : dbHelper.getSelectedTable().getHeader().keySet()) {
             if (str.equalsIgnoreCase(colName)) {
-                dbHelper.getSelectedTable().getHeader().remove(str);
                 realColName = str;
+                dbHelper.getSelectedTable().getHeader().remove(realColName);
                 break;
             }
             index++;
@@ -71,17 +70,17 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public void alterTableModify(String tableName, String colName, Class<?> type)
             throws RuntimeException {
-        this.dbHelper.readTable(tableName);
-        if (!dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName)) {
+        dbHelper.readTable(tableName);
+        if (!dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName.toLowerCase())) {
             throw new RuntimeException("Column deos not exist!");
         }
-        dbHelper.getSelectedTable().getHeader().put(colName, type);
-        dbHelper.getSelectedTable().getDefaultHeader().put(colName, type);
+        dbHelper.getSelectedTable().getDefaultHeader().put(colName.toLowerCase(), type);
         int index = 0;
         String realColName = null;
         for (String str : dbHelper.getSelectedTable().getHeader().keySet()) {
             if (str.equalsIgnoreCase(colName)) {
                 realColName = str;
+                dbHelper.getSelectedTable().getHeader().put(realColName, type);
                 break;
             }
             index++;
