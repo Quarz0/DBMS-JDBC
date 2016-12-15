@@ -13,6 +13,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import model.Record;
 import model.SelectionTable;
 import model.TypeFactory;
+import util.App;
 
 public class XMLReader extends DefaultHandler {
 
@@ -32,22 +33,18 @@ public class XMLReader extends DefaultHandler {
         if (!tagOpened)
             return;
         String content = String.copyValueOf(ch, start, length);
-        if (content.equals("null"))
-            tempRecord.addToRecord(null);
-        else {
-            Class<?> tempClz = types[tempRecord.getValues().size()];
+        Class<?> tempClz = types[tempRecord.getValues().size()];
 
-            try {
-                if (tempClz.equals(String.class))
-                    tempRecord.addToRecord(types[tempRecord.getValues().size()]
-                            .getMethod("valueOf", Object.class).invoke(null, content));
-                else
-                    tempRecord.addToRecord(types[tempRecord.getValues().size()]
-                            .getMethod("valueOf", String.class).invoke(null, content));
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-                    | NoSuchMethodException | SecurityException e) {
-                e.printStackTrace();
-            }
+        try {
+            if (tempClz.equals(String.class))
+                tempRecord.addToRecord(types[tempRecord.getValues().size()]
+                        .getMethod("valueOf", Object.class).invoke(null, content));
+            else
+                tempRecord.addToRecord(types[tempRecord.getValues().size()]
+                        .getMethod("valueOf", String.class).invoke(null, content));
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException | SecurityException e) {
+            e.printStackTrace();
         }
     }
 
@@ -95,7 +92,12 @@ public class XMLReader extends DefaultHandler {
         } else if (qName.equals("Record")) {
             tempRecord = new Record(table.getHeader(), new ArrayList<>());
         } else if (table.getHeader().containsKey(qName)) {
-            tagOpened = true;
+            if (!App.checkForExistence(attributes.getValue("xsi:nil"))
+                    && attributes.getValue("xsi:nil").equals("true")) {
+                tempRecord.addToRecord(null);
+            } else {
+                tagOpened = true;
+            }
         }
     }
 }
