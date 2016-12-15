@@ -46,6 +46,8 @@ public final class Regex {
 
     public static final String PARSE_WITH_WHERE = "\\s+WHERE\\s+((.*)\\s+ORDER\\s+(.*))?(.*)";
 
+    public static final String PARSE_WITH_UNION = "\\s+UNION\\s+((.*)\\s+ORDER\\s+BY\\s+(.*))?(.*)";
+
     private Regex() {
     }
 }

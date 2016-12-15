@@ -1,10 +1,11 @@
-package eg.edu.alexu.csd.oop.DBMS.model.statements;
+package eg.edu.alexu.csd.oop.DBMS.model.statements.clauses;
 
 import java.text.ParseException;
 import java.util.Map;
 import java.util.TreeMap;
 
 import eg.edu.alexu.csd.oop.DBMS.controller.DBMSClause;
+import eg.edu.alexu.csd.oop.DBMS.model.statements.Clause;
 import eg.edu.alexu.csd.oop.DBMS.util.App;
 import eg.edu.alexu.csd.oop.DBMS.util.Regex;
 import eg.edu.alexu.csd.oop.DBMS.util.RegexEvaluator;

@@ -28,7 +28,7 @@ public class Record implements Cloneable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         return new Record(copyHeader(), copyValues());
     }
 

@@ -2,17 +2,13 @@ package eg.edu.alexu.csd.oop.DBMS.model;
 
 import java.io.File;
 
-import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.BackEndWriter;
-
 public class Table {
-    private BackEndWriter backEndWriter;
     private File dataFile;
     private File tableDir;
     private File validatorFile;
 
-    public Table(File tableDir, BackEndWriter backEndWriter) {
+    public Table(File tableDir) {
         this.tableDir = tableDir;
-        this.backEndWriter = backEndWriter;
         this.createDir();
     }
 
@@ -23,10 +19,6 @@ public class Table {
         if (!tableDir.mkdir()) {
             throw new RuntimeException("Cannot create table directory");
         }
-    }
-
-    public BackEndWriter getBackEndWriter() {
-        return backEndWriter;
     }
 
     public File getData() {

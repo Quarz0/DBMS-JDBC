@@ -3,10 +3,11 @@ package eg.edu.alexu.csd.oop.DBMS.controller;
 import java.text.ParseException;
 
 import eg.edu.alexu.csd.oop.DBMS.model.SQLParserHelper;
-import eg.edu.alexu.csd.oop.DBMS.model.statements.Distinct;
-import eg.edu.alexu.csd.oop.DBMS.model.statements.Order;
 import eg.edu.alexu.csd.oop.DBMS.model.statements.Query;
-import eg.edu.alexu.csd.oop.DBMS.model.statements.Where;
+import eg.edu.alexu.csd.oop.DBMS.model.statements.clauses.Distinct;
+import eg.edu.alexu.csd.oop.DBMS.model.statements.clauses.Order;
+import eg.edu.alexu.csd.oop.DBMS.model.statements.clauses.Union;
+import eg.edu.alexu.csd.oop.DBMS.model.statements.clauses.Where;
 import eg.edu.alexu.csd.oop.DBMS.util.App;
 import eg.edu.alexu.csd.oop.DBMS.util.Regex;
 import eg.edu.alexu.csd.oop.DBMS.util.RegexEvaluator;
@@ -33,7 +34,7 @@ public class SQLParserController {
         Class<?> cls;
         Query query;
         try {
-            cls = Class.forName("eg.edu.alexu.csd.oop.DBMS.model.statements."
+            cls = Class.forName("eg.edu.alexu.csd.oop.DBMS.model.statements.queries."
                     + queryIdentifier.substring(0, 1).toUpperCase()
                     + queryIdentifier.substring(1).toLowerCase());
             query = (Query) cls.getConstructor().newInstance();
@@ -56,17 +57,24 @@ public class SQLParserController {
 
         String[] groups;
         int queryStartIndex = s.indexOf(" ");
+        if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_ORDER_BY))) {
+            Order o = new Order();
+            o.parse(groups[2] != null ? groups[2] : groups[4]);
+            query.addClause(o);
+        }
+        if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_UNION))) {
+            Union union = new Union();
+            union.parse(groups[2] != null ? groups[2] : groups[4]);
+            query.addClause(union);
+            s = s.substring(0, RegexEvaluator.startIndex(s, Regex.PARSE_WITH_UNION));
+        }
         if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_DISTINCT))) {
             Distinct d = new Distinct();
             d.parse(groups[1]);
             query.addClause(d);
             queryStartIndex = s.toLowerCase().indexOf("distinct") + "distinct".length();
         }
-        if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_ORDER_BY))) {
-            Order o = new Order();
-            o.parse(groups[2] != null ? groups[2] : groups[4]);
-            query.addClause(o);
-        }
+
         if (App.checkForExistence(groups = RegexEvaluator.evaluate(s, Regex.PARSE_WITH_WHERE))) {
             Where w = new Where();
             w.parse(groups[2] != null ? groups[2] : groups[4]);
@@ -75,7 +83,8 @@ public class SQLParserController {
 
         query.parse(s.substring(queryStartIndex,
                 Math.min(RegexEvaluator.startIndex(s, Regex.PARSE_WITH_ORDER_BY),
-                        RegexEvaluator.startIndex(s, Regex.PARSE_WITH_WHERE))));
+                        Math.min(RegexEvaluator.startIndex(s, Regex.PARSE_WITH_UNION),
+                                RegexEvaluator.startIndex(s, Regex.PARSE_WITH_WHERE)))));
         this.sqlParserHelper.setCurrentQuery(query);
     }
 

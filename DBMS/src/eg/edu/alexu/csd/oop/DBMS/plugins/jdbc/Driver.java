@@ -78,13 +78,18 @@ public class Driver implements java.sql.Driver {
         }
         try {
             String writerType = url.substring(url.indexOf(':') + 1, url.lastIndexOf(':'));
-            if (appDir.exists()) {
-                return new eg.edu.alexu.csd.oop.DBMS.plugins.jdbc.Connection(appDir.getPath(),
-                        BackEndWriterFactory.getBackEndWriter(writerType));
+            if (!appDir.exists()) {
+                appDir.mkdirs();
             }
-            appDir.mkdirs();
             return new eg.edu.alexu.csd.oop.DBMS.plugins.jdbc.Connection(appDir.getPath(),
-                    BackEndWriterFactory.getBackEndWriter(writerType));
+                    BackEndWriterFactory
+                            .getBackEndWriter(writerType.substring(0, writerType.length() - 2))); // the
+                                                                                                  // url
+                                                                                                  // is
+                                                                                                  // on
+                                                                                                  // the
+                                                                                                  // form
+                                                                                                  // ***db
         } catch (Exception e) {
             throw new SQLException();
         }

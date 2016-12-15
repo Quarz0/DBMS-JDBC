@@ -16,6 +16,7 @@ public class DatabaseHelper {
     private DBMSController dbmsController;
     private SelectionTable selectedTable;
     private SelectionTable tempTable;
+    private SelectionTable unionTable;
     private File workspaceDir;
 
     public DatabaseHelper(DBMSController dbmsController) {
@@ -100,6 +101,10 @@ public class DatabaseHelper {
         return tempTable;
     }
 
+    public SelectionTable getUnionTable() {
+        return unionTable;
+    }
+
     public File getWorkspaceDir() {
         return workspaceDir;
     }
@@ -112,7 +117,7 @@ public class DatabaseHelper {
         for (File tableDir : tables) {
             BackEndWriter writer = this.fetchWriter(tableDir);
             if (App.checkForExistence(writer)) {
-                Table table = new Table(tableDir, writer);
+                Table table = new Table(tableDir);
                 File dataFile = new File(table.getTablePath() + File.separator
                         + table.getTableName() + writer.getDataFileExtension());
                 File validatorFile = new File(table.getTablePath() + File.separator
@@ -136,7 +141,7 @@ public class DatabaseHelper {
             throw new RuntimeException("Unfortunately i do not have your table :(");
         }
         try {
-            selectionTable = table.getBackEndWriter().readTable(table);
+            selectionTable = this.backEndWriter.readTable(table);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Error while attempting to read from table");
         }
@@ -157,8 +162,10 @@ public class DatabaseHelper {
         }
     }
 
-    public void resetSelectedTable() {
+    public void resetTables() {
         this.selectedTable = null;
+        this.unionTable = null;
+        this.tempTable = null;
     }
 
     public void setBackEndWriter(BackEndWriter backEndWriter) {

@@ -112,11 +112,12 @@ public class DatabaseController implements DBMS, Observer {
         }
         File tableFile = new File(
                 dbHelper.getCurrentDatabase().getPath() + File.separator + tableName);
-        Table table = new Table(tableFile, this.dbHelper.getBackEndWriter());
+        Table table = new Table(tableFile);
         dbHelper.getCurrentDatabase().registerTable(table);
         table.registerFiles(
-                table.getBackEndWriter().makeDataFile(table.getTablePath(), tableName, columns),
-                table.getBackEndWriter().makeValidatorFile(table.getTablePath(), tableName,
+                this.dbHelper.getBackEndWriter().makeDataFile(table.getTablePath(), tableName,
+                        columns),
+                this.dbHelper.getBackEndWriter().makeValidatorFile(table.getTablePath(), tableName,
                         columns));
     }
 
@@ -243,7 +244,7 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public void update() throws RuntimeException {
-        this.getHelper().resetSelectedTable();
+        this.getHelper().resetTables();
         this.dbmsController.getSQLParserController().getSqlParserHelper().getCurrentQuery()
                 .execute(this);
         this.dbmsController.getSQLParserController().getSqlParserHelper().getCurrentQuery()
@@ -252,7 +253,7 @@ public class DatabaseController implements DBMS, Observer {
             try {
                 if (this.dbmsController.getSQLParserController().getSqlParserHelper()
                         .getCurrentQuery() instanceof Writable)
-                    this.dbHelper.getSelectedTable().getTableSchema().getBackEndWriter()
+                    this.dbHelper.getBackEndWriter()
                             .writeTable(this.getHelper().getSelectedTable());
             } catch (FileNotFoundException e) {
                 throw new RuntimeException("Error while attempting to write table");
@@ -260,8 +261,8 @@ public class DatabaseController implements DBMS, Observer {
 
             if (this.dbmsController.getSQLParserController().getSqlParserHelper()
                     .getCurrentQuery() instanceof Viewable) {
-                this.dbmsController.getCLIController()
-                        .feedback(this.dbHelper.getSelectedTable().toString());
+                // this.dbmsController.getCLIController()
+                // .feedback(this.dbHelper.getSelectedTable().toString());
             }
         }
     }

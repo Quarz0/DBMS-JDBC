@@ -19,7 +19,7 @@ public class DBMSController {
         this.registerObservers();
         this.appPath = appPath;
         this.createAppPath();
-        this.cliController.begin();
+        // this.cliController.begin();
     }
 
     private void createAppPath() {

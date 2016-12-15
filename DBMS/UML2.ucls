@@ -10,8 +10,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.statements.Create" project="DBMS" 
-    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/statements/Create.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="2" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.statements.queries.Create" project="DBMS" 
+    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/statements/queries/Create.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="397" y="382"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -19,8 +19,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.statements.Delete" project="DBMS" 
-    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/statements/Delete.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="3" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.statements.queries.Delete" project="DBMS" 
+    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/statements/queries/Delete.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="125" y="430"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -28,8 +28,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.statements.Drop" project="DBMS" 
-    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/statements/Drop.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="4" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.statements.queries.Drop" project="DBMS" 
+    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/statements/queries/Drop.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="121" y="147"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -37,8 +37,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.statements.Insert" project="DBMS" 
-    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/statements/Insert.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="5" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.statements.queries.Insert" project="DBMS" 
+    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/statements/queries/Insert.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1118" y="164"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -55,8 +55,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.statements.Select" project="DBMS" 
-    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/statements/Select.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="7" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.statements.queries.Select" project="DBMS" 
+    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/statements/queries/Select.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="888" y="180"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -64,8 +64,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.statements.Update" project="DBMS" 
-    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/statements/Update.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="8" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.statements.queries.Update" project="DBMS" 
+    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/statements/queries/Update.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1129" y="497"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -73,8 +73,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.statements.Use" project="DBMS" 
-    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/statements/Use.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="9" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.statements.queries.Use" project="DBMS" 
+    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/statements/queries/Use.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="380" y="104"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -82,8 +82,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="10" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.statements.Where" project="DBMS" 
-    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/statements/Where.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="10" language="java" name="eg.edu.alexu.csd.oop.DBMS.model.statements.clauses.Where" project="DBMS" 
+    file="/DBMS/src/eg/edu/alexu/csd/oop/DBMS/model/statements/clauses/Where.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="677" y="491"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      

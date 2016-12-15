@@ -14,9 +14,9 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 
 import eg.edu.alexu.csd.oop.DBMS.model.Record;
 import eg.edu.alexu.csd.oop.DBMS.model.SelectionTable;
-import eg.edu.alexu.csd.oop.DBMS.model.statements.Delete;
-import eg.edu.alexu.csd.oop.DBMS.model.statements.Select;
-import eg.edu.alexu.csd.oop.DBMS.model.statements.Update;
+import eg.edu.alexu.csd.oop.DBMS.model.statements.queries.Delete;
+import eg.edu.alexu.csd.oop.DBMS.model.statements.queries.Select;
+import eg.edu.alexu.csd.oop.DBMS.model.statements.queries.Update;
 import eg.edu.alexu.csd.oop.DBMS.util.App;
 import eg.edu.alexu.csd.oop.DBMS.util.BooleanEvaluator;
 
@@ -126,6 +126,42 @@ public class ClauseController implements DBMSClause {
             }
         }
         this.dbmsController.getDatabaseController().getHelper().requestClone();
+    }
+
+    @Override
+    public void union(Select select) throws RuntimeException {
+        SelectionTable defaultTable = this.dbmsController.getDatabaseController().getHelper()
+                .getSelectedTable();
+        SelectionTable unionTable = this.dbmsController.getDatabaseController().getHelper()
+                .getUnionTable();
+
+        if (!App.checkForExistence(unionTable)) {
+            try {
+                unionTable = (SelectionTable) defaultTable.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException("Run, Forest, Run!");
+            }
+        }
+        select.execute(this.dbmsController.getDatabaseController());
+        select.getClauses().forEach(clause -> clause.execute(this));
+        defaultTable = this.dbmsController.getDatabaseController().getHelper().getSelectedTable();
+        if (!defaultTable.isTypeEqual(unionTable))
+            throw new RuntimeException("Inconsistent data!");
+
+        try {
+            for (Record record : defaultTable.getRecordList()) {
+                unionTable.addRecord((Record) record.clone());
+            }
+            this.dbmsController.getDatabaseController().getHelper()
+                    .setSelectedTable((SelectionTable) unionTable.clone());
+            this.distinct();
+            unionTable = (SelectionTable) this.dbmsController.getDatabaseController().getHelper()
+                    .getSelectedTable().clone();
+
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("Run, Forest, Run!");
+        }
+
     }
 
     @Override

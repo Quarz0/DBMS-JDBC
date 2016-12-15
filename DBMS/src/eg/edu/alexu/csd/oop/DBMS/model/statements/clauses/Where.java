@@ -1,8 +1,9 @@
-package eg.edu.alexu.csd.oop.DBMS.model.statements;
+package eg.edu.alexu.csd.oop.DBMS.model.statements.clauses;
 
 import java.text.ParseException;
 
 import eg.edu.alexu.csd.oop.DBMS.controller.DBMSClause;
+import eg.edu.alexu.csd.oop.DBMS.model.statements.Clause;
 import eg.edu.alexu.csd.oop.DBMS.util.App;
 
 public class Where extends Clause {
