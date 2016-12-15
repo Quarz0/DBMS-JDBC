@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import javax.xml.stream.XMLStreamException;
+
 import eg.edu.alexu.csd.oop.DBMS.model.SelectionTable;
 import eg.edu.alexu.csd.oop.DBMS.model.Table;
 
@@ -14,7 +16,7 @@ public interface BackEndWriter {
     public String getValidatorFileExtension();
 
     public File makeDataFile(String tablePath, String tableName, Map<String, Class<?>> header)
-            throws IOException;
+            throws IOException, XMLStreamException;
 
     public File makeValidatorFile(String tablePath, String tableName, Map<String, Class<?>> header)
             throws IOException;

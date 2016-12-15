@@ -9,6 +9,8 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.xml.stream.XMLStreamException;
+
 import eg.edu.alexu.csd.oop.DBMS.model.Database;
 import eg.edu.alexu.csd.oop.DBMS.model.DatabaseHelper;
 import eg.edu.alexu.csd.oop.DBMS.model.Observer;
@@ -118,7 +120,7 @@ public class DatabaseController implements DBMS, Observer {
                     table.getBackEndWriter().makeDataFile(table.getTablePath(), tableName, columns),
                     table.getBackEndWriter().makeValidatorFile(table.getTablePath(), tableName,
                             columns));
-        } catch (IOException e) {
+        } catch (IOException | XMLStreamException e) {
             throw new RuntimeException("Error while attempting to create table");
         }
     }

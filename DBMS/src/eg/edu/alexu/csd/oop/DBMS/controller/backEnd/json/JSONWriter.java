@@ -55,7 +55,8 @@ public class JSONWriter implements BackEndWriter {
     }
 
     @Override
-    public File makeDataFile(String tablePath, String tableName, Map<String, Class<?>> header) {
+    public File makeDataFile(String tablePath, String tableName, Map<String, Class<?>> header)
+            throws IOException {
         File jsonFile = new File(tablePath + File.separator + tableName + ".json");
         List<String> names = new ArrayList<>();
         List<String> types = new ArrayList<>();
@@ -63,33 +64,25 @@ public class JSONWriter implements BackEndWriter {
             names.add(name);
             types.add(header.get(name).getSimpleName());
         }
-        try {
-            jsonFile.createNewFile();
-            writer = new FileWriter(jsonFile);
-            List<Map<String, String>> vals = new ArrayList<>();
-            JSONTable jsonTable = new JSONTable(tableName, names, types, vals);
-            writer.write(gson.toJson(jsonTable));
-            writer.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot create data file");
-        }
+        jsonFile.createNewFile();
+        writer = new FileWriter(jsonFile);
+        List<Map<String, String>> vals = new ArrayList<>();
+        JSONTable jsonTable = new JSONTable(tableName, names, types, vals);
+        writer.write(gson.toJson(jsonTable));
+        writer.close();
         return jsonFile;
     }
 
     @Override
     public File makeValidatorFile(String tablePath, String tableName,
-            Map<String, Class<?>> header) {
+            Map<String, Class<?>> header) throws IOException {
         File validatorFile = new File(tablePath + File.separator + tableName + ".jsonv");
-        try {
-            validatorFile.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot create validator file");
-        }
+        validatorFile.createNewFile();
         return validatorFile;
     }
 
     @Override
-    public SelectionTable readTable(Table table) throws FileNotFoundException {
+    public SelectionTable readTable(Table table) throws IOException {
         reader = new BufferedReader(new FileReader(table.getData()));
         JSONTable jsonTable = gson.fromJson(reader, JSONTable.class);
         List<String> colNames = jsonTable.getColumnsNames();
@@ -115,9 +108,10 @@ public class JSONWriter implements BackEndWriter {
                         if (tempClz.equals(String.class))
                             values.add(classTypes[values.size()].getMethod("valueOf", Object.class)
                                     .invoke(null, currRecord.get(name)));
-                        else
+                        else {
                             values.add(classTypes[values.size()].getMethod("valueOf", String.class)
                                     .invoke(null, currRecord.get(name)));
+                        }
                     } catch (IllegalAccessException | IllegalArgumentException
                             | InvocationTargetException | NoSuchMethodException
                             | SecurityException e) {
@@ -131,7 +125,7 @@ public class JSONWriter implements BackEndWriter {
     }
 
     @Override
-    public void writeTable(SelectionTable selectionTable) throws FileNotFoundException {
+    public void writeTable(SelectionTable selectionTable) throws IOException {
         File jsonFile = selectionTable.getTableSchema().getData();
         List<String> colNames = new ArrayList<>();
         List<String> types = new ArrayList<>();
@@ -152,15 +146,11 @@ public class JSONWriter implements BackEndWriter {
             }
             records.add(tempRecord);
         }
-        try {
-            writer = new FileWriter(jsonFile);
-            JSONTable jsonTable = new JSONTable(selectionTable.getTableName(), colNames, types,
-                    records);
-            writer.write(gson.toJson(jsonTable));
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        writer = new FileWriter(jsonFile);
+        JSONTable jsonTable = new JSONTable(selectionTable.getTableName(), colNames, types,
+                records);
+        writer.write(gson.toJson(jsonTable));
+        writer.close();
     }
 
 }
