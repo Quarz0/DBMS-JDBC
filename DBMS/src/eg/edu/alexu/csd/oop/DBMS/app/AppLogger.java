@@ -10,11 +10,16 @@ public class AppLogger {
     private static Logger logger;
 
     public static Logger getInstance() {
-        if (!App.checkForExistence(logger))
-            logger = LogManager.getLogger();
+        if (!App.checkForExistence(logger)) {
+            logger = LogManager.getLogger(AppLogger.class.getName());
+        }
         return logger;
     }
 
     private AppLogger() {
     }
+    
+//    public static void main(String[] args) {
+//        AppLogger.getInstance().info("heldsfdlo");
+//    }
 }

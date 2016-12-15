@@ -10,6 +10,7 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 
+import eg.edu.alexu.csd.oop.DBMS.app.AppLogger;
 import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.BackEndWriter;
 import eg.edu.alexu.csd.oop.DBMS.model.Record;
 import eg.edu.alexu.csd.oop.DBMS.model.SelectionTable;
@@ -73,6 +74,7 @@ public class XMLWriter implements BackEndWriter {
             xmlStreamWriter.close();
         } catch (Exception e) {
             e.printStackTrace();
+            AppLogger.getInstance().error(e);
         }
         return xmlFile;
     }

@@ -16,6 +16,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import eg.edu.alexu.csd.oop.DBMS.app.AppLogger;
 import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.BackEndWriter;
 import eg.edu.alexu.csd.oop.DBMS.model.Record;
 import eg.edu.alexu.csd.oop.DBMS.model.SelectionTable;
@@ -122,6 +123,7 @@ public class JSONWriter implements BackEndWriter {
                             | InvocationTargetException | NoSuchMethodException
                             | SecurityException e) {
                         e.printStackTrace();
+                        AppLogger.getInstance().error(e);
                     }
                 }
             }
@@ -160,6 +162,7 @@ public class JSONWriter implements BackEndWriter {
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
+            AppLogger.getInstance().error(e);
         }
     }
 
