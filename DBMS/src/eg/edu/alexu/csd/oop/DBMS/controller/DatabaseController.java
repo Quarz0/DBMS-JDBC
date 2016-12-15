@@ -260,8 +260,8 @@ public class DatabaseController implements DBMS, Observer {
 
             if (this.dbmsController.getSQLParserController().getSqlParserHelper()
                     .getCurrentQuery() instanceof Viewable) {
-                // this.dbmsController.getCLIController()
-                // .feedback(this.dbHelper.getSelectedTable().toString());
+                this.dbmsController.getCLIController()
+                        .feedback(this.dbHelper.getSelectedTable().toString());
             }
         }
     }

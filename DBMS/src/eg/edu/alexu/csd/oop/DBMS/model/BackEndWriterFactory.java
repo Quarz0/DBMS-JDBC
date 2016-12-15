@@ -5,8 +5,8 @@ import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.json.JSONWriter;
 import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.xml.XMLWriter;
 
 public class BackEndWriterFactory {
-    private final static String JSON_CASE = "altdb";
-    private final static String XML_CASE = "xmldb";
+    private final static String JSON_CASE = "json";
+    private final static String XML_CASE = "xml";
 
     public static BackEndWriter getBackEndWriter(String writerType) {
         switch (writerType.toLowerCase()) {

@@ -32,22 +32,18 @@ public class XMLReader extends DefaultHandler {
         if (!tagOpened)
             return;
         String content = String.copyValueOf(ch, start, length);
-        if (content.equals("null"))
-            tempRecord.addToRecord(null);
-        else {
-            Class<?> tempClz = types[tempRecord.getValues().size()];
+        Class<?> tempClz = types[tempRecord.getValues().size()];
 
-            try {
-                if (tempClz.equals(String.class))
-                    tempRecord.addToRecord(types[tempRecord.getValues().size()]
-                            .getMethod("valueOf", Object.class).invoke(null, content));
-                else
-                    tempRecord.addToRecord(types[tempRecord.getValues().size()]
-                            .getMethod("valueOf", String.class).invoke(null, content));
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-                    | NoSuchMethodException | SecurityException e) {
-                e.printStackTrace();
-            }
+        try {
+            if (tempClz.equals(String.class))
+                tempRecord.addToRecord(types[tempRecord.getValues().size()]
+                        .getMethod("valueOf", Object.class).invoke(null, content));
+            else
+                tempRecord.addToRecord(types[tempRecord.getValues().size()]
+                        .getMethod("valueOf", String.class).invoke(null, content));
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException | SecurityException e) {
+            e.printStackTrace();
         }
     }
 
@@ -95,7 +91,11 @@ public class XMLReader extends DefaultHandler {
         } else if (qName.equals("Record")) {
             tempRecord = new Record(table.getHeader(), new ArrayList<>());
         } else if (table.getHeader().containsKey(qName)) {
-            tagOpened = true;
+            if (attributes.getValue("xsi:nil") != null) {
+                tempRecord.addToRecord(null);
+            } else {
+                tagOpened = true;
+            }
         }
     }
 }

@@ -28,6 +28,7 @@ public class SmokeTest {
     public static Class<?> getSpecifications() {
         return Driver.class;
     }
+
     private String protocol = "xmldb";
 
     private String tmp = System.getProperty("java.io.tmpdir");

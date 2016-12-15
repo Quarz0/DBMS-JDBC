@@ -20,13 +20,12 @@ public class XMLWriter implements BackEndWriter {
     private static final String VALIDATOR_FILE_EXTENSION = ".dtd";
     private XMLOutputFactory fileWriter;
     private SAXParser parser;
-    private SAXParserFactory parserFactor;
     private XMLReader reader;
     private FileOutputStream writer;
     private XMLStreamWriter xmlStreamWriter;
 
     public XMLWriter() {
-        parserFactor = SAXParserFactory.newInstance();
+        SAXParserFactory parserFactor = SAXParserFactory.newInstance();
         try {
             parser = parserFactor.newSAXParser();
         } catch (Exception e) {
@@ -155,13 +154,15 @@ public class XMLWriter implements BackEndWriter {
                 for (String name : tempRecord.getColumns().keySet()) {
                     Object value = tempRecord.getValues().get(counter);
                     xmlStreamWriter.writeCharacters("\n\t\t");
-                    xmlStreamWriter.writeStartElement(name);
-                    if (value == null)
-                        xmlStreamWriter.writeCharacters("null");
-                    else
+                    if (value == null) {
+                        xmlStreamWriter.writeEmptyElement(name);
+                        xmlStreamWriter.writeAttribute("xsi:nil", "true");
+                    } else {
+                        xmlStreamWriter.writeStartElement(name);
                         xmlStreamWriter.writeCharacters(value.toString());
+                        xmlStreamWriter.writeEndElement();
+                    }
                     counter++;
-                    xmlStreamWriter.writeEndElement();
                 }
                 xmlStreamWriter.writeCharacters("\n\t");
                 xmlStreamWriter.writeEndElement();

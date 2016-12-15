@@ -2,7 +2,6 @@ package eg.edu.alexu.csd.oop.DBMS.app;
 
 import eg.edu.alexu.csd.oop.DBMS.controller.DBMSController;
 import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.xml.XMLWriter;
-import eg.edu.alexu.csd.oop.DBMS.util.App;
 
 public class Main {
 
@@ -11,7 +10,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        new DBMSController(App.DEFAULT_DIR_PATH, new XMLWriter());
+        String s = "/home/heshamelsawaf/DBMS";
+        new DBMSController(s, new XMLWriter());
     }
 
 }
