@@ -736,6 +736,11 @@ public class ResultSet implements java.sql.ResultSet {
     }
 
     @Override
+    public String toString() {
+        return this.table.toString();
+    }
+
+    @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
         throw new UnsupportedOperationException();
 

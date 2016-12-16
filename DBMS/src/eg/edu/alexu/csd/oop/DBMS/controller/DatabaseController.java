@@ -18,7 +18,6 @@ import eg.edu.alexu.csd.oop.DBMS.model.Record;
 import eg.edu.alexu.csd.oop.DBMS.model.SelectionTable;
 import eg.edu.alexu.csd.oop.DBMS.model.Table;
 import eg.edu.alexu.csd.oop.DBMS.model.TypeFactory;
-import eg.edu.alexu.csd.oop.DBMS.model.statements.Viewable;
 import eg.edu.alexu.csd.oop.DBMS.model.statements.Writable;
 import eg.edu.alexu.csd.oop.DBMS.util.App;
 
@@ -269,11 +268,6 @@ public class DatabaseController implements DBMS, Observer {
                 throw new RuntimeException("Error while attempting to write table");
             }
 
-            if (this.dbmsController.getSQLParserController().getSqlParserHelper()
-                    .getCurrentQuery() instanceof Viewable) {
-                // this.dbmsController.getCLIController()
-                // .feedback(this.dbHelper.getSelectedTable().toString());
-            }
         }
     }
 

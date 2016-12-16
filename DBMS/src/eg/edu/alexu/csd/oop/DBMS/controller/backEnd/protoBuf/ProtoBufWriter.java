@@ -61,7 +61,7 @@ public class ProtoBufWriter implements BackEndWriter {
     public File makeValidatorFile(String tablePath, String tableName, Map<String, Class<?>> header)
             throws IOException {
         File validatorFile = new File(
-                tablePath + File.pathSeparator + tableName + VALIDATOR_FILE_EXTENSION);
+                tablePath + File.separator + tableName + VALIDATOR_FILE_EXTENSION);
         validatorFile.createNewFile();
         return null;
     }

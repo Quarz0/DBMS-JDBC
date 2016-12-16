@@ -8,19 +8,16 @@ import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.BackEndWriter;
 public class DBMSController {
 
     private String appPath;
-    private CLIController cliController;
     private DatabaseController databaseController;
     private SQLParserController sqlParserController;
 
     public DBMSController(String appPath, BackEndWriter backEndWriter) {
-        this.cliController = new CLIController(this);
         this.databaseController = new DatabaseController(this);
         this.databaseController.getHelper().setBackEndWriter(backEndWriter);
         this.sqlParserController = new SQLParserController(this);
         this.registerObservers();
         this.appPath = appPath;
         this.createAppPath();
-        // this.cliController.begin();
     }
 
     private void createAppPath() {
@@ -36,10 +33,6 @@ public class DBMSController {
 
     public String getAppPath() {
         return appPath;
-    }
-
-    public CLIController getCLIController() {
-        return this.cliController;
     }
 
     public DatabaseController getDatabaseController() {

@@ -2,6 +2,7 @@ package eg.edu.alexu.csd.oop.DBMS.plugins.jdbc;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
@@ -11,6 +12,7 @@ import java.util.logging.Logger;
 
 import eg.edu.alexu.csd.oop.DBMS.model.BackEndWriterFactory;
 import eg.edu.alexu.csd.oop.DBMS.util.App;
+import eg.edu.alexu.csd.oop.DBMS.util.ErrorCode;
 
 public class Driver implements java.sql.Driver {
     private Properties info;
@@ -31,9 +33,9 @@ public class Driver implements java.sql.Driver {
     private boolean canLogIn(String username, String password) throws SQLException {
         if (App.checkForExistence(username) && App.checkForExistence(password)) {
             String configDir = info.getProperty("path");
-            File configFile = new File(info.getProperty(configDir + File.separator + "login.conf"));
+            File configFile = new File(configDir + File.separator + ".login.conf");
             if (!configFile.exists()) {
-                throw new SQLException();
+                throw new SQLException(ErrorCode.MUST_SIGN_UP);
             }
             try {
                 FileReader reader = new FileReader(configFile);
@@ -48,8 +50,8 @@ public class Driver implements java.sql.Driver {
                     return true;
                 }
                 reader.close();
-            } catch (Exception ex) {
-                throw new SQLException();
+            } catch (IOException ex) {
+                throw new SQLException("Error!");
             }
         }
         return false;
@@ -72,10 +74,10 @@ public class Driver implements java.sql.Driver {
             }
         } catch (Exception e) {
         }
-        File appDir = (File) info.get("path");
-        if (!App.checkForExistence(appDir)) {
+        if (!App.checkForExistence(info.get("path"))) {
             throw new SQLException();
         }
+        File appDir = new File(info.get("path").toString());
         try {
             String writerType = url.substring(url.indexOf(':') + 1, url.lastIndexOf(':'));
             if (!appDir.exists()) {

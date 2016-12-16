@@ -5,20 +5,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import eg.edu.alexu.csd.oop.DBMS.app.AppLogger;
-import eg.edu.alexu.csd.oop.DBMS.controller.DBMSController;
+import eg.edu.alexu.csd.oop.DBMS.controller.CLIController;
 import eg.edu.alexu.csd.oop.DBMS.util.App;
 import eg.edu.alexu.csd.oop.DBMS.util.ErrorCode;
 
 public class CLI {
 
     private BufferedReader bufferedReader;
-    private DBMSController dbmsController;
+    private CLIController cliController;
     private String feedback;
     private long start;
     private String table;
 
-    public CLI(DBMSController dbmsController) {
-        this.dbmsController = dbmsController;
+    public CLI(CLIController cliController) {
+        this.cliController = cliController;
         this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         this.feedback = "";
         this.table = null;
@@ -33,6 +33,28 @@ public class CLI {
         }
     }
 
+    public String getPassword() {
+        System.out.print("Enter password: ");
+        // char[] pass = System.console().readPassword();
+        // return new String(pass);
+        try {
+            return this.bufferedReader.readLine();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    public String getURL() {
+        System.out.print("Enter Driver's URL: ");
+        try {
+            return this.bufferedReader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
     public void newPrompt() {
         try {
             while (true) {
@@ -42,6 +64,10 @@ public class CLI {
             e.printStackTrace();
             AppLogger.getInstance().error(ErrorCode.CLI_READLINE + " " + e.getMessage());
         }
+    }
+
+    public void out(String s) {
+        System.out.println(s);
     }
 
     private void print() throws IOException {
@@ -65,7 +91,7 @@ public class CLI {
         String temp = this.bufferedReader.readLine();
         AppLogger.getInstance().info("USER INPUT: <" + temp + ">");
         this.start = System.currentTimeMillis();
-        this.feedback = this.dbmsController.getCLIController().newInput(temp);
+        this.feedback = this.cliController.newInput(temp);
     }
 
     public void setTable(String table) {

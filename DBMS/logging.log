@@ -1,0 +1,23 @@
+2016-12-16 21:08:22,932 [INFO ] CLI.java:main - USER INPUT: <use wc3>
+2016-12-16 21:08:23,337 [INFO ] CLI.java:main - Query is ok (403ms)
+2016-12-16 21:08:45,817 [INFO ] CLI.java:main - USER INPUT: <select * from Customers>
+2016-12-16 21:08:45,998 [INFO ] CLI.java:main - Error while attempting to read from table (180ms)
+2016-12-16 21:09:09,046 [INFO ] CLI.java:main - USER INPUT: <null>
+2016-12-16 21:09:09,103 [INFO ] CLI.java:main - Syntax error! (0ms)
+2016-12-16 21:09:09,104 [INFO ] CLI.java:main - USER INPUT: <null>
+2016-12-16 21:09:09,104 [INFO ] CLI.java:main - Syntax error! (0ms)
+2016-12-16 21:09:09,104 [INFO ] CLI.java:main - USER INPUT: <null>
+2016-12-16 21:09:09,105 [INFO ] CLI.java:main - Syntax error! (0ms)
+2016-12-16 21:09:09,105 [INFO ] CLI.java:main - USER INPUT: <null>
+2016-12-16 21:09:09,105 [INFO ] CLI.java:main - Syntax error! (0ms)
+2016-12-16 21:09:09,106 [INFO ] CLI.java:main - USER INPUT: <null>
+2016-12-16 21:09:09,106 [INFO ] CLI.java:main - Syntax error! (0ms)
+2016-12-16 21:09:09,106 [INFO ] CLI.java:main - USER INPUT: <null>
+2016-12-16 21:09:09,107 [INFO ] CLI.java:main - Syntax error! (0ms)
+2016-12-16 21:09:09,107 [INFO ] CLI.java:main - USER INPUT: <null>
+2016-12-16 21:09:09,107 [INFO ] CLI.java:main - Syntax error! (0ms)
+2016-12-16 21:09:09,107 [INFO ] CLI.java:main - USER INPUT: <null>
+2016-12-16 21:09:09,111 [INFO ] CLI.java:main - Syntax error! (0ms)
+2016-12-16 21:09:09,111 [INFO ] CLI.java:main - USER INPUT: <null>
+2016-12-16 21:09:09,112 [INFO ] CLI.java:main - Syntax error! (0ms)
+2016-12-16 21:09:09,112 [INFO ] CLI.java:main - USER INPUT: <null>
