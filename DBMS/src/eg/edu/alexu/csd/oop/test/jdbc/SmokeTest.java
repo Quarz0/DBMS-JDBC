@@ -88,7 +88,7 @@ public class SmokeTest {
                     "INSERT INTO table_name13(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value5', 'value6', 6)");
             Assert.assertEquals("Insert returned a number != 1", 1, count4);
 
-            boolean result2 = statement.execute("ALTER TABLE table_name13 ADD column_name4 date");
+            boolean result2 = statement.execute("ALTER TABLE table_name13 ADD NULL date");
             Assert.assertFalse("Wrong return for ALTER TABLE", result2);
 
             boolean result3 = statement
