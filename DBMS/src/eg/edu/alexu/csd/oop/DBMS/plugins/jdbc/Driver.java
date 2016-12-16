@@ -31,7 +31,7 @@ public class Driver implements java.sql.Driver {
     private boolean canLogIn(String username, String password) throws SQLException {
         if (App.checkForExistence(username) && App.checkForExistence(password)) {
             String configDir = info.getProperty("path");
-            File configFile = new File(info.getProperty(configDir + File.separator + "login.conf"));
+            File configFile = new File(configDir + File.separator + "login.conf");
             if (!configFile.exists()) {
                 throw new SQLException();
             }
@@ -72,10 +72,10 @@ public class Driver implements java.sql.Driver {
             }
         } catch (Exception e) {
         }
-        File appDir = (File) info.get("path");
-        if (!App.checkForExistence(appDir)) {
+        if (!App.checkForExistence(info.get("path"))) {
             throw new SQLException();
         }
+        File appDir = new File(info.get("path").toString());
         try {
             String writerType = url.substring(url.indexOf(':') + 1, url.lastIndexOf(':'));
             if (!appDir.exists()) {
