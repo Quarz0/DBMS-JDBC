@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -38,6 +36,7 @@ public class CLI {
         this.table = null;
         this.info = new Properties();
         this.info.setProperty("path", App.DEFAULT_DIR_PATH);
+        this.createAppPath();
     }
 
     public void close() {
@@ -46,6 +45,16 @@ public class CLI {
         } catch (IOException e) {
             e.printStackTrace();
             AppLogger.getInstance().error(ErrorCode.CLI_CLOSE + " " + e.getMessage());
+        }
+    }
+
+    private void createAppPath() {
+        File workspace = new File(App.DEFAULT_DIR_PATH);
+        if (!workspace.exists()) {
+            if (!workspace.mkdir()) {
+                AppLogger.getInstance().fatal("Failed to create DBMS Directory");
+                throw new RuntimeException("Failed to create DBMS Directory");
+            }
         }
     }
 
@@ -84,12 +93,13 @@ public class CLI {
     public void newCredentials(String username, String password) throws IOException {
         String configDir = info.getProperty("path");
         List<String> lines = Arrays.asList("username:" + username, "password:" + password);
-        Path file = Paths.get(configDir + File.separator + ".cred.conf");
-        Files.write(file, lines, Charset.forName("UTF-8"));
+        File file = new File(configDir + File.separator + ".cred.conf");
+        file.createNewFile();
+        Files.write(file.toPath(), lines, Charset.forName("UTF-8"));
         Set<PosixFilePermission> perms = new HashSet<>();
         perms.add(PosixFilePermission.OWNER_READ);
         perms.add(PosixFilePermission.GROUP_READ);
-        Files.setPosixFilePermissions(file, perms);
+        Files.setPosixFilePermissions(file.toPath(), perms);
     }
 
     public String newPassword() {
