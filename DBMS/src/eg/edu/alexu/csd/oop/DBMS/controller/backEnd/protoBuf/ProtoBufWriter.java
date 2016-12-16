@@ -86,15 +86,16 @@ public class ProtoBufWriter implements BackEndWriter {
     @Override
     public void writeTable(SelectionTable selectionTable) throws IOException {
         PBSelectionTable.Builder pbSelectionTableBuilder = PBSelectionTable.newBuilder();
+        pbSelectionTableBuilder.setTableName(selectionTable.getTableName());
         pbSelectionTableBuilder.addAllColNames(selectionTable.getHeader().keySet());
         pbSelectionTableBuilder.addAllTypes(classesToStrings(selectionTable.getHeader().values()));
         List<PBRecord> recordList = new ArrayList<>();
         for (Record record : selectionTable.getRecordList()) {
-            PBRecord.Builder pbReordBuilder = PBRecord.newBuilder();
+            PBRecord.Builder pbRecordBuilder = PBRecord.newBuilder();
             for (Object value : record.getValues()) {
-                pbReordBuilder.addValues(value.toString());
+                pbRecordBuilder.addValues(value.toString());
             }
-            recordList.add(pbReordBuilder.build());
+            recordList.add(pbRecordBuilder.build());
         }
         pbSelectionTableBuilder.addAllRecordList(recordList);
         FileOutputStream writer = new FileOutputStream(selectionTable.getTableSchema().getData());
