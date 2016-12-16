@@ -1,8 +1,19 @@
 package eg.edu.alexu.csd.oop.DBMS.view;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
 
 import eg.edu.alexu.csd.oop.DBMS.app.AppLogger;
 import eg.edu.alexu.csd.oop.DBMS.controller.CLIController;
@@ -16,12 +27,17 @@ public class CLI {
     private String feedback;
     private long start;
     private String table;
+    private Properties info;
+
+    private File configFile;
 
     public CLI(CLIController cliController) {
         this.cliController = cliController;
         this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         this.feedback = "";
         this.table = null;
+        this.info = new Properties();
+        this.info.setProperty("path", App.DEFAULT_DIR_PATH);
     }
 
     public void close() {
@@ -33,15 +49,25 @@ public class CLI {
         }
     }
 
+    public boolean credentialsExists() {
+        String configDir = info.getProperty("path");
+        this.configFile = new File(configDir + File.separator + ".cred.conf");
+        return configFile.exists();
+    }
+
+    public Properties getInfo() {
+        return info;
+    }
+
     public String getPassword() {
         System.out.print("Enter password: ");
-        // char[] pass = System.console().readPassword();
-        // return new String(pass);
-        try {
-            return this.bufferedReader.readLine();
-        } catch (IOException e) {
-            return null;
-        }
+        char[] pass = System.console().readPassword();
+        return new String(pass);
+        // try {
+        // return this.bufferedReader.readLine();
+        // } catch (IOException e) {
+        // return null;
+        // }
     }
 
     public String getURL() {
@@ -53,6 +79,28 @@ public class CLI {
             return null;
         }
 
+    }
+
+    public void newCredentials(String username, String password) throws IOException {
+        String configDir = info.getProperty("path");
+        List<String> lines = Arrays.asList("username:" + username, "password:" + password);
+        Path file = Paths.get(configDir + File.separator + ".cred.conf");
+        Files.write(file, lines, Charset.forName("UTF-8"));
+        Set<PosixFilePermission> perms = new HashSet<>();
+        perms.add(PosixFilePermission.OWNER_READ);
+        perms.add(PosixFilePermission.GROUP_READ);
+        Files.setPosixFilePermissions(file, perms);
+    }
+
+    public String newPassword() {
+        System.out.print("Enter a New password: ");
+        char[] pass = System.console().readPassword();
+        return new String(pass);
+        // try {
+        // return this.bufferedReader.readLine();
+        // } catch (IOException e) {
+        // return null;
+        // }
     }
 
     public void newPrompt() {
@@ -91,7 +139,10 @@ public class CLI {
         String temp = this.bufferedReader.readLine();
         AppLogger.getInstance().info("USER INPUT: <" + temp + ">");
         this.start = System.currentTimeMillis();
-        this.feedback = this.cliController.newInput(temp);
+        if (App.checkForExistence(temp) && temp.trim().equals("exit"))
+            this.cliController.end();
+        else
+            this.feedback = this.cliController.newInput(temp);
     }
 
     public void setTable(String table) {

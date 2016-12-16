@@ -1,14 +1,16 @@
 package eg.edu.alexu.csd.oop.DBMS.controller;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 
 import eg.edu.alexu.csd.oop.DBMS.app.AppLogger;
 import eg.edu.alexu.csd.oop.DBMS.plugins.jdbc.Driver;
 import eg.edu.alexu.csd.oop.DBMS.util.App;
 import eg.edu.alexu.csd.oop.DBMS.util.ErrorCode;
+import eg.edu.alexu.csd.oop.DBMS.util.MessageDigestUtil;
 import eg.edu.alexu.csd.oop.DBMS.view.CLI;
 
 public class CLIController implements Feedback {
@@ -23,7 +25,7 @@ public class CLIController implements Feedback {
     }
 
     private CLI cli;
-    private java.sql.Driver driver;
+    private Driver driver;
 
     private Connection connection;
 
@@ -36,6 +38,12 @@ public class CLIController implements Feedback {
     }
 
     public void begin() {
+        try {
+            this.checkForCredentials();
+        } catch (NoSuchAlgorithmException | RuntimeException | IOException e2) {
+            this.cli.out(e2.getMessage());
+            this.end();
+        }
         String url = this.cli.getURL();
         try {
             if (!this.driver.acceptsURL(url)) {
@@ -46,12 +54,13 @@ public class CLIController implements Feedback {
             this.cli.out("Error!");
             this.end();
         }
-        Properties properties = new Properties();
-        properties.setProperty("username", System.getProperty("user.name"));
-        properties.setProperty("password", this.cli.getPassword());
-        properties.setProperty("path", App.DEFAULT_DIR_PATH);
+        this.cli.getInfo().setProperty("username", System.getProperty("user.name"));
+        this.cli.getInfo().setProperty("password", this.cli.getPassword());
         try {
-            this.connection = this.driver.connect(url, properties);
+            this.connection = this.driver.connect(url, this.cli.getInfo());
+            if (!App.checkForExistence(this.connection))
+                throw new SQLException("Access denied for user "
+                        + this.cli.getInfo().getProperty("username") + "@" + url);
             this.statement = this.connection.createStatement();
         } catch (SQLException e) {
             this.cli.out(e.getMessage());
@@ -60,9 +69,24 @@ public class CLIController implements Feedback {
         this.cli.run();
     }
 
+    public void checkForCredentials()
+            throws NoSuchAlgorithmException, IOException, RuntimeException {
+        if (this.cli.credentialsExists())
+            return;
+        this.cli.newCredentials(System.getProperty("user.name"),
+                MessageDigestUtil.getSecuredPassword(this.cli.newPassword()));
+    }
+
     public void end() {
-        this.cli.close();
-        CLIController.exit();
+        try {
+            Thread.sleep(2000);
+            this.cli.out("Bye");
+            Thread.sleep(2000);
+            this.cli.close();
+            CLIController.exit();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -75,7 +99,8 @@ public class CLIController implements Feedback {
             if (this.statement.execute(s))
                 return this.statement.getResultSet().toString();
             else
-                return ErrorCode.QUERY_IS_OK;
+                return ErrorCode.QUERY_IS_OK + " " + (this.statement.getUpdateCount() + " row"
+                        + (this.statement.getUpdateCount() == 1 ? " " : "s ") + "affected");
         } catch (RuntimeException e) {
             return e.getMessage();
         } catch (SQLException e) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration status="ERROR">
 	<Appenders>
-		<File name="File" fileName="logging.log" append="false">
+		<File name="File" fileName=".logging.log" append="false">
 			<PatternLayout>
 				<pattern>
 					%d [%-5p] %F:%t - %m%n

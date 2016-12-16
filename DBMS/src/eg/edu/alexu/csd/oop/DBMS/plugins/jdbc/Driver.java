@@ -12,10 +12,9 @@ import java.util.logging.Logger;
 
 import eg.edu.alexu.csd.oop.DBMS.model.BackEndWriterFactory;
 import eg.edu.alexu.csd.oop.DBMS.util.App;
-import eg.edu.alexu.csd.oop.DBMS.util.ErrorCode;
 
 public class Driver implements java.sql.Driver {
-    private Properties info;
+    private File configFile;
 
     @Override
     public boolean acceptsURL(String url) throws SQLException {
@@ -32,24 +31,19 @@ public class Driver implements java.sql.Driver {
 
     private boolean canLogIn(String username, String password) throws SQLException {
         if (App.checkForExistence(username) && App.checkForExistence(password)) {
-            String configDir = info.getProperty("path");
-            File configFile = new File(configDir + File.separator + ".login.conf");
-            if (!configFile.exists()) {
-                throw new SQLException(ErrorCode.MUST_SIGN_UP);
-            }
             try {
-                FileReader reader = new FileReader(configFile);
+                FileReader reader = new FileReader(this.configFile);
                 Properties props = new Properties();
                 props.load(reader);
                 String savedUsername = props.getProperty("username", null);
                 String savedPassword = props.getProperty("password", null);
-                if (App.checkForExistence(username) && App.checkForExistence(password)) {
+                if (!App.checkForExistence(username) || !App.checkForExistence(password)) {
                     return false;
                 }
+                reader.close();
                 if (username.equals(savedUsername) && password.equals(savedPassword)) {
                     return true;
                 }
-                reader.close();
             } catch (IOException ex) {
                 throw new SQLException("Error!");
             }
@@ -70,7 +64,7 @@ public class Driver implements java.sql.Driver {
         String password = info.getProperty("password", null);
         try {
             if (!canLogIn(username, password)) {
-                // return null;
+                return null;
             }
         } catch (Exception e) {
         }
