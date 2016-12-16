@@ -19,6 +19,7 @@ import eg.edu.alexu.csd.oop.DBMS.model.Record;
 import eg.edu.alexu.csd.oop.DBMS.model.SelectionTable;
 import eg.edu.alexu.csd.oop.DBMS.model.Table;
 import eg.edu.alexu.csd.oop.DBMS.model.TypeFactory;
+import eg.edu.alexu.csd.oop.DBMS.util.App;
 
 public class ProtoBufWriter implements BackEndWriter {
     private static final String DATA_FILE_EXTENSION = ".ser";
@@ -84,7 +85,12 @@ public class ProtoBufWriter implements BackEndWriter {
             Iterator<String> valuesIt = pbRecord.getValuesList().iterator();
             Iterator<Class<?>> typeIt = header.values().iterator();
             while (typeIt.hasNext() && valuesIt.hasNext()) {
-                values.add(TypeFactory.parseToObject(typeIt.next(), valuesIt.next()));
+                Class<?> cls = typeIt.next();
+                String val = valuesIt.next();
+                if (val.equals("NULL"))
+                    values.add(null);
+                else
+                    values.add(TypeFactory.parseToObject(cls, App.addQuotes(cls, val)));
             }
             selectedTable.addRecord(new Record(header, values));
         }
@@ -101,7 +107,7 @@ public class ProtoBufWriter implements BackEndWriter {
         for (Record record : selectionTable.getRecordList()) {
             PBRecord.Builder pbRecordBuilder = PBRecord.newBuilder();
             for (Object value : record.getValues()) {
-                pbRecordBuilder.addValues(value.toString());
+                pbRecordBuilder.addValues(App.checkForExistence(value) ? value.toString() : "NULL");
             }
             recordList.add(pbRecordBuilder.build());
         }

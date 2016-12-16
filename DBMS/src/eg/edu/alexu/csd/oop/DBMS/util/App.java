@@ -1,6 +1,7 @@
 package eg.edu.alexu.csd.oop.DBMS.util;
 
 import java.io.File;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,6 +21,13 @@ public final class App {
         temp.put(')', "\\\\)");
         specialCharacters = Collections.unmodifiableMap(temp);
     };
+
+    public static String addQuotes(Class<?> cls, String s) {
+        if (String.class.equals(cls) || Date.class.equals(cls)) // data types that must be quoted
+                                                                // are added here.
+            return "\"" + s + "\"";
+        return s;
+    }
 
     public static boolean checkForExistence(Object object) {
         if (object == null)

@@ -1053,6 +1053,7 @@ public final class PBWriter {
                     throws com.google.protobuf.InvalidProtocolBufferException {
                 return PARSER.parseFrom(data);
             }
+
             public static PBWriter.PBSelectionTable.PBRecord parseFrom(byte[] data,
                     com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws com.google.protobuf.InvalidProtocolBufferException {
@@ -1351,10 +1352,12 @@ public final class PBWriter {
         public static Builder newBuilder(PBWriter.PBSelectionTable prototype) {
             return newBuilder().mergeFrom(prototype);
         }
+
         public static PBWriter.PBSelectionTable parseDelimitedFrom(java.io.InputStream input)
                 throws java.io.IOException {
             return PARSER.parseDelimitedFrom(input);
         }
+
         public static PBWriter.PBSelectionTable parseDelimitedFrom(java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
@@ -1382,6 +1385,7 @@ public final class PBWriter {
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data, extensionRegistry);
         }
+
         public static PBWriter.PBSelectionTable parseFrom(
                 com.google.protobuf.CodedInputStream input) throws java.io.IOException {
             return PARSER.parseFrom(input);
@@ -1419,6 +1423,7 @@ public final class PBWriter {
         private byte memoizedIsInitialized = -1;
 
         private int memoizedSerializedSize = -1;
+
         private PBSelectionTable(boolean noInit) {
             this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance();
         }
@@ -1904,6 +1909,7 @@ public final class PBWriter {
 
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistry registry) {
     }
+
     private PBWriter() {
     }
 

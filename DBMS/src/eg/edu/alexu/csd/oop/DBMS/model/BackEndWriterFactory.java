@@ -1,7 +1,6 @@
 package eg.edu.alexu.csd.oop.DBMS.model;
 
 import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.BackEndWriter;
-import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.json.JSONWriter;
 import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.protoBuf.ProtoBufWriter;
 import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.xml.XMLWriter;
 
