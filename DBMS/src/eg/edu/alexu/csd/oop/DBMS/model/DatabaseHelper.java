@@ -1,7 +1,7 @@
 package eg.edu.alexu.csd.oop.DBMS.model;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import eg.edu.alexu.csd.oop.DBMS.controller.DBMSController;
 import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.BackEndWriter;
@@ -141,8 +141,9 @@ public class DatabaseHelper {
             throw new RuntimeException("Unfortunately i do not have your table :(");
         }
         try {
+
             selectionTable = this.backEndWriter.readTable(table);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Error while attempting to read from table");
         }
         try {

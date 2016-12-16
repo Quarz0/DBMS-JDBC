@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+option java_outer_classname = "PBWriter";
+message PBSelectionTable {
+	message PBRecord {
+		repeated string values = 1;
+	}
+
+	required string tableName = 1;
+	repeated string colNames = 2;
+	repeated string types = 3;
+	repeated PBRecord recordList = 4;
+}

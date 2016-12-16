@@ -1,13 +1,15 @@
 package eg.edu.alexu.csd.oop.DBMS.controller;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.xml.stream.XMLStreamException;
 
 import eg.edu.alexu.csd.oop.DBMS.model.Database;
 import eg.edu.alexu.csd.oop.DBMS.model.DatabaseHelper;
@@ -34,12 +36,13 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public void alterTableAdd(String tableName, String colName, Class<?> type)
             throws RuntimeException {
-        this.dbHelper.readTable(tableName);
-        if (dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName)) {
+
+        dbHelper.readTable(tableName);
+        if (dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName.toLowerCase())) {
             throw new RuntimeException("Column already exists!");
         }
         dbHelper.getSelectedTable().getHeader().put(colName, type);
-        dbHelper.getSelectedTable().getDefaultHeader().put(colName, type);
+        dbHelper.getSelectedTable().getDefaultHeader().put(colName.toLowerCase(), type);
         for (Record record : dbHelper.getSelectedTable().getRecordList()) {
             record.addToRecord(null);
         }
@@ -47,17 +50,17 @@ public class DatabaseController implements DBMS, Observer {
 
     @Override
     public void alterTableDrop(String tableName, String colName) throws RuntimeException {
-        this.dbHelper.readTable(tableName);
-        if (!dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName)) {
+
+        if (!dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName.toLowerCase())) {
             throw new RuntimeException("Column does not exist!");
         }
-        dbHelper.getSelectedTable().getDefaultHeader().remove(colName);
+        dbHelper.getSelectedTable().getDefaultHeader().remove(colName.toLowerCase());
         int index = 0;
         String realColName = null;
         for (String str : dbHelper.getSelectedTable().getHeader().keySet()) {
             if (str.equalsIgnoreCase(colName)) {
-                dbHelper.getSelectedTable().getHeader().remove(str);
                 realColName = str;
+                dbHelper.getSelectedTable().getHeader().remove(realColName);
                 break;
             }
             index++;
@@ -71,17 +74,18 @@ public class DatabaseController implements DBMS, Observer {
     @Override
     public void alterTableModify(String tableName, String colName, Class<?> type)
             throws RuntimeException {
-        this.dbHelper.readTable(tableName);
-        if (!dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName)) {
+
+        dbHelper.readTable(tableName);
+        if (!dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName.toLowerCase())) {
             throw new RuntimeException("Column deos not exist!");
         }
-        dbHelper.getSelectedTable().getHeader().put(colName, type);
-        dbHelper.getSelectedTable().getDefaultHeader().put(colName, type);
+        dbHelper.getSelectedTable().getDefaultHeader().put(colName.toLowerCase(), type);
         int index = 0;
         String realColName = null;
         for (String str : dbHelper.getSelectedTable().getHeader().keySet()) {
             if (str.equalsIgnoreCase(colName)) {
                 realColName = str;
+                dbHelper.getSelectedTable().getHeader().put(realColName, type);
                 break;
             }
             index++;
@@ -114,11 +118,15 @@ public class DatabaseController implements DBMS, Observer {
                 dbHelper.getCurrentDatabase().getPath() + File.separator + tableName);
         Table table = new Table(tableFile);
         dbHelper.getCurrentDatabase().registerTable(table);
-        table.registerFiles(
-                this.dbHelper.getBackEndWriter().makeDataFile(table.getTablePath(), tableName,
-                        columns),
-                this.dbHelper.getBackEndWriter().makeValidatorFile(table.getTablePath(), tableName,
-                        columns));
+        try {
+            table.registerFiles(
+                    this.dbHelper.getBackEndWriter().makeDataFile(table.getTablePath(), tableName,
+                            columns),
+                    this.dbHelper.getBackEndWriter().makeValidatorFile(table.getTablePath(),
+                            tableName, columns));
+        } catch (IOException | XMLStreamException e) {
+            throw new RuntimeException("Error while attempting to create table");
+        }
     }
 
     @Override
@@ -255,7 +263,7 @@ public class DatabaseController implements DBMS, Observer {
                         .getCurrentQuery() instanceof Writable)
                     this.dbHelper.getBackEndWriter()
                             .writeTable(this.getHelper().getSelectedTable());
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 throw new RuntimeException("Error while attempting to write table");
             }
 

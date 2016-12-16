@@ -3,11 +3,13 @@ package eg.edu.alexu.csd.oop.DBMS.controller.backEnd.xml;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Map;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.BackEndWriter;
@@ -57,23 +59,20 @@ public class XMLWriter implements BackEndWriter {
     }
 
     @Override
-    public File makeDataFile(String tablePath, String tableName, Map<String, Class<?>> header) {
+    public File makeDataFile(String tablePath, String tableName, Map<String, Class<?>> header)
+            throws IOException, XMLStreamException {
         File xmlFile = new File(tablePath + File.separator + tableName + ".xml");
-        try {
-            writer = new FileOutputStream(xmlFile);
-            xmlStreamWriter = fileWriter.createXMLStreamWriter(writer, "UTF-8");
-            xmlStreamWriter.writeStartDocument("UTF-8", "1.0");
-            xmlStreamWriter.writeCharacters("\n");
-            xmlStreamWriter.writeStartElement(tableName);
-            xmlStreamWriter.writeAttribute("colNames", mapToString(header));
-            xmlStreamWriter.writeAttribute("types", classToString(header));
-            xmlStreamWriter.writeEndElement();
-            xmlStreamWriter.writeEndDocument();
-            xmlStreamWriter.flush();
-            xmlStreamWriter.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        writer = new FileOutputStream(xmlFile);
+        xmlStreamWriter = fileWriter.createXMLStreamWriter(writer, "UTF-8");
+        xmlStreamWriter.writeStartDocument("UTF-8", "1.0");
+        xmlStreamWriter.writeCharacters("\n");
+        xmlStreamWriter.writeStartElement(tableName);
+        xmlStreamWriter.writeAttribute("colNames", mapToString(header));
+        xmlStreamWriter.writeAttribute("types", classToString(header));
+        xmlStreamWriter.writeEndElement();
+        xmlStreamWriter.writeEndDocument();
+        xmlStreamWriter.flush();
+        xmlStreamWriter.close();
         return xmlFile;
     }
 
