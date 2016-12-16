@@ -12,7 +12,7 @@ public class CLIController implements Feedback {
 
     public CLIController(DBMSController dbmsController) {
         this.dbmsController = dbmsController;
-        // this.cli = new CLI(dbmsController);
+//        this.cli = new CLI(dbmsController);
     }
 
     public void begin() {

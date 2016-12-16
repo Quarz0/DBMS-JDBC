@@ -108,7 +108,7 @@ public class ResultSet implements java.sql.ResultSet {
         checkClosed();
         int i = 1;
         for (String column : table.getHeader().keySet()) {
-            if (column.equals(columnLabel)) {
+            if (column.equals(columnLabel.toLowerCase())) {
                 return i;
             }
             i++;
