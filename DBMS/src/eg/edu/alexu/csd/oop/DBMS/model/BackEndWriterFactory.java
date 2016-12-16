@@ -2,6 +2,7 @@ package eg.edu.alexu.csd.oop.DBMS.model;
 
 import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.BackEndWriter;
 import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.json.JSONWriter;
+import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.protoBuf.ProtoBufWriter;
 import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.xml.XMLWriter;
 
 public class BackEndWriterFactory {
@@ -15,7 +16,7 @@ public class BackEndWriterFactory {
             return new XMLWriter();
         case JSON_CASE:
         case ALTERNATIVE_CASE:
-            return new JSONWriter();
+            return new ProtoBufWriter();
         default:
             return null;
         }
