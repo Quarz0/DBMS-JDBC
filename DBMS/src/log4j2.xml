@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="ERROR">
+	<Appenders>
+		<File name="File" fileName="logging.log" append="false">
+			<PatternLayout>
+				<pattern>
+					%d [%-5p] %F:%t - %m%n
+				</pattern>
+			</PatternLayout>
+		</File>
+	</Appenders>
+	
+	<Loggers>
+		<Logger name="eg.edu.alexu.csd.oop.DBMS.app.AppLogger" level="info" additivity="false">
+		   <AppenderRef ref="File"/>
+		</Logger>
+	</Loggers>
+
+</configuration>

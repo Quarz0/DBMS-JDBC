@@ -38,6 +38,7 @@ public class DatabaseController implements DBMS, Observer {
             throws RuntimeException {
 
         this.dbHelper.readTable(tableName);
+
         if (dbHelper.getSelectedTable().getDefaultHeader().containsKey(colName.toLowerCase())) {
             throw new RuntimeException("Column already exists!");
         }
@@ -270,8 +271,8 @@ public class DatabaseController implements DBMS, Observer {
 
             if (this.dbmsController.getSQLParserController().getSqlParserHelper()
                     .getCurrentQuery() instanceof Viewable) {
-//                this.dbmsController.getCLIController()
-//                        .feedback(this.dbHelper.getSelectedTable().toString());
+                // this.dbmsController.getCLIController()
+                // .feedback(this.dbHelper.getSelectedTable().toString());
             }
         }
     }

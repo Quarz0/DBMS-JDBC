@@ -2,6 +2,7 @@ package eg.edu.alexu.csd.oop.DBMS.controller;
 
 import java.io.File;
 
+import eg.edu.alexu.csd.oop.DBMS.app.AppLogger;
 import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.BackEndWriter;
 
 public class DBMSController {
@@ -19,14 +20,15 @@ public class DBMSController {
         this.registerObservers();
         this.appPath = appPath;
         this.createAppPath();
-//        this.cliController.begin();
+        // this.cliController.begin();
     }
 
     private void createAppPath() {
         File workspace = new File(this.appPath);
         if (!workspace.exists()) {
             if (!workspace.mkdir()) {
-                throw new RuntimeException("Failed to create DBMS Dirctory");
+                AppLogger.getInstance().fatal("Failed to create DBMS Directory");
+                throw new RuntimeException("Failed to create DBMS Directory");
             }
         }
         this.databaseController.getHelper().setWorkspaceDir(workspace);

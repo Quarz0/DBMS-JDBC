@@ -73,6 +73,7 @@ public class XMLWriter implements BackEndWriter {
         xmlStreamWriter.writeEndDocument();
         xmlStreamWriter.flush();
         xmlStreamWriter.close();
+
         return xmlFile;
     }
 

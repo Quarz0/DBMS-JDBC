@@ -10,6 +10,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import eg.edu.alexu.csd.oop.DBMS.app.AppLogger;
 import eg.edu.alexu.csd.oop.DBMS.model.Record;
 import eg.edu.alexu.csd.oop.DBMS.model.SelectionTable;
 import eg.edu.alexu.csd.oop.DBMS.model.TypeFactory;
@@ -44,6 +45,7 @@ public class XMLReader extends DefaultHandler {
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException e) {
             e.printStackTrace();
+            AppLogger.getInstance().error(e);
         }
     }
 

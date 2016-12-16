@@ -2,7 +2,6 @@ package eg.edu.alexu.csd.oop.test.jdbc;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.Driver;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -402,8 +401,8 @@ public class SmokeTest {
         Connection connection = createUseDatabase("TestDB_Create");
         try {
             Statement statement = connection.createStatement();
-            statement
-                    .execute("CREATE TABLE table_name13(column_name1 varchar, column_name2 int, column_name3 varchar)");
+            statement.execute(
+                    "CREATE TABLE table_name13(column_name1 varchar, column_name2 int, column_name3 varchar)");
             int count1 = statement.executeUpdate(
                     "INSERT INTO table_name13(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)");
             Assert.assertEquals("Insert returned a number != 1", 1, count1);
@@ -416,31 +415,33 @@ public class SmokeTest {
             int count4 = statement.executeUpdate(
                     "INSERT INTO table_name13(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value5', 'value6', 6)");
             Assert.assertEquals("Insert returned a number != 1", 1, count4);
-            boolean result3 = statement
-                    .execute("SELECT column_name3, column_name2 FROM table_name13 ORDER BY column_name2 ASC, COLUMN_name3 DESC");
+            boolean result3 = statement.execute(
+                    "SELECT column_name3, column_name2 FROM table_name13 ORDER BY column_name2 ASC, COLUMN_name3 DESC");
             Assert.assertTrue("Wrong return for select UNION existing records", result3);
             ResultSet res2 = statement.getResultSet();
-            while (res2.next());
-            while (res2.previous());
+            while (res2.next())
+                ;
+            while (res2.previous())
+                ;
             Assert.assertTrue(res2.isBeforeFirst());
             res2.next();
             Assert.assertTrue(res2.isFirst());
             res2.next();
             res2.first();
-//            Assert.assertEquals("value1", res2.getString("colUmn_Name1"));
+            // Assert.assertEquals("value1", res2.getString("colUmn_Name1"));
             Assert.assertEquals(4, res2.getInt("colUmn_Name2"));
             Assert.assertEquals("value5", res2.getString("colUmn_Name3"));
             res2.next();
-//            Assert.assertEquals("value1", res2.getString("colUmn_Name1"));
+            // Assert.assertEquals("value1", res2.getString("colUmn_Name1"));
             Assert.assertEquals(4, res2.getInt("colUmn_Name2"));
             Assert.assertEquals("value3", res2.getString("colUmn_Name3"));
             res2.next();
-//            Assert.assertEquals("value2", res2.getString("colUmn_Name1"));
+            // Assert.assertEquals("value2", res2.getString("colUmn_Name1"));
             Assert.assertEquals(5, res2.getInt("colUmn_Name2"));
             Assert.assertEquals("value4", res2.getString("colUmn_Name3"));
             res2.next();
             Assert.assertTrue(res2.isLast());
-//            Assert.assertEquals("value5", res2.getString("colUmn_Name1"));
+            // Assert.assertEquals("value5", res2.getString("colUmn_Name1"));
             Assert.assertEquals(6, res2.getInt("colUmn_Name2"));
             Assert.assertEquals("value6", res2.getString("colUmn_Name3"));
             res2.next();
@@ -449,71 +450,75 @@ public class SmokeTest {
             Assert.assertTrue(res2.isBeforeFirst());
             res2.next();
             Assert.assertTrue(res2.isFirst());
-//            Assert.assertEquals("value1", res2.getString(1));
+            // Assert.assertEquals("value1", res2.getString(1));
             Assert.assertEquals(4, res2.getInt(2));
             Assert.assertEquals("value5", res2.getString(1));
             res2.next();
-//            Assert.assertEquals("value1", res2.getString(1));
+            // Assert.assertEquals("value1", res2.getString(1));
             Assert.assertEquals(4, res2.getInt(2));
             Assert.assertEquals("value3", res2.getString(1));
             res2.next();
-//            Assert.assertEquals("value2", res2.getString(1));
+            // Assert.assertEquals("value2", res2.getString(1));
             Assert.assertEquals(5, res2.getInt(2));
             Assert.assertEquals("value4", res2.getString(1));
             res2.next();
             Assert.assertTrue(res2.isLast());
-//            Assert.assertEquals("value5", res2.getString(1));
+            // Assert.assertEquals("value5", res2.getString(1));
             Assert.assertEquals(6, res2.getInt(2));
             Assert.assertEquals("value6", res2.getString(1));
             res2.next();
-            while (res2.previous());
+            while (res2.previous())
+                ;
             res2.afterLast();
             Assert.assertTrue(res2.isAfterLast());
-            while (res2.previous());
-            while (res2.next());
-            while (res2.previous());
+            while (res2.previous())
+                ;
+            while (res2.next())
+                ;
+            while (res2.previous())
+                ;
             Assert.assertTrue(res2.isBeforeFirst());
             res2.next();
             Assert.assertTrue(res2.isFirst());
             res2.first();
-//            Assert.assertEquals("value1", res2.getObject(res2.findColumn("colUmn_Name1")));
+            // Assert.assertEquals("value1", res2.getObject(res2.findColumn("colUmn_Name1")));
             Assert.assertEquals(4, res2.getObject(res2.findColumn("colUmn_Name2")));
             Assert.assertEquals("value5", res2.getObject(res2.findColumn("colUmn_Name3")));
             res2.next();
-//            Assert.assertEquals("value1", res2.getObject(res2.findColumn("colUmn_Name1")));
+            // Assert.assertEquals("value1", res2.getObject(res2.findColumn("colUmn_Name1")));
             Assert.assertEquals(4, res2.getObject(res2.findColumn("colUmn_Name2")));
             Assert.assertEquals("value3", res2.getObject("colUmn_Name3"));
             res2.next();
-//            Assert.assertEquals("value2", res2.getObject("colUmn_Name1"));
+            // Assert.assertEquals("value2", res2.getObject("colUmn_Name1"));
             Assert.assertEquals(5, res2.getObject("colUmn_Name2"));
             Assert.assertEquals("value4", res2.getObject("colUmn_Name3"));
             res2.next();
             Assert.assertTrue(res2.isLast());
-//            Assert.assertEquals("value5", res2.getObject("colUmn_Name1"));
+            // Assert.assertEquals("value5", res2.getObject("colUmn_Name1"));
             Assert.assertEquals(6, res2.getObject("colUmn_Name2"));
             Assert.assertEquals("value6", res2.getObject("colUmn_Name3"));
             res2.next();
             Assert.assertTrue(res2.isAfterLast());
             res2.previous();
-//            Assert.assertEquals("value5", res2.getObject("colUmn_Name1"));
+            // Assert.assertEquals("value5", res2.getObject("colUmn_Name1"));
             Assert.assertEquals(6, res2.getObject("colUmn_Name2"));
             res2.absolute(1);
-//            Assert.assertEquals("value1", res2.getObject(1));
+            // Assert.assertEquals("value1", res2.getObject(1));
             Assert.assertEquals(4, res2.getObject(2));
             Assert.assertEquals("value5", res2.getObject(1));
             res2.absolute(2);
-//            Assert.assertEquals("value1", res2.getObject(1));
+            // Assert.assertEquals("value1", res2.getObject(1));
             Assert.assertEquals(4, res2.getObject(2));
             Assert.assertEquals("value3", res2.getObject(1));
             res2.absolute(4);
             res2.previous();
-//            Assert.assertEquals("value2", res2.getObject(1));
+            // Assert.assertEquals("value2", res2.getObject(1));
             Assert.assertEquals(5, res2.getObject(2));
             Assert.assertEquals("value4", res2.getObject(1));
             res2.absolute(15125);
             res2.previous();
             Assert.assertTrue(res2.isLast());
-//            Assert.assertEquals("value5", res2.getObject(1));
+            // Assert.assertEquals("value5", res2.getObject(1));
             Assert.assertEquals(6, res2.getObject(2));
             Assert.assertEquals("value6", res2.getObject(1));
             res2.next();
