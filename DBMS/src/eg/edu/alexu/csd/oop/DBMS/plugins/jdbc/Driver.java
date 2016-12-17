@@ -20,9 +20,7 @@ public class Driver implements java.sql.Driver {
     public boolean acceptsURL(String url) throws SQLException {
         if (!App.checkForExistence(url)) {
             throw new SQLException();
-        } else if (url.equals("jdbc:xmldb://localhost")) {
-            return true;
-        } else if (url.equals("jdbc:altdb://localhost")) {
+        } else if (url.matches("jdbc:[a-zA-Z]+db://localhost")) {
             return true;
         } else {
             return false;
