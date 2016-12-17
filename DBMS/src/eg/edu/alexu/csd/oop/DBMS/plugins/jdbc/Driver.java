@@ -3,6 +3,7 @@ package eg.edu.alexu.csd.oop.DBMS.plugins.jdbc;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
@@ -12,6 +13,7 @@ import java.util.logging.Logger;
 
 import eg.edu.alexu.csd.oop.DBMS.model.BackEndWriterFactory;
 import eg.edu.alexu.csd.oop.DBMS.util.App;
+import eg.edu.alexu.csd.oop.DBMS.util.MessageDigestUtil;
 import eg.edu.alexu.csd.oop.DBMS.util.RegexEvaluator;
 
 public class Driver implements java.sql.Driver {
@@ -32,10 +34,10 @@ public class Driver implements java.sql.Driver {
         }
     }
 
-    private boolean canLogIn(String username, String password) throws SQLException {
+    private boolean canLogIn(String username, String password, String path) throws SQLException {
         if (App.checkForExistence(username) && App.checkForExistence(password)) {
             try {
-                FileReader reader = new FileReader(this.configFile);
+                FileReader reader = new FileReader(path + ".cred.conf");
                 Properties props = new Properties();
                 props.load(reader);
                 String savedUsername = props.getProperty("username", null);
@@ -44,8 +46,15 @@ public class Driver implements java.sql.Driver {
                     return false;
                 }
                 reader.close();
-                if (username.equals(savedUsername) && password.equals(savedPassword)) {
-                    return true;
+                try {
+                    if (username.equals(savedUsername) && savedPassword
+                            .equals(MessageDigestUtil.getSecuredPassword(password))) {
+                        return true;
+                    }
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException();
+                } catch (RuntimeException e) {
+                    throw new RuntimeException();
                 }
             } catch (IOException ex) {
                 throw new SQLException("Error!");
@@ -65,9 +74,10 @@ public class Driver implements java.sql.Driver {
         }
         String username = info.getProperty("username", null);
         String password = info.getProperty("password", null);
+        String path = info.getProperty("path");
         try {
-            if (!canLogIn(username, password)) {
-                // return null;
+            if (!canLogIn(username, password, path)) {
+                return null;
             }
         } catch (Exception e) {
         }

@@ -1,1 +1,13 @@
-2016-12-17 01:14:01,396 [INFO ] CLIController.java:main - EXITING Program
+2016-12-17 23:59:01,545 [INFO ] CLIController.java:main - Program Started
+2016-12-17 23:59:04,734 [INFO ] CLIController.java:main - Password entered
+2016-12-17 23:59:05,070 [INFO ] CLIController.java:main - Access Granted
+2016-12-17 23:59:06,870 [INFO ] CLI.java:main - NEW REQUEST: <null>
+2016-12-17 23:59:06,871 [ERROR] CLIController.java:main - Syntax error!
+2016-12-17 23:59:07,038 [INFO ] CLI.java:main - NEW REQUEST: <null>
+2016-12-17 23:59:07,039 [ERROR] CLIController.java:main - Syntax error!
+2016-12-17 23:59:07,039 [INFO ] CLI.java:main - NEW REQUEST: <null>
+2016-12-17 23:59:07,039 [ERROR] CLIController.java:main - Syntax error!
+2016-12-17 23:59:07,040 [INFO ] CLI.java:main - NEW REQUEST: <null>
+2016-12-17 23:59:07,040 [ERROR] CLIController.java:main - Syntax error!
+2016-12-17 23:59:07,040 [INFO ] CLI.java:main - NEW REQUEST: <null>
+2016-12-17 23:59:07,041 [ERROR] CLIController.java:main - Syntax error!

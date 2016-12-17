@@ -70,13 +70,13 @@ public class CLI {
 
     public String getPassword() {
         System.out.print("Enter password: ");
-        char[] pass = System.console().readPassword();
-        return new String(pass);
-        // try {
-        // return this.bufferedReader.readLine();
-        // } catch (IOException e) {
-        // return null;
-        // }
+        // char[] pass = System.console().readPassword();
+        // return new String(pass);
+        try {
+            return this.bufferedReader.readLine();
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     public String getURL() {
@@ -104,13 +104,13 @@ public class CLI {
 
     public String newPassword() {
         System.out.print("Enter a New password: ");
-        char[] pass = System.console().readPassword();
-        return new String(pass);
-        // try {
-        // return this.bufferedReader.readLine();
-        // } catch (IOException e) {
-        // return null;
-        // }
+        // char[] pass = System.console().readPassword();
+        // return new String(pass);
+        try {
+            return this.bufferedReader.readLine();
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     public void newPrompt() {
