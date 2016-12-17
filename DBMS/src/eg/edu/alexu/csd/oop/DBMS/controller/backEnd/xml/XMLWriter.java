@@ -12,6 +12,8 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.xml.sax.SAXException;
+
 import eg.edu.alexu.csd.oop.DBMS.controller.backEnd.BackEndWriter;
 import eg.edu.alexu.csd.oop.DBMS.model.Record;
 import eg.edu.alexu.csd.oop.DBMS.model.SelectionTable;
@@ -128,9 +130,9 @@ public class XMLWriter implements BackEndWriter {
         reader = new XMLReader(table.getTableName());
         try {
             parser.parse(table.getData(), reader);
-        } catch (Exception e) {
+        } catch (IOException | SAXException | IllegalArgumentException e) {
             e.printStackTrace();
-            throw new RuntimeException("Invalid file");
+            throw new RuntimeException("Invalid file or file was not found");
         }
         return reader.getTable();
     }
