@@ -79,13 +79,17 @@ public class CLIController implements Feedback {
 
     public void end() {
         try {
+            this.statement.close();
+            this.connection.close();
             Thread.sleep(2000);
             this.cli.out("Bye");
             Thread.sleep(2000);
             this.cli.close();
             CLIController.exit();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            this.cli.out("Error!");
+        } catch (SQLException e) {
+            this.cli.out("Error while trying to close connection");
         }
     }
 
