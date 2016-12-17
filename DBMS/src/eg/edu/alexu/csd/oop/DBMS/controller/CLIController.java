@@ -101,9 +101,9 @@ public class CLIController implements Feedback {
     public String newInput(String s) {
         try {
             if (this.statement.execute(s))
-                return this.statement.getResultSet().toString();
+                return ErrorCode.QUERY_IS_OK + this.statement.getResultSet().toString();
             else
-                return ErrorCode.QUERY_IS_OK + " " + (this.statement.getUpdateCount() + " row"
+                return ErrorCode.QUERY_IS_OK + ", " + (this.statement.getUpdateCount() + " row"
                         + (this.statement.getUpdateCount() == 1 ? " " : "s ") + "affected");
         } catch (RuntimeException e) {
             return e.getMessage();

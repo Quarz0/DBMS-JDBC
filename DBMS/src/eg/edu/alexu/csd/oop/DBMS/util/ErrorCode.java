@@ -12,7 +12,7 @@ public final class ErrorCode {
     public static final String FAILED_TO_CREATE_DEFAULT_DATABASE = "Cannot create workspace directory";
     public static final String LOCATE_QUERY = "Query not found!";
     public static final String QUERY_IS_NOT_OK = "Query failed";
-    public static final String QUERY_IS_OK = "Query is ok";
+    public static final String QUERY_IS_OK = "Query ok";
     public static final String SYNTAX_ERROR = "Syntax error!";
 
     public static final String TABLE_NOT_FOUND = "Cannot find table!";

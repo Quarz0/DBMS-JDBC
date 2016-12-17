@@ -147,11 +147,12 @@ public class CLI {
 
     private void scan() throws IOException {
         String temp = this.bufferedReader.readLine();
-        AppLogger.getInstance().info("USER INPUT: <" + temp + ">");
+        AppLogger.getInstance().info("NEW REQUEST: <" + temp + ">");
         this.start = System.currentTimeMillis();
-        if (App.checkForExistence(temp) && temp.trim().equals("exit"))
+        if (App.checkForExistence(temp) && temp.trim().equals("exit")) {
+            AppLogger.getInstance().warn("Exiting...");
             this.cliController.end();
-        else
+        } else
             this.feedback = this.cliController.newInput(temp);
     }
 

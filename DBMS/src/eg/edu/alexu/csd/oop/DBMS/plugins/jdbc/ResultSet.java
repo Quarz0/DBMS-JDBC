@@ -82,7 +82,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     private void checkClosed() throws SQLException {
         if (isClosed()) {
-            throw new SQLException();
+            throw new SQLException("Connection is  closed!");
         }
     }
 
