@@ -56,6 +56,7 @@ public class JDBCResultSetTest {
         statement.execute("insert into tester values (\"ahmed\",15, 32.5, 1996-5-16)");
         statement.execute("insert into tester (id, salary, birth) values (15, 12.9, 1995-12-24)");
         ResultSet temp = statement.executeQuery("select * from tester");
+        statement.execute("drop database test");
         temp.next();    //1
         assertEquals("ahmed",temp.getString(1));
         assertEquals("ahmed",temp.getString("name"));
@@ -67,10 +68,26 @@ public class JDBCResultSetTest {
         assertEquals(1996-5-16,temp.getDate("birth"));
         temp.next();
         assertEquals(0,temp.getString(1));  //null
-        statement.execute("drop database test");
-        
     }
     
+    @Test
     
+    public void testGetColumn() throws SQLException {
+        Driver driver = new Driver();
+        Properties info = new Properties();
+        info.setProperty("path", System.getProperty("user.home"));
+        String url = "jdbc:xmldb://localhost";
+        java.sql.Connection connection = driver.connect(url, info);
+        Statement statement = connection.createStatement();
+        statement.execute("create database test");
+        statement.execute("use test");
+        statement.execute("create table tester (name varchar, id int, salary float, birth Date)");
+        statement.execute("insert into tester values (\"ahmed\",15, 32.5, 1996-5-16)");
+        statement.execute("insert into tester (id, salary, birth) values (15, 12.9, 1995-12-24)");
+        ResultSet temp = statement.executeQuery("select * from tester");
+        statement.execute("drop database test");
+        temp.next();    //1
+        //not Done yet
+    }
 
 }
