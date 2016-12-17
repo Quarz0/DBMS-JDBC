@@ -132,7 +132,7 @@ public class CLI {
         if (App.checkForExistence(this.feedback)) {
             String log = this.feedback + " (" + (System.currentTimeMillis() - this.start) + "ms)";
             System.out.println(log);
-            AppLogger.getInstance().info(log);
+
         }
         if (App.checkForExistence(this.table))
             System.out.println(this.table);

@@ -16,11 +16,11 @@ import eg.edu.alexu.csd.oop.DBMS.view.CLI;
 public class CLIController implements Feedback {
 
     public static void exit() {
-        AppLogger.getInstance().info("EXITING Program");
         System.exit(0);
     }
 
     public static void main(String[] args) {
+        AppLogger.getInstance().info("Program Started");
         new CLIController();
     }
 
@@ -41,31 +41,40 @@ public class CLIController implements Feedback {
         try {
             this.checkForCredentials();
         } catch (NoSuchAlgorithmException | RuntimeException | IOException e2) {
+            AppLogger.getInstance().fatal(e2.getMessage());
             this.cli.out(e2.getMessage());
             this.end();
         }
         String url = this.cli.getURL();
         try {
             if (!this.driver.acceptsURL(url)) {
+                AppLogger.getInstance().info("Invalid URL!");
                 this.cli.out("Invalid URL!");
                 this.end();
             }
         } catch (SQLException e1) {
+            AppLogger.getInstance().error("Error!");
             this.cli.out("Error!");
             this.end();
         }
         this.cli.getInfo().setProperty("username", System.getProperty("user.name"));
         this.cli.getInfo().setProperty("password", this.cli.getPassword());
+        AppLogger.getInstance().info("Password entered");
         try {
             this.connection = this.driver.connect(url, this.cli.getInfo());
-            if (!App.checkForExistence(this.connection))
+            if (!App.checkForExistence(this.connection)) {
+                AppLogger.getInstance().error("Access denied for user "
+                        + this.cli.getInfo().getProperty("username") + "@" + url);
                 throw new SQLException("Access denied for user "
                         + this.cli.getInfo().getProperty("username") + "@" + url);
+            }
             this.statement = this.connection.createStatement();
         } catch (SQLException e) {
+            AppLogger.getInstance().error(e.getMessage());
             this.cli.out(e.getMessage());
             this.end();
         }
+        AppLogger.getInstance().info("Access Granted");
         this.cli.run();
     }
 
@@ -87,9 +96,13 @@ public class CLIController implements Feedback {
             Thread.sleep(2000);
             this.cli.close();
         } catch (InterruptedException e) {
+            AppLogger.getInstance().fatal("Error while exiting");
             this.cli.out("Error!");
         } catch (SQLException e) {
+            AppLogger.getInstance().fatal("Error while trying to close connection");
             this.cli.out("Error while trying to close connection");
+        } catch (Exception e) {
+            AppLogger.getInstance().fatal("Error while exiting");
         } finally {
             CLIController.exit();
         }
@@ -102,14 +115,19 @@ public class CLIController implements Feedback {
 
     public String newInput(String s) {
         try {
-            if (this.statement.execute(s))
+            if (this.statement.execute(s)) {
+                AppLogger.getInstance().info(ErrorCode.QUERY_IS_OK);
                 return ErrorCode.QUERY_IS_OK + this.statement.getResultSet().toString();
-            else
+            } else {
+                AppLogger.getInstance().info(ErrorCode.QUERY_IS_OK);
                 return ErrorCode.QUERY_IS_OK + ", " + (this.statement.getUpdateCount() + " row"
                         + (this.statement.getUpdateCount() == 1 ? " " : "s ") + "affected");
-        } catch (RuntimeException e) {
-            return e.getMessage();
-        } catch (SQLException e) {
+            }
+        } catch (SQLException | RuntimeException e) {
+            if (App.checkForExistence(e.getMessage()))
+                AppLogger.getInstance().error(e.getMessage());
+            else
+                AppLogger.getInstance().error("Error: " + e);
             return e.getMessage();
         }
     }
