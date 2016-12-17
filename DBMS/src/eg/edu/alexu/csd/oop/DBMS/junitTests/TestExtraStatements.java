@@ -73,4 +73,33 @@ public class TestExtraStatements {
         assertEquals(10.5, temp.getFloat(3), 0.001);
         statement.execute("drop database test");
     }
+
+    @Test
+    public void testSelectDistint() throws SQLException {
+        Driver driver = new Driver();
+        Properties info = new Properties();
+        info.setProperty("path", System.getProperty("user.home"));
+        String url = "jdbc:xmldb://localhost";
+        java.sql.Connection connection = driver.connect(url, info);
+        Statement statement = connection.createStatement();
+        statement.execute("create database test");
+        statement.execute("use test");
+        statement.execute("create table tester (name varchar,id int, salary float)");
+        statement.execute("insert into tester values (\"ahmed\", 15, 14.5)");
+        statement.execute("insert into tester values (\"ahmed\", 14, 32.5)");
+        statement.execute("insert into tester values (\"ahmed\", 15, 10.5)");
+        ResultSet temp = statement.executeQuery("SELECT Distinct name, salary from tester");
+        temp.next();
+        assertEquals(2, temp.getMetaData().getColumnCount());
+        assertEquals("ahmed", temp.getString(1));
+        assertEquals(14.5, temp.getFloat(2), 0.001);
+        temp = statement.executeQuery("SELECT Distinct name, id from tester");
+        temp.next();
+        assertEquals(2, temp.getMetaData().getColumnCount());
+        assertEquals(15, temp.getInt(2));
+        temp.next();
+        assertEquals(14, temp.getInt(2));
+        statement.execute("drop database test");
+    }
+
 }

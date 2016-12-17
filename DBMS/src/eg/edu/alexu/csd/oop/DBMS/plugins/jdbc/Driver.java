@@ -17,7 +17,6 @@ import eg.edu.alexu.csd.oop.DBMS.util.MessageDigestUtil;
 import eg.edu.alexu.csd.oop.DBMS.util.RegexEvaluator;
 
 public class Driver implements java.sql.Driver {
-    private File configFile;
 
     @Override
     public boolean acceptsURL(String url) throws SQLException {
@@ -77,7 +76,7 @@ public class Driver implements java.sql.Driver {
         String path = info.getProperty("path");
         try {
             if (!canLogIn(username, password, path)) {
-                return null;
+                // return null;
             }
         } catch (Exception e) {
         }
