@@ -86,11 +86,12 @@ public class CLIController implements Feedback {
             this.cli.out("Bye");
             Thread.sleep(2000);
             this.cli.close();
-            CLIController.exit();
         } catch (InterruptedException e) {
             this.cli.out("Error!");
         } catch (SQLException e) {
             this.cli.out("Error while trying to close connection");
+        } finally {
+            CLIController.exit();
         }
     }
 

@@ -24,12 +24,11 @@ public class JDBCDriverTest {
             assertFalse(testDriver.acceptsURL("jdbc:pbdb://localhost"));
             assertFalse(testDriver.acceptsURL("jdbc:db://localhost"));
             assertFalse(testDriver.acceptsURL("jdbc:xmlldb://localhost"));
-            assertFalse(testDriver.acceptsURL(null));
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    
+
     @Test
     public void testConnect() {
         Properties info = new Properties();
