@@ -150,7 +150,6 @@ public class CLI {
         AppLogger.getInstance().info("NEW REQUEST: <" + temp + ">");
         this.start = System.currentTimeMillis();
         if (App.checkForExistence(temp) && temp.trim().equals("exit")) {
-            AppLogger.getInstance().warn("Exiting...");
             this.cliController.end();
         } else
             this.feedback = this.cliController.newInput(temp);

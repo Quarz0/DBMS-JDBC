@@ -79,6 +79,7 @@ public class CLIController implements Feedback {
 
     public void end() {
         try {
+            AppLogger.getInstance().warn("Exiting...");
             this.statement.close();
             this.connection.close();
             Thread.sleep(2000);
