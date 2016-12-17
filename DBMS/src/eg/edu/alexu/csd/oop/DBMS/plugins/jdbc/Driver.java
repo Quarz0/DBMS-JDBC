@@ -67,7 +67,7 @@ public class Driver implements java.sql.Driver {
         String password = info.getProperty("password", null);
         try {
             if (!canLogIn(username, password)) {
-                return null;
+//                return null;
             }
         } catch (Exception e) {
         }
