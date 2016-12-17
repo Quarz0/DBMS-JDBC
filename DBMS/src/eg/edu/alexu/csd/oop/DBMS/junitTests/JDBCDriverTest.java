@@ -19,7 +19,8 @@ public class JDBCDriverTest {
             assertTrue(testDriver.acceptsURL("jdbc:xmldb://localhost"));
             assertTrue(testDriver.acceptsURL("jdbc:altdb://localhost"));
             assertFalse(testDriver.acceptsURL("jdbcxmldb://localhost"));
-            assertFalse(testDriver.acceptsURL("jdbc:jsondb://localhost"));
+            assertTrue(testDriver.acceptsURL("jdbc:jsondb://localhost"));
+            assertTrue(testDriver.acceptsURL("jdbc:protodb://localhost"));
             assertFalse(testDriver.acceptsURL("jdbc:pbdb://localhost"));
             assertFalse(testDriver.acceptsURL("jdbc:db://localhost"));
             assertFalse(testDriver.acceptsURL("jdbc:xmlldb://localhost"));
